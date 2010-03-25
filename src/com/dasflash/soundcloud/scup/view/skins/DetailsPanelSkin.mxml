@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	xmlns:view="com.dasflash.soundcloud.scup.view.*">
+
+	<fx:Script>
+		<![CDATA[
+			import mx.events.CalendarLayoutChangeEvent;
+			
+
+			protected function expandButtonChangeHandler(event:Event):void
+			{
+				hostComponent.currentState = expandButton.selected ? "expanded" : "collapsed";
+			}
+
+			protected function dateChangeHandler(event:CalendarLayoutChangeEvent):void
+			{
+				hostComponent.release_day = dateField.selectedDate.date;
+				hostComponent.release_month = dateField.selectedDate.month+1;
+				hostComponent.release_year = dateField.selectedDate.fullYear;
+			}
+
+		]]>
+	</fx:Script>
+	
+    <fx:Metadata>
+        [HostComponent("com.dasflash.soundcloud.scup.view.DetailsPanel")]
+    </fx:Metadata>
+    
+    <s:states>
+        <s:State name="collapsed" />
+        <s:State name="expanded" />
+    </s:states>
+    
+    <s:transitions>
+	  <s:Transition>
+	    <s:Resize target="{this}" duration="300"/>
+	  </s:Transition>
+	</s:transitions>
+    
+    <!--background-->
+    <s:Rect id="background" width="100%" height="100%">
+        <s:fill>
+            <s:SolidColor color="#EBF1F9"/>
+        </s:fill>
+    </s:Rect>
+    
+    <s:VGroup width="100%" top="16" left="20" right="20" bottom="2" bottom.expanded="8" gap="0">
+    
+    	<!-- standard fields -->
+	    <s:HGroup width="100%">
+	    
+	    	<!-- artwork drop field -->
+	    	<view:ArtworkDropField skinClass="com.dasflash.soundcloud.scup.view.skins.ArtworkDropFieldSkin"
+								   dropFile="hostComponent.artwork_data=event.file"
+								   removeFile="hostComponent.artwork_data=null"/>
+	    	
+	    	<s:VGroup width="100%" paddingBottom="10">
+	    		
+			    <s:TextInput id="titleInput" width="100%"
+			    	text="{hostComponent.title || 'New Set'}"
+			    	change="hostComponent.title=titleInput.text"
+			    	alpha="{hostComponent.title?1:0.6}"
+			    	styleName="setDetailsHead"
+			    	skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkin"
+					/>
+			    
+			    <s:TextArea id="descriptionInput" width="100%" height="50"
+			    	text="{hostComponent.description || 'Add a description'}"
+			    	change="hostComponent.description=descriptionInput.text"
+			    	alpha="{hostComponent.description?1:0.6}"
+			    	skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkinMultiLine"/>
+			    	
+			    <s:ToggleButton id="expandButton" skinClass="com.dasflash.soundcloud.scup.view.skins.ExtraFieldsButtonSkin"
+					change="expandButtonChangeHandler(event)" selected="{currentState=='expanded'}"/>
+					
+	    	</s:VGroup>
+	    	
+	    </s:HGroup>
+	    
+	    <!--extra fields-->
+	    <mx:Grid id="grid" includeIn="expanded" width="100%" verticalGap="2" itemCreationPolicy="deferred" >
+	    
+	    	<mx:GridRow styleName="gridRow" width="100%">
+	    		<mx:GridItem width="100">
+	    			<s:Group width="100%"><s:Label text="Genre:" styleName="bodySoft right" top="8" width="100%"/></s:Group>
+	    		</mx:GridItem>
+	    		<mx:GridItem width="100%">
+	    			<s:Group width="100%"><s:TextInput id="genreInput" text="{hostComponent.genre}" width="100%"
+	    				skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkin" 
+	    				change="hostComponent.genre=genreInput.text" top="2"/></s:Group>
+	    		</mx:GridItem>
+	    		<mx:GridItem width="100">
+	    			<s:Group width="100%"><s:Label text="Record Label:" styleName="bodySoft right" top="8" width="100%"/></s:Group>
+	    		</mx:GridItem>
+	    		<mx:GridItem width="100%">
+	    			<s:Group width="100%"><s:TextInput id="labelNameInput" text="{hostComponent.label_name}" width="100%"
+	    				skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkin"
+	    				change="hostComponent.label_name=labelNameInput.text" top="2"/></s:Group>
+	    		</mx:GridItem>
+	    	</mx:GridRow>
+	    	
+	    	<mx:GridRow styleName="gridRow" width="100%">
+	    		<mx:GridItem width="100">
+	    			<s:Group width="100%"><s:Label text="Set type:" styleName="bodySoft right" top="8" width="100%"/></s:Group>
+	    		</mx:GridItem>
+	    		<mx:GridItem width="100%">
+	    			<s:DropDownList id="typeDropDown" dataProvider="{hostComponent.playlistTypes}"
+						prompt="Pick a type"
+	    				selectedIndex="{hostComponent.selectedPlaylistTypeIndex}"
+	    				skinClass="com.dasflash.soundcloud.scup.view.skins.DropDownListSkin"
+	    				change="hostComponent.selectedPlaylistTypeIndex=typeDropDown.selectedIndex"/>
+	    		</mx:GridItem>
+	    		<mx:GridItem width="100">
+	    			<s:Group width="100%"><s:Label text="Release number:" styleName="bodySoft right" top="8" width="100%"/></s:Group>
+	    		</mx:GridItem>
+	    		<mx:GridItem width="100%">
+	    			<s:Group width="100%"><s:TextInput id="releaseInput" text="{hostComponent.release}" width="100%"
+	    				skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkin"
+	    				change="hostComponent.release=releaseInput.text" top="2"/></s:Group>
+	    		</mx:GridItem>
+	    	</mx:GridRow>
+	    	
+	    	<mx:GridRow styleName="gridRow" width="100%">
+	    		<mx:GridItem width="100">
+	    			<s:Group width="100%"><s:Label text="Keywords:" styleName="bodySoft right" top="8" width="100%"/></s:Group>
+	    		</mx:GridItem>	
+	    		<mx:GridItem width="100%">
+	    			<s:Group width="100%"><s:TextInput id="tagListInput" text="{hostComponent.tag_list}" width="100%"
+	    				skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkin"
+	    				change="hostComponent.tag_list=tagListInput.text" top="2"
+						toolTip="Separate multiple keywords with spaces"/></s:Group>
+	    		</mx:GridItem>
+	    		<mx:GridItem width="100">
+	    			<s:Group width="100%"><s:Label text="Release date:" styleName="bodySoft right" top="8" width="100%"/></s:Group>
+	    		</mx:GridItem>
+	    		<mx:GridItem width="100%">
+	    				<mx:DateField id="dateField" change="dateChangeHandler(event)" selectedDate="{new Date()}"
+	    					textInputStyleName="dateField" focusSkin="com.dasflash.soundcloud.scup.view.skins.FocusSkin"/>
+	    		</mx:GridItem>
+	    	</mx:GridRow>
+	    	
+	    	<mx:GridRow styleName="gridRow" width="100%">
+	    		<mx:GridItem width="100">
+	    			<s:Group width="100%"><s:Label text="License:" styleName="bodySoft right" top="8" width="100%"/></s:Group>
+	    		</mx:GridItem>
+	    		<mx:GridItem width="100%">
+	    			<s:DropDownList id="licenseDropDown" dataProvider="{hostComponent.licenseTypes}"
+	    				selectedIndex="{hostComponent.selectedLicenseIndex}"
+	    				skinClass="com.dasflash.soundcloud.scup.view.skins.DropDownListSkin"
+	    				change="hostComponent.selectedLicenseIndex=licenseDropDown.selectedIndex"/>
+	    		</mx:GridItem>
+	    		<mx:GridItem width="100">
+	    			<s:Group width="100%"><s:Label text="EAN/UPC:" styleName="bodySoft right" top="8" width="100%"/></s:Group>
+	    		</mx:GridItem>
+	    		<mx:GridItem width="100%">
+	    			<s:Group width="100%"><s:TextInput id="eanInput" text="{hostComponent.ean}" width="100%"
+	    				skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkin" restrict="0-9" maxChars="13"
+	    				change="hostComponent.ean=eanInput.text" top="2"/></s:Group>
+	    		</mx:GridItem>
+	    	</mx:GridRow>
+	    	
+	    	<mx:GridRow styleName="gridRow" width="100%">
+	    		<mx:GridItem width="100">
+	    			<s:Group width="100%"><s:Label text="Buy this set link:" styleName="bodySoft right" top="8" width="100%"/></s:Group>
+	    		</mx:GridItem>
+	    		<mx:GridItem width="100%">
+	    			<s:Group width="100%"><s:TextInput id="purchaseUrlInput" text="{hostComponent.purchase_url || 'http://'}" width="100%"
+	    				skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkin"
+	    				change="hostComponent.purchase_url=purchaseUrlInput.text" top="2"/></s:Group>
+	    		</mx:GridItem>
+	    	</mx:GridRow>
+	    	
+	    </mx:Grid>
+	    
+	</s:VGroup>
+    
+</s:Skin>
+

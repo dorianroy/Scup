@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SparkSkin
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	minWidth="21" alpha.disabledStates="0.5">
+
+	<fx:Metadata>
+	<![CDATA[ 
+		[HostComponent("spark.components.ToggleButton")]
+	]]>
+	</fx:Metadata>
+    
+    <fx:Script>
+        /* Define the skin elements that should not be colorized. 
+           For toggle button, the graphics are colorized but the label is not. */
+        static private const exclusions:Array = ["labelDisplay"];
+
+	/** 
+	 * @copy spark.skins.SparkSkin#colorizeExclusions
+	 */		
+        override public function get colorizeExclusions():Array {return exclusions;}
+    </fx:Script>
+	
+	<!-- states -->
+	<s:states>
+        <s:State name="up" />
+        <s:State name="over" stateGroups="overStates" />
+        <s:State name="down" stateGroups="downStates" />
+        <s:State name="disabled" stateGroups="disabledStates" />
+        <s:State name="upAndSelected" stateGroups="selectedStates, selectedUpStates" />
+        <s:State name="overAndSelected" stateGroups="overStates, selectedStates" />
+        <s:State name="downAndSelected" stateGroups="downStates, selectedStates" />
+        <s:State name="disabledAndSelected" stateGroups="selectedUpStates, disabledStates, selectedStates" />
+	</s:states>
+    
+    <s:layout>
+    	<s:HorizontalLayout gap="2"/>
+    </s:layout>
+	
+	<mx:Image source.selectedStates="@Embed('assets/arrow_mini_down.png')"
+		source="@Embed('assets/arrow_mini_right.png')"/>
+	
+	<!-- layer 8: text -->
+	<s:Label id="labelDisplay"
+			text="More options" text.selectedStates="Hide more options"
+             verticalAlign="middle"
+			 verticalCenter="1"
+			 left="6" top="2" bottom="2"
+			 styleName="textButton"/>
+	
+</s:SparkSkin>

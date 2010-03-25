@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	>
+	
+	<fx:Script>
+		<![CDATA[
+			import flash.net.URLRequest;
+			import flash.net.navigateToURL;
+			
+			import spark.events.IndexChangeEvent;
+
+			protected function sharingDropDownChangeHandler(event:IndexChangeEvent):void
+			{
+				hostComponent.selectedSharingIndex = sharingDropDown.selectedIndex;
+				
+				if (sharingDropDown.selectedIndex == 1) {
+					hostComponent.currentState = "collapsed";
+				}
+			}
+
+			protected function helpButtonClickHandler(event:MouseEvent):void
+			{
+				var helpURL:String = "http://www.soundcloud.com/";
+				navigateToURL(new URLRequest(helpURL));
+			}
+			
+			override protected function stateChanged(oldState:String, newState:String, recursive:Boolean):void
+			{
+				super.stateChanged(oldState, newState, recursive);
+				
+				if (newState=="expanded") {
+					callLater(sharedToInput.setFocus);
+				}
+			}
+
+		]]>
+	</fx:Script>
+	
+		
+    <fx:Metadata>
+        [HostComponent("com.dasflash.soundcloud.scup.view.SharingPanel")]
+    </fx:Metadata>
+    
+	<s:states>
+        <s:State name="collapsed" />
+        <s:State name="expanded" />
+    </s:states>
+    
+    <s:transitions>
+	  <s:Transition>
+	    <s:Resize target="{this}" duration="300"/>
+	  </s:Transition>
+	</s:transitions>
+    
+     <!--background-->
+    <s:Rect width="100%" height="100%" >
+        <s:fill>
+            <s:SolidColor color="#999999"/>
+        </s:fill>
+    </s:Rect>
+    
+    <!--divider line-->
+	 <s:Group width="100%">
+    	<s:Line width="100%"><s:stroke><mx:SolidColorStroke color="0"/></s:stroke></s:Line>
+    </s:Group>
+	
+    <s:HGroup width="100%" gap="0" left="20" top="1">
+    
+    	<!-- left column-->
+	    <s:VGroup width="50%" gap="5">
+	    	
+	    	<s:Group width="100%">
+	    	
+			    <s:DropDownList id="sharingDropDown" dataProvider="{hostComponent.sharingTypes}"
+			    	selectedIndex="{hostComponent.selectedSharingIndex}" labelField="label"
+			    	top="7" change="sharingDropDownChangeHandler(event)"/>
+			    	
+			    <s:Button left="{sharingDropDown.x+sharingDropDown.width+10}" top="7" label="Invite People"
+			    	click="hostComponent.currentState='expanded'" includeIn="collapsed" styleName="standardButton"
+			    	visible="{!Boolean(sharingDropDown.selectedIndex==1)}"/>
+			    
+		    	<s:Button label="?" right="5" top="4" click="navigateToURL(new URLRequest('http://soundcloud.com/faqs#faq7'))"
+		    		skinClass="com.dasflash.soundcloud.scup.view.skins.LinkButtonSkin" styleName="linkButton"/>
+			    
+	    	</s:Group>
+	    	
+	    	<s:Group width="100%">
+		    	<s:Label styleName="sharingPanelHelp" top="6" text.collapsed="{
+		    		sharingDropDown.selectedIndex==1?'The set and its tracks will be public':'The set and its tracks will be private'
+			    	}" text.expanded="Invite people to your set by email"/>
+			    <s:Button label="Hide" includeIn="expanded" right="12" styleName="linkButton" top="0" bottom="0"
+			    	skinClass="com.dasflash.soundcloud.scup.view.skins.LinkButtonSkin"
+			    	click="hostComponent.currentState='collapsed'"/>
+	    	</s:Group>
+		    	
+		    <s:Group width="100%">
+				<s:TextArea id="sharedToInput" width="100%" height="80" includeIn="expanded" bottom="7" right="12"
+					text="{hostComponent.sharedTo}" change="{hostComponent.sharedTo=sharedToInput.text}"
+					toolTip="Separate multiple addresses by comma"/>
+			</s:Group>
+		    
+	    </s:VGroup>
+	    
+	    <!-- vertical divider line-->
+	    <s:Group height="100%">
+	    	<s:Line height="100%"><s:stroke><mx:SolidColorStroke color="#878787"/></s:stroke></s:Line>
+	    </s:Group>
+	    
+	    <!-- right column-->
+	    <s:VGroup width="50%" gap="0">
+	    	
+	    	<!--downloadable checkbox-->
+	    	<s:Group width="100%">
+	    		<s:CheckBox id="downloadableCheckBox" selected="{hostComponent.downloadable}" 
+	    			label="Make original downloadable"
+		    		styleName="sharingPanelCB" top="5" bottom="5" left="12"
+		    		change="hostComponent.downloadable=downloadableCheckBox.selected"/>
+		    	<s:Button label="?" right="12" top="4" click="navigateToURL(new URLRequest('http://soundcloud.com/faqs#faq9'))"
+		    		skinClass="com.dasflash.soundcloud.scup.view.skins.LinkButtonSkin" styleName="linkButton"/>
+	    	</s:Group>
+		    
+		     <!-- horizontal divider line-->
+		    <s:Group width="100%">
+		    	<s:Line width="100%"><s:stroke><mx:SolidColorStroke color="#878787"/></s:stroke></s:Line>
+		    </s:Group>
+		    
+		   	<!--streamable checkbox-->
+	    	<s:Group width="100%">
+	    		<s:CheckBox id="streamableCheckBox" selected="{hostComponent.streamable}" 
+	    			label="Allow 128 kbps external streaming"
+		    		styleName="sharingPanelCB" top="5" bottom="5" left="12"
+		    		change="hostComponent.streamable=streamableCheckBox.selected"/>
+		    	<!--<s:Button label="?" right="12" top="4" click="navigateToURL('')"
+		    		skinClass="com.dasflash.soundcloud.scup.view.skins.LinkButtonSkin" styleName="linkButton"/>-->
+	    	</s:Group>
+	    	
+	    </s:VGroup>
+	    
+    </s:HGroup>
+    
+    
+    
+</s:Skin>

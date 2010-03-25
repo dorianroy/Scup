@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	creationComplete="creationCompleteHandler(event)">
+	
+	
+	<fx:Metadata>
+	<![CDATA[ 
+		[HostComponent("com.dasflash.soundcloud.scup.view.SimpleProgressBar")]
+	]]>
+	</fx:Metadata>
+	
+	<fx:Script>
+		<![CDATA[
+		
+			import flash.events.Event;
+			import mx.events.FlexEvent;
+		
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				addEventListener(Event.ENTER_FRAME, enterFrameHandler);
+				hostComponent.addEventListener(Event.COMPLETE, completeHandler);
+			}
+			
+			/**
+			 * creates a "running" progress bar
+			 */
+			protected function enterFrameHandler(event:Event):void
+			{
+				bmpFill.x -= .5;
+			}
+			
+			protected function completeHandler(event:Event):void
+			{
+				removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<!-- layer 1: track -->
+	<s:Rect id="track" left="0" right="0" top="0" bottom="0" radiusX="4" radiusY="4" height="23">
+		<s:fill>
+			<mx:SolidColor color="#F6F6F6"/>
+		</s:fill>
+		<s:stroke>
+			<mx:SolidColorStroke weight="1" color="#c2c2c2"/>
+		</s:stroke>
+	</s:Rect>
+	
+	<!-- layer 2: bar -->
+	<s:Rect top="1" left="1" bottom="1" radiusX="4" radiusY="4" alpha=".5"
+		width="{track.width*(hostComponent.percentComplete/100)}">
+		<s:fill>
+			<s:BitmapFill id="bmpFill" source="@Embed('assets/progressbar_fill.png')"/>
+		</s:fill>
+	</s:Rect>
+	
+</s:Skin>

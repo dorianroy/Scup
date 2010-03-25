@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	xmlns:view="com.dasflash.soundcloud.scup.view.*"
+	xmlns:ctrl="com.dasflash.soundcloud.scup.controller.*"
+	xmlns:model="com.dasflash.soundcloud.scup.model.*"
+	width="667"	height="493"
+	minWidth="667" minHeight="440"
+	maxWidth="667"
+	showStatusBar="false"
+	styleName="mainWindow"
+	windowComplete="windowCompleteHandler(event)"
+	visible="false" xmlns:swiz="http://swiz.swizframework.org" 
+	>
+	
+	<fx:Metadata>
+	
+		[Event(type="com.dasflash.soundcloud.scup.events.ScupEvent", name="initApp")]
+		
+	</fx:Metadata>
+	
+	
+	<fx:Script>
+		<![CDATA[
+			import air.update.ApplicationUpdaterUI;
+			
+			import com.dasflash.soundcloud.scup.events.ScupEvent;
+			import com.dasflash.soundcloud.scup.view.skins.DetailsPanelSkin;
+			
+			import flash.events.InvokeEvent;
+			
+			import mx.events.AIREvent;
+			import mx.events.FlexEvent;
+			import mx.logging.LogEventLevel;
+			
+			private var appUpdater:ApplicationUpdaterUI;
+			
+			/**
+			 * Start application
+			 */
+			protected function windowCompleteHandler(event:AIREvent):void
+			{
+				// check for update
+				// this event will be handled by UpdaterController
+				dispatchEvent(new ScupEvent(ScupEvent.CHECK_FOR_UPDATE));
+				
+				// init app
+				// this event will be handled by SoundcloudAPIController
+				dispatchEvent(new ScupEvent(ScupEvent.INIT_APP));
+			}
+
+		]]>
+	</fx:Script>
+	
+	<fx:Style source="Scup.css"/>
+	
+	<fx:Declarations>
+		
+		<!-- Swiz Framework Configuration -->
+		<swiz:Swiz config="{swizConfig}">
+			<!--
+			You provide dependencies to Swiz using IBeanProviders.
+			Here we are defining a BeanProvider directly, which is basically just an Array.
+			Beans can be added and removed at runtime.
+			BeanLoader is not yet implemented in this release but will implement IBeanProvider once it is.
+			beanProviders is the default property for Swiz, so you can define them directly inside the Swiz tag.
+			-->
+			<swiz:BeanProvider>
+				
+				<swiz:Bean name="setData">
+					<model:SetData />
+				</swiz:Bean>
+				
+				<swiz:Bean name="userData">
+					<model:UserData />
+				</swiz:Bean>
+				
+				<ctrl:SoundcloudAPIController/>
+				
+				<ctrl:WindowController/>
+				
+				<ctrl:DropWindowController/>
+				
+				<ctrl:UpdaterController/>
+				
+				<ctrl:ThrobberController/>
+				
+				<ctrl:EncryptedLocalStorageController/>
+				
+			</swiz:BeanProvider>
+			
+			<swiz:loggingTargets>
+				<s:TraceTarget fieldSeparator=" | " includeLevel="true" includeCategory="true" level="{ LogEventLevel.ALL }" />
+			</swiz:loggingTargets>
+			
+		</swiz:Swiz>
+		
+		<swiz:SwizConfig id="swizConfig"
+			strict="true"
+			eventPackages="com.dasflash.soundcloud.scup.events"
+			viewPackages="com.dasflash.soundcloud.scup.view"
+		/>
+		
+	</fx:Declarations>
+	
+	<s:layout>
+		<s:VerticalLayout gap="0"/>
+	</s:layout>
+	
+	<view:DetailsPanel id="detailsPanel" width="100%" skinClass="com.dasflash.soundcloud.scup.view.skins.DetailsPanelSkin"
+		currentStateChange="if(detailsPanel.currentState=='expanded')sharingPanel.currentState='collapsed'"/>
+	
+	<view:TrackList width="100%" height="100%" />
+		
+	<view:SharingPanel id="sharingPanel" width="100%" skinClass="com.dasflash.soundcloud.scup.view.skins.SharingPanelSkin"
+		currentStateChange="if(sharingPanel.currentState=='expanded')detailsPanel.currentState='collapsed'"/>
+	
+	<view:StatusBar width="100%" skinClass="com.dasflash.soundcloud.scup.view.skins.StatusBarSkin"/>
+
+
+</s:WindowedApplication>
+

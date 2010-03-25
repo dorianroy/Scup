@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" alpha.disabled=".5"> 
+	<fx:Script>
+		<![CDATA[
+			import spark.skins.spark.DropDownListButtonSkin;
+		]]>
+	</fx:Script>
+
+    <fx:Metadata>
+    <![CDATA[ 
+	/** 
+	 * @copy spark.skins.default.ApplicationSkin#hostComponent
+	 */
+        [HostComponent("spark.components.DropDownList")]
+    ]]>
+    </fx:Metadata> 
+
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="open" />
+		<s:State name="disabled" />
+	</s:states>
+    
+    <s:PopUpAnchor id="popUp" displayPopUp.normal="false" displayPopUp.open="true" includeIn="open"
+    	itemDestructionPolicy="auto" popUpPosition="center" popUpWidthMatchesAnchorWidth="false">
+    	
+	<!---
+	      The drop down area of the skin. This includes borders, background colors, scrollers, and filters. 
+	      To create a custom drop down, edit this skin and create a custom skin class. 
+	-->
+    	<s:Group id="dropDown" minHeight="22">
+			<!---  
+				Defines the appearance of the DropDownList component popup's rectangular background fill.
+			-->
+		    <s:Rect id="background" top="0" left="0" right="0" bottom="0" radiusX="3" radiusY="3">
+		    	<s:fill>
+		    		<s:SolidColor id="bgFill" color="0xFFFFFF" />
+		    	</s:fill>
+		    	<s:stroke>
+		    		<s:SolidColorStroke color="0x999999" weight="1"/>
+		    	</s:stroke>
+		    </s:Rect>
+		    
+		    <s:Scroller id="scroller" left="0" top="6" right="0" bottom="6" focusEnabled="false">
+			    <s:DataGroup id="dataGroup" itemRenderer="com.dasflash.soundcloud.scup.view.skins.DropDownItemRenderer">
+			    	<s:layout>
+			    	    <s:VerticalLayout gap="0" horizontalAlign="contentJustify"/>
+			    	</s:layout>
+			    </s:DataGroup>
+		   </s:Scroller>
+    	
+	        <s:filters>
+	            <s:DropShadowFilter blurX="20" blurY="20" distance="5" angle="90" alpha="0.4" />
+	        </s:filters>
+	    </s:Group>
+	</s:PopUpAnchor>
+	
+	<s:HGroup gap="0" verticalAlign="bottom">
+		
+		<!--- The button used by the DropDownList. The default skin is DropDownListButtonSkin. -->
+		<s:Button id="openButton" focusEnabled="false"
+			skinClass="com.dasflash.soundcloud.scup.view.skins.DropDownListButtonSkin" />
+			
+		<s:Label id="labelDisplay" verticalAlign="middle" maxDisplayedLines="1" 
+			click="hostComponent.openDropDown()"/>
+    
+	</s:HGroup>
+
+</s:Skin>

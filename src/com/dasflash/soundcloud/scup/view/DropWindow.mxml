@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	xmlns:d="http://ns.adobe.com/fxg/2008/dt"
+	width="390" height="288"
+	resizable="false"
+	showStatusBar="false"
+	creationComplete="creationCompleteHandler(event)"
+	>
+	
+	<fx:Metadata>
+	
+		[Event(type="com.dasflash.soundcloud.scup.events.DropWindowEvent", name="dropFile")]
+		[Event(type="com.dasflash.soundcloud.scup.events.DropWindowEvent", name="openMainWindow")]
+		[Event(type="com.dasflash.soundcloud.scup.events.DropWindowEvent", name="openAuthPage")]
+		[Event(type="com.dasflash.soundcloud.scup.events.DropWindowEvent", name="resetApp")]
+		[Event(type="com.dasflash.soundcloud.scup.events.DropWindowEvent", name="switchUser")]
+		[Event(type="com.dasflash.soundcloud.scup.events.CompleteAuthEvent", name="completeAuth")]
+		
+	</fx:Metadata>
+	
+	<fx:Script>
+	
+		<![CDATA[
+			import com.dasflash.soundcloud.scup.events.CompleteAuthEvent;
+			import com.dasflash.soundcloud.scup.events.DropWindowEvent;
+			
+			import flash.display.InteractiveObject;
+			
+			import mx.events.FlexEvent;
+			
+			
+			[Bindable]
+			public var setURL:String;
+			
+
+			protected function nativeDragEnterHandler(event:NativeDragEvent):void
+			{
+				 if (currentState=="dropPage" && event.clipboard.hasFormat(ClipboardFormats.FILE_LIST_FORMAT)) {
+					 
+					 var files:Array = event.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT) as Array;
+					 
+					 for each (var file:File in files) {
+						 
+						 // limit to .ogg, .mp3, .mp4 .flac, .aac, .wav(e) .aif(f) 
+						 switch (file.extension.toLowerCase()) {
+							 case "ogg": break;
+							 case "mp3": break;
+							 case "mp4": break;
+							 case "flac": break;
+							 case "aac": break;
+							 case "wav": break;
+							 case "wave": break;
+							 case "aif": break;
+							 case "aiff": break;
+							 
+							 // if none of the file extensions is met, return
+							 default: return;
+						 }
+					 }
+					 
+					var iobject:* = flash.display.InteractiveObject(this);
+					NativeDragManager.acceptDragDrop(iobject);
+				} 
+			}
+
+			protected function nativeDragDropHandler(event:NativeDragEvent):void
+			{
+				var files:Array = event.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT) as Array;
+				
+				dispatchEvent(new DropWindowEvent(DropWindowEvent.DROP_FILE, files, true));
+			}
+
+			/* protected function nativeDragExitHandler(event:NativeDragEvent):void
+			{
+				// maybe needed for future extensions
+			} */
+
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				addEventListener(NativeDragEvent.NATIVE_DRAG_ENTER, nativeDragEnterHandler);
+				addEventListener(NativeDragEvent.NATIVE_DRAG_DROP, nativeDragDropHandler);
+				/* addEventListener(NativeDragEvent.NATIVE_DRAG_EXIT, nativeDragExitHandler); */
+			}
+
+		]]>
+	</fx:Script>
+	
+	<s:states>
+        <s:State name="dropPage"/>
+        <s:State name="authStartPage"/>
+        <s:State name="authCompletePage"/>
+        <s:State name="authFailPage"/>
+        <!--<s:State name="saveSetCompletePage"/>-->
+        <s:State name="userInvalid"/>
+        <s:State name="noConnection"/>
+    </s:states>
+
+	<mx:Image source="@Embed('assets/dropwindow_bg.png')" width="390" height="288"/>
+		
+    <s:VGroup width="100%" horizontalAlign="center" y="165" gap="0">
+    	
+		<s:RichText styleName="dropWindowHead">
+			<s:content.dropPage>Drag files here to upload</s:content.dropPage>
+			<s:content.authStartPage>Connect with SoundCloud</s:content.authStartPage>
+			<s:content.authCompletePage>Enter the code</s:content.authCompletePage>
+			<s:content.authFailPage>Wrong code</s:content.authFailPage>
+			<!--<s:content.saveSetCompletePage>Your set has been saved</s:content.saveSetCompletePage>-->
+			<s:content.userInvalid>Couldn't authenticate</s:content.userInvalid>
+			<s:content.noConnection>Couldn't access SoundCloud</s:content.noConnection>
+		</s:RichText>
+	
+    	<s:RichEditableText id="sublineText" styleName="dropWindowBody" lineBreak="toFit" width="100%"
+    		editable="false" selectable="false">
+			<s:content.dropPage>We support AIFF, WAV, FLAC, OGG, MP3, AAC</s:content.dropPage>
+			<s:content.authStartPage>Click the button below to open the authentication page in your browser</s:content.authStartPage>
+			<s:content.authCompletePage>you see on the authentication page</s:content.authCompletePage>
+			<s:content.authFailPage>please try again</s:content.authFailPage>
+			<!--<s:content.saveSetCompletePage>
+				Click <s:a href="{setURL}">here</s:a> to open it in the browser
+			</s:content.saveSetCompletePage>-->
+			<s:content.userInvalid>Your user account data seems to be invalid</s:content.userInvalid>
+			<s:content.noConnection>Please check your internet connection</s:content.noConnection>
+		</s:RichEditableText>
+		
+		<s:Group>
+			<s:TextInput id="codeTextInput" includeIn="authCompletePage, authFailPage" styleName="codeTextInput" width="50" height="20" top="0" bottom="4"/>
+		</s:Group>
+		
+		<s:Button includeIn="dropPage" click="dispatchEvent(new DropWindowEvent(DropWindowEvent.OPEN_MAIN_WINDOW))">
+			<s:label>Add tracks later</s:label>
+		</s:Button>
+		
+		<s:Button includeIn="authStartPage" click="dispatchEvent(new DropWindowEvent(DropWindowEvent.OPEN_AUTH_PAGE));currentState='authCompletePage'">
+			<s:label>Yes please, move ahead</s:label>
+		</s:Button>
+		
+		<s:Button includeIn="authCompletePage, authFailPage" click="dispatchEvent(new CompleteAuthEvent(CompleteAuthEvent.COMPLETE_AUTH, codeTextInput.text));">
+			<s:label>Complete Authentication</s:label>
+		</s:Button>
+		
+		<!--<s:Button includeIn="saveSetCompletePage" click="dispatchEvent(new DropWindowEvent(DropWindowEvent.RESET_APP))">
+			<s:label>Upload another set</s:label>
+		</s:Button>-->
+		
+		<s:Button includeIn="userInvalid" click="dispatchEvent(new DropWindowEvent(DropWindowEvent.SWITCH_USER))">
+			<s:label>Authenticate again</s:label>
+		</s:Button>
+		
+		<s:Button includeIn="noConnection" click="dispatchEvent(new DropWindowEvent(DropWindowEvent.RESET_APP))">
+			<s:label>Try again</s:label>
+		</s:Button>
+		
+    </s:VGroup>
+	
+</s:Window>

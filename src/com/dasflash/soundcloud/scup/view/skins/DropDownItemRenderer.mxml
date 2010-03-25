@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer focusEnabled="false"
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx">
+    
+    
+    <s:states>
+        <s:State name="normal"/>            
+        <s:State name="hovered"/>
+        <s:State name="selected"/>
+		<!--<s:State name="normalAndShowsCaret"/>
+		<s:State name="hoveredAndShowsCaret"/>
+		<s:State name="selectedAndShowsCaret"/>-->
+    </s:states>
+    
+    <s:Rect left="0" right="0" top="0" bottom="0">
+        <s:fill.hovered>
+            <s:SolidColor color="#5c646f" />
+        </s:fill.hovered>
+        <!--<s:fill.selected>
+            <s:SolidColor color="{selectionColor}" />
+        </s:fill.selected>-->
+    </s:Rect>
+    
+    <mx:Image source="@Embed('assets/dropdown_check.png')" includeIn="selected" left="4" top="5"/>
+    
+    <s:Label id="labelDisplay" color.hovered="#FFFFFF" verticalCenter="0"
+			 left="20" right="6" top="6" bottom="4"/>
+
+</s:ItemRenderer>
