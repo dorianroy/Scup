@@ -6,7 +6,7 @@ package com.dasflash.soundcloud.scup.events
 	{
 		public static const INIT_APP:String = "initApp";
 		
-		public static const SWITCH_USER:String = "switchUser";
+//		public static const SWITCH_USER:String = "switchUser";
 		
 		public static const SAVE_SET:String = "saveSet";
 		

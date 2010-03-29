@@ -45,7 +45,7 @@ package com.dasflash.soundcloud.scup.controller
 		 * 
 		 * @param event
 		 */
-		[Mediate(event="DropWindowEvent.DROP_FILE")]
+		[Mediate(event="dropFile")]
 		public function fileDropHandler(event:DropWindowEvent):void
 		{
 			// clear model data

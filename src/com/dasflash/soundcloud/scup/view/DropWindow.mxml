@@ -26,6 +26,7 @@
 		<![CDATA[
 			import com.dasflash.soundcloud.scup.events.CompleteAuthEvent;
 			import com.dasflash.soundcloud.scup.events.DropWindowEvent;
+			import com.dasflash.soundcloud.scup.events.ScupEvent;
 			
 			import flash.display.InteractiveObject;
 			
@@ -93,7 +94,6 @@
         <s:State name="authStartPage"/>
         <s:State name="authCompletePage"/>
         <s:State name="authFailPage"/>
-        <!--<s:State name="saveSetCompletePage"/>-->
         <s:State name="userInvalid"/>
         <s:State name="noConnection"/>
     </s:states>
@@ -107,7 +107,6 @@
 			<s:content.authStartPage>Connect with SoundCloud</s:content.authStartPage>
 			<s:content.authCompletePage>Enter the code</s:content.authCompletePage>
 			<s:content.authFailPage>Wrong code</s:content.authFailPage>
-			<!--<s:content.saveSetCompletePage>Your set has been saved</s:content.saveSetCompletePage>-->
 			<s:content.userInvalid>Couldn't authenticate</s:content.userInvalid>
 			<s:content.noConnection>Couldn't access SoundCloud</s:content.noConnection>
 		</s:RichText>
@@ -118,9 +117,6 @@
 			<s:content.authStartPage>Click the button below to open the authentication page in your browser</s:content.authStartPage>
 			<s:content.authCompletePage>you see on the authentication page</s:content.authCompletePage>
 			<s:content.authFailPage>please try again</s:content.authFailPage>
-			<!--<s:content.saveSetCompletePage>
-				Click <s:a href="{setURL}">here</s:a> to open it in the browser
-			</s:content.saveSetCompletePage>-->
 			<s:content.userInvalid>Your user account data seems to be invalid</s:content.userInvalid>
 			<s:content.noConnection>Please check your internet connection</s:content.noConnection>
 		</s:RichEditableText>
@@ -140,10 +136,6 @@
 		<s:Button includeIn="authCompletePage, authFailPage" click="dispatchEvent(new CompleteAuthEvent(CompleteAuthEvent.COMPLETE_AUTH, codeTextInput.text));">
 			<s:label>Complete Authentication</s:label>
 		</s:Button>
-		
-		<!--<s:Button includeIn="saveSetCompletePage" click="dispatchEvent(new DropWindowEvent(DropWindowEvent.RESET_APP))">
-			<s:label>Upload another set</s:label>
-		</s:Button>-->
 		
 		<s:Button includeIn="userInvalid" click="dispatchEvent(new DropWindowEvent(DropWindowEvent.SWITCH_USER))">
 			<s:label>Authenticate again</s:label>

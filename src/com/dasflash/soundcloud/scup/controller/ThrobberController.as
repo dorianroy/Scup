@@ -13,7 +13,7 @@ package com.dasflash.soundcloud.scup.controller
 		// THROBBER
 		private var throbber:Throbber;
 		
-		[Mediate(event="ScupEvent.SHOW_THROBBER")]
+		[Mediate(event="showThrobber")]
 		public function showThrobberHandler(event:ScupEvent):void
 		{
 			if (!throbber) {
@@ -23,7 +23,7 @@ package com.dasflash.soundcloud.scup.controller
 			}
 		}
 		
-		[Mediate(event="ScupEvent.HIDE_THROBBER")]
+		[Mediate(event="hideThrobber")]
 		public function hideThrobberHandler(event:ScupEvent):void
 		{
 			if (throbber) {

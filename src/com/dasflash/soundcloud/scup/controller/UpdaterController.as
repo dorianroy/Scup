@@ -22,7 +22,7 @@ package com.dasflash.soundcloud.scup.controller
 		public static const UPDATE_CONFIG_FILE:String = "app:/updateConfig.xml";
 		
 		
-		[Mediate(event="ScupEvent.CHECK_FOR_UPDATE")]
+		[Mediate(event="checkForUpdate")]
 		public function checkForUpdate(event:ScupEvent):void
 		{
 			// initialize updater gui

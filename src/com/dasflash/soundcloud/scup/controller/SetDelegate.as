@@ -11,7 +11,7 @@
 	import flash.net.URLRequestMethod;
 
 	[Event(type="com.dasflash.soundcloud.as3api.events.SoundcloudEvent", name="requestComplete")]
-	[Event(type="com.dasflash.soundcloud.as3api.events.SoundcloudFault", name="fault")]
+	[Event(type="com.dasflash.soundcloud.as3api.events.SoundcloudFaultEvent", name="fault")]
 	
 	
 	/**

@@ -5,6 +5,14 @@
 	xmlns:mx="library://ns.adobe.com/flex/mx"
 	>
 	
+	<fx:Metadata>
+		
+		[Event(type="com.dasflash.soundcloud.scup.events.ScupEvent", name="browseFiles")]
+		[Event(type="com.dasflash.soundcloud.scup.events.ScupEvent", name="cancelSet")]
+		[Event(type="com.dasflash.soundcloud.scup.events.ScupEvent", name="saveSet")]
+		
+	</fx:Metadata>
+	
 	<fx:Script>
 		<![CDATA[
 			import com.dasflash.soundcloud.scup.events.ScupEvent;

@@ -18,7 +18,7 @@ package com.dasflash.soundcloud.scup.view
 		public var sharingTypes:ArrayCollection;
 
 		[Inject(source="setData.selectedSharingIndex", twoWay="true")]
-		public var selectedSharingIndex:int;
+		public var selectedSharingIndex:int = 1;
 		
 		[Inject(source="setData.downloadable", twoWay="true")]
 		public var downloadable:Boolean;

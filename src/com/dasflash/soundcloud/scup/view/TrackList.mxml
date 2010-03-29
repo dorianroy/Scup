@@ -8,6 +8,12 @@
 	nativeDragDrop="nativeDragDropHandler(event)"
 	click="list.selectedIndex=-1"
 	>
+	
+	<fx:Metadata>
+		
+		[Event(type="com.dasflash.soundcloud.scup.events.MainWindowEvent", name="addFiles")]
+		
+	</fx:Metadata>
 
 	<fx:Script>
 		<![CDATA[

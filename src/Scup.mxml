@@ -59,40 +59,10 @@
 	<fx:Declarations>
 		
 		<!-- Swiz Framework Configuration -->
-		<swiz:Swiz config="{swizConfig}">
-			<!--
-			You provide dependencies to Swiz using IBeanProviders.
-			Here we are defining a BeanProvider directly, which is basically just an Array.
-			Beans can be added and removed at runtime.
-			BeanLoader is not yet implemented in this release but will implement IBeanProvider once it is.
-			beanProviders is the default property for Swiz, so you can define them directly inside the Swiz tag.
-			-->
-			<swiz:BeanProvider>
-				
-				<swiz:Bean name="setData">
-					<model:SetData />
-				</swiz:Bean>
-				
-				<swiz:Bean name="userData">
-					<model:UserData />
-				</swiz:Bean>
-				
-				<ctrl:SoundcloudAPIController/>
-				
-				<ctrl:WindowController/>
-				
-				<ctrl:DropWindowController/>
-				
-				<ctrl:UpdaterController/>
-				
-				<ctrl:ThrobberController/>
-				
-				<ctrl:EncryptedLocalStorageController/>
-				
-			</swiz:BeanProvider>
+		<swiz:Swiz config="{swizConfig}" beanProviders="{[Beans]}">
 			
 			<swiz:loggingTargets>
-				<s:TraceTarget fieldSeparator=" | " includeLevel="true" includeCategory="true" level="{ LogEventLevel.ALL }" />
+				<s:TraceTarget fieldSeparator=" | " includeLevel="true" includeCategory="true" level="{ LogEventLevel.WARN }" />
 			</swiz:loggingTargets>
 			
 		</swiz:Swiz>

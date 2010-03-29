@@ -6,11 +6,6 @@ package com.dasflash.soundcloud.scup.model
 	public class UserData extends EventDispatcher
 	{
 		
-		public function UserData()
-		{
-			trace("me too");
-		}
-		
 		public var userId:uint;
 
 		public var userName:String;

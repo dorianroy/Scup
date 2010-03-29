@@ -8,6 +8,11 @@ package com.dasflash.soundcloud.scup.view
 
 	
 	/**
+	 *  Dispatched when the maximum value changed.
+	 */
+	[Event(name="maximumChanged", type="flash.events.Event")]
+	
+	/**
 	 *  Dispatched when the load completes.
 	 *  @eventType flash.events.Event.COMPLETE
 	 */
@@ -30,12 +35,6 @@ package com.dasflash.soundcloud.scup.view
 	 *  @eventType mx.events.FlexEvent.SHOW
 	 */
 	[Event(name="show", type="mx.events.FlexEvent")]
-
-
-	[DefaultBindingProperty(source="percentComplete")]
-	
-	[DefaultTriggerEvent("progress")]
-	
 
 	/**
 	 * Simple, skinnable version of the halo ProgressBar

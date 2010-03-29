@@ -98,7 +98,7 @@ package com.dasflash.soundcloud.scup.controller
 		/**
 		 * Opens the main window and hides the drop window 
 		 */
-		[Mediate(event="DropWindowEvent.OPEN_MAIN_WINDOW")]
+		[Mediate(event="openMainWindow")]
 		public function openMainWindow():void
 		{
 			if (dropWindow) {

@@ -6,8 +6,14 @@
 	xmlns:view="com.dasflash.soundcloud.scup.view.*"
 	click="event.stopPropagation()"
 	autoDrawBackground="false"
-	>
+	>	
 	
+	<fx:Metadata>
+		
+		[Event(type="com.dasflash.soundcloud.scup.events.TrackListEvent", name="retryTrack")]
+		[Event(type="com.dasflash.soundcloud.scup.events.TrackListEvent",name="deleteTrack")]
+		
+	</fx:Metadata>
 	
 	<fx:Script>
 		<![CDATA[

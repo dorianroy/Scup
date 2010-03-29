@@ -33,6 +33,10 @@ package com.dasflash.soundcloud.scup.controller
 	import org.swizframework.core.IDispatcherAware;
 
 //	import org.swizframework.storage.EncryptedLocalStorageBean;
+	
+	[Event(type="com.dasflash.soundcloud.scup.events.ScupEvent", name="showThrobber")]
+	[Event(type="com.dasflash.soundcloud.scup.events.ScupEvent", name="hideThrobber")]
+	[Event(type="com.dasflash.soundcloud.scup.events.ScupEvent", name="initApp")]
 
 	/**
 	 * Controls communication with the SoundCloud API using an instance
@@ -88,7 +92,7 @@ package com.dasflash.soundcloud.scup.controller
 		// AUTHENTICATION STEP 1
 		// check for a previously saved access token
 		
-		[Mediate(event="ScupEvent.INIT_APP")]
+		[Mediate(event="initApp")]
 		public function initAppHandler(event:Event):void
 		{
 //			deleteAccessToken();// TODO temp
@@ -202,7 +206,7 @@ package com.dasflash.soundcloud.scup.controller
 		// AUTHENTICATION STEP 4
 		// navigate to authentication page
 		
-		[Mediate(event="DropWindowEvent.OPEN_AUTH_PAGE")]
+		[Mediate(event="openAuthPage")]
 		public function openAuthPageHandler(event:DropWindowEvent):void
 		{
 			soundcloudClient.authorizeUser();
@@ -212,7 +216,7 @@ package com.dasflash.soundcloud.scup.controller
 		// AUTHENTICATION STEP 5
 		// trade authenticated request token for access token
 		
-		[Mediate(event="CompleteAuthEvent.COMPLETE_AUTH")]
+		[Mediate(event="completeAuth")]
 		public function completeAuthHandler(event:CompleteAuthEvent):void
 		{
 			soundcloudClient.addEventListener(SoundcloudAuthEvent.ACCESS_TOKEN, accessTokenSuccessHandler);
@@ -311,7 +315,7 @@ package com.dasflash.soundcloud.scup.controller
 			Alert.show("Upload failed. "+event.message);
 		}*/
 		
-		[Mediate(event="TrackListEvent.RETRY_TRACK")]
+		[Mediate(event="retryTrack")]
 		public function retryTrackHandler(event:TrackListEvent):void
 		{
 			// restart queue
@@ -320,7 +324,7 @@ package com.dasflash.soundcloud.scup.controller
 			uploadTracks();
 		}
 		
-		[Mediate(event="TrackListEvent.DELETE_TRACK")]
+		[Mediate(event="deleteTrack")]
 		public function deleteTrackHandler(event:TrackListEvent):void
 		{
 			var track:TrackData = event.trackData;
@@ -339,7 +343,7 @@ package com.dasflash.soundcloud.scup.controller
 		}
 		
 		// ADD TRACKS
-		[Mediate(event="ScupEvent.BROWSE_FILES")]
+		[Mediate(event="browseFiles")]
 		public function browseFilesHandler(event:ScupEvent):void
 		{
 			var file:File = new File();
@@ -357,7 +361,7 @@ package com.dasflash.soundcloud.scup.controller
 			addTracks(event.files);
 		}
 		
-		[Mediate(event="MainWindowEvent.ADD_FILES")]
+		[Mediate(event="addFiles")]
 		public function addFilesHandler(event:MainWindowEvent):void
 		{
 			if (setData.trackCollection.length == 0) {
@@ -393,7 +397,7 @@ package com.dasflash.soundcloud.scup.controller
 		
 		// SAVE SET
 		
-		[Mediate(event="ScupEvent.SAVE_SET")]
+		[Mediate(event="saveSet")]
 		public function saveSetHandler(event:ScupEvent):void
 		{
 			if (!setData.title) {
@@ -552,8 +556,8 @@ package com.dasflash.soundcloud.scup.controller
 		}
 		
 		// CANCEL SET
-		[Mediate(event="ScupEvent.CANCEL_SET")]
-		public function cancelSetHandler(event:Event):void
+		[Mediate(event="cancelSet")]
+		public function cancelSetHandler(event:ScupEvent):void
 		{
 			Alert.show("If you continue, the already uploaded tracks will not be deleted but all the settings you just made will be lost.",
 				"", Alert.CANCEL|Alert.OK, null, cancelAlertCloseHandler);
@@ -585,15 +589,15 @@ package com.dasflash.soundcloud.scup.controller
 		
 		
 		// SAVE SET COMPLETE
-		[Mediate(event="DropWindowEvent.RESET_APP")]
-		public function resetAppHandler(event:Event):void
+		[Mediate(event="resetApp")]
+		public function resetAppHandler(event:DropWindowEvent):void
 		{
 			initAppHandler(event);
 		}
 		
 		// SWITCH USER 
-		[Mediate(event="DropWindowEvent.SWITCH_USER")]
-		public function switchUser(event:Event):void
+		[Mediate(event="switchUser")]
+		public function switchUser(event:DropWindowEvent):void
 		{
 			// delete old credentials
 			deleteAccessToken();

@@ -18,11 +18,6 @@ package com.dasflash.soundcloud.scup.model
 		public var description:String;
 		public var ean:String;
 		
-		public function SetData()
-		{
-			trace("here")
-		}
-		
 
 		// playlist_type
 		public var playlistTypes:ArrayCollection = new ArrayCollection(
