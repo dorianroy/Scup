@@ -8,6 +8,7 @@ package com.dasflash.soundcloud.scup.view
 	
 	import spark.components.supportClasses.SkinnableComponent;
 
+	
 	[SkinState("collapsed")]
 	
 	[SkinState("expanded")]

@@ -1,47 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		xmlns:s="library://ns.adobe.com/flex/spark" 
-		xmlns:mx="library://ns.adobe.com/flex/mx" width="101" height="101"
-		mouseOver="deleteButton.alpha=1"
-		mouseOut="deleteButton.alpha=0"
-		>
-	
-	
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	width="101"
+	height="101"
+	mouseOver="deleteButton.alpha=1"
+	mouseOut="deleteButton.alpha=0">
+
+
 	<fx:Metadata>
-		
-		[HostComponent("com.dasflash.soundcloud.scup.view.ArtworkDropField")]
-		
-		[Event(type="com.dasflash.soundcloud.scup.events.ArtworkDropFieldEvent", name="removeFile")]
-		
+		[HostComponent("com.dasflash.soundcloud.scup.view.components.ArtworkDropField")]
 	</fx:Metadata>
-	
-	<fx:Script>
-		<![CDATA[
-			import com.dasflash.soundcloud.scup.events.ArtworkDropFieldEvent;
-		]]>
-	</fx:Script>
+
+
 	<!--background-->
-	<s:Rect top="0" right="0" bottom="0" left="0">
+	<s:Rect top="0"
+		right="0"
+		bottom="0"
+		left="0">
 		<s:fill>
 			<s:SolidColor color="#f3f3f3"/>
 		</s:fill>
 	</s:Rect>
-	
+
 	<!-- loader -->
-	<mx:Image id="loader" source="{hostComponent.artworkFileURL}"
-			  horizontalAlign="center" verticalAlign="middle" smoothBitmapContent="true"
-			  top="0" right="0" bottom="0" left="0" maintainAspectRatio="true"/>
-	
+	<mx:Image id="loader"
+		source="{hostComponent.artworkFileURL}"
+		horizontalAlign="center"
+		verticalAlign="middle"
+		smoothBitmapContent="true"
+		top="0"
+		right="0"
+		bottom="0"
+		left="0"
+		maintainAspectRatio="true"/>
+
 	<!-- frame -->
-	<mx:Image source="@Embed('assets/artwork_frame.png')" />
-	
-	<s:VGroup horizontalAlign="center" width="100%" top="34">
-		<s:RichText width="60%" text="Drop artwork here" textAlign="center" visible="{!Boolean(hostComponent.artworkFileURL)}" />
+	<mx:Image source="@Embed('assets/artwork_frame.png')"/>
+
+	<s:VGroup horizontalAlign="center"
+		width="100%"
+		top="34">
+		<s:RichText width="60%"
+			text="Drop artwork here"
+			textAlign="center"
+			visible="{!Boolean(hostComponent.artworkFileURL)}"/>
 	</s:VGroup>
-	
-	<mx:Button id="deleteButton" right="6" top="6" toolTip="Remove artwork"
-			alpha="0" styleName="deleteArtworkButton" visible="{Boolean(hostComponent.artworkFileURL)}"
-			click="hostComponent.artworkFileURL=null;
-				dispatchEvent(new ArtworkDropFieldEvent(ArtworkDropFieldEvent.REMOVE_FILE, null, true))"/>
-	
+
+	<mx:Button id="deleteButton"
+		right="6"
+		top="6"
+		toolTip="Remove artwork"
+		alpha="0"
+		styleName="deleteArtworkButton"
+		visible="{Boolean(hostComponent.artworkFileURL)}"
+		click="hostComponent.removeFile()"/>
+
 </s:Skin>

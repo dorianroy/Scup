@@ -1,4 +1,4 @@
-package com.dasflash.soundcloud.scup.view
+package com.dasflash.soundcloud.scup.view.components
 {
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;

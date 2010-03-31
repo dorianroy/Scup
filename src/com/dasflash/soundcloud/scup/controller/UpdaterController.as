@@ -2,7 +2,7 @@ package com.dasflash.soundcloud.scup.controller
 {
 	import air.update.ApplicationUpdaterUI;
 	
-	import com.dasflash.soundcloud.scup.events.ScupEvent;
+	import com.dasflash.soundcloud.scup.events.AppEvent;
 	
 	import flash.events.EventDispatcher;
 	import flash.filesystem.File;
@@ -23,7 +23,7 @@ package com.dasflash.soundcloud.scup.controller
 		
 		
 		[Mediate(event="checkForUpdate")]
-		public function checkForUpdate(event:ScupEvent):void
+		public function checkForUpdate(event:AppEvent):void
 		{
 			// initialize updater gui
 			var updater: ApplicationUpdaterUI = new ApplicationUpdaterUI();

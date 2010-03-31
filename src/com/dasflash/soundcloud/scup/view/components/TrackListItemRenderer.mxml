@@ -5,7 +5,7 @@
 	xmlns:mx="library://ns.adobe.com/flex/mx"
 	xmlns:view="com.dasflash.soundcloud.scup.view.*"
 	click="event.stopPropagation()"
-	autoDrawBackground="false"
+	autoDrawBackground="false" xmlns:components="com.dasflash.soundcloud.scup.view.components.*"
 	>	
 	
 	<fx:Metadata>
@@ -154,7 +154,7 @@
 				  toolTip="Remove this track from the list (it will not be removed from your computer)"/>
 				
 				<!-- progress bar -->
-				<view:SimpleProgressBar right="8" top="7" width="140" height="10"
+				<components:SimpleProgressBar right="8" top="7" width="140" height="10"
 					source="{data.asset_data}" visible="{data.isUploading}"
 					skinClass="com.dasflash.soundcloud.scup.view.skins.SimpleProgressBarSkin"/>
 				

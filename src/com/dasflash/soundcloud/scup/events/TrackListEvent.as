@@ -4,11 +4,14 @@ package com.dasflash.soundcloud.scup.events
 	
 	import flash.events.Event;
 	
+	
 	public class TrackListEvent extends Event
 	{
+		
 		public static const RETRY_TRACK:String = "retryTrack";
 		
 		public static const DELETE_TRACK:String = "deleteTrack";
+		
 		
 		public var trackData:TrackData;
 		

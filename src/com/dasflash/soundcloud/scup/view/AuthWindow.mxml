@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	xmlns:d="http://ns.adobe.com/fxg/2008/dt"
+	width="390"
+	height="288"
+	resizable="false"
+	showStatusBar="false">
+
+	<fx:Metadata>
+	
+		[Event(type="com.dasflash.soundcloud.scup.events.AuthWindowEvent", name="openAuthPage")]
+		[Event(type="com.dasflash.soundcloud.scup.events.CompleteAuthEvent", name="completeAuth")]
+		[Event(type="com.dasflash.soundcloud.scup.events.AppEvent", name="resetApp")]
+		[Event(type="com.dasflash.soundcloud.scup.events.AppEvent", name="switchUser")]
+		
+	</fx:Metadata>
+
+	<fx:Script>
+
+		<![CDATA[
+			import com.dasflash.soundcloud.scup.events.AppEvent;
+			import com.dasflash.soundcloud.scup.events.AuthWindowEvent;
+			import com.dasflash.soundcloud.scup.events.CompleteAuthEvent;
+
+			import flash.display.InteractiveObject;
+
+			import mx.events.FlexEvent;
+
+
+			[Bindable]
+			public var setURL:String;
+		]]>
+
+	</fx:Script>
+
+	<s:states>
+		<s:State name="authStartPage"/>
+		<s:State name="authCompletePage"/>
+		<s:State name="authFailPage"/>
+		<s:State name="userInvalid"/>
+		<s:State name="noConnection"/>
+	</s:states>
+
+	<mx:Image source="@Embed('assets/authwindow_bg.png')"
+		width="390"
+		height="288"/>
+
+	<s:VGroup width="100%"
+		horizontalAlign="center"
+		y="165"
+		gap="0">
+
+		<s:RichText styleName="authWindowHead">
+			<s:content.authStartPage>Connect with SoundCloud</s:content.authStartPage>
+			<s:content.authCompletePage>Enter the code</s:content.authCompletePage>
+			<s:content.authFailPage>Wrong code</s:content.authFailPage>
+			<s:content.userInvalid>Couldn't authenticate</s:content.userInvalid>
+			<s:content.noConnection>Couldn't access SoundCloud</s:content.noConnection>
+		</s:RichText>
+
+		<s:RichEditableText id="sublineText"
+			styleName="authWindowBody"
+			lineBreak="toFit"
+			width="100%"
+			editable="false"
+			selectable="false">
+			<s:content.authStartPage>Click the button below to open the authentication page in your browser</s:content.authStartPage>
+			<s:content.authCompletePage>you see on the authentication page</s:content.authCompletePage>
+			<s:content.authFailPage>please try again</s:content.authFailPage>
+			<s:content.userInvalid>Your user account data seems to be invalid</s:content.userInvalid>
+			<s:content.noConnection>Please check your internet connection</s:content.noConnection>
+		</s:RichEditableText>
+
+		<s:Group>
+			<s:TextInput id="codeTextInput"
+				includeIn="authCompletePage, authFailPage"
+				styleName="codeTextInput"
+				width="50"
+				height="20"
+				top="0"
+				bottom="4"/>
+		</s:Group>
+
+		<s:Button includeIn="authStartPage"
+			click="dispatchEvent(new AuthWindowEvent(AuthWindowEvent.OPEN_AUTH_PAGE));currentState='authCompletePage'">
+			<s:label>Yes please, move ahead</s:label>
+		</s:Button>
+
+		<s:Button includeIn="authCompletePage, authFailPage"
+			click="dispatchEvent(new CompleteAuthEvent(CompleteAuthEvent.COMPLETE_AUTH, codeTextInput.text));">
+			<s:label>Complete Authentication</s:label>
+		</s:Button>
+
+		<s:Button includeIn="userInvalid"
+			click="dispatchEvent(new AppEvent(AppEvent.SWITCH_USER))">
+			<s:label>Authenticate again</s:label>
+		</s:Button>
+
+		<s:Button includeIn="noConnection"
+			click="dispatchEvent(new AppEvent(AppEvent.RESET_APP))">
+			<s:label>Try again</s:label>
+		</s:Button>
+
+	</s:VGroup>
+
+</s:Window>

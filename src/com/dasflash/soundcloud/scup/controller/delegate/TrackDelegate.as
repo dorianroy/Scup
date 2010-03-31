@@ -1,4 +1,4 @@
-package com.dasflash.soundcloud.scup.controller
+package com.dasflash.soundcloud.scup.controller.delegate
 {
 	import com.dasflash.soundcloud.as3api.SoundcloudClient;
 	import com.dasflash.soundcloud.as3api.SoundcloudDelegate;

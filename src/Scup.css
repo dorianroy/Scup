@@ -42,7 +42,7 @@ s|SkinnableComponent
 {
 	focusSkin: ClassReference('com.dasflash.soundcloud.scup.view.skins.FocusSkin');
 }
-.dropWindowHead
+.authWindowHead
 {
 	fontFamily: Interstate-Regular, Helvetica, Arial, sans-serif;
 	fontSize: 21;
@@ -50,7 +50,7 @@ s|SkinnableComponent
 	paddingLeft: 40;
 	paddingRight: 40;
 }
-.dropWindowBody
+.authWindowBody
 {
 	fontFamily: Interstate-Light, Helvetica, Arial, sans-serif;
 	fontSize: 14;
@@ -111,7 +111,7 @@ s|SkinnableComponent
 }
 .gridRow 
 {
-	borderSkin: ClassReference('com.dasflash.soundcloud.scup.view.skins.GridRowBorderSkin');
+	borderSkin: ClassReference('mx.skins.halo.HaloBorder');
 	dropShadowEnabled: false;
 	borderSides: top;
 	borderColor: #e9ebee;

@@ -6,10 +6,14 @@ package com.dasflash.soundcloud.scup.controller
 	import com.dasflash.soundcloud.as3api.events.SoundcloudAuthEvent;
 	import com.dasflash.soundcloud.as3api.events.SoundcloudEvent;
 	import com.dasflash.soundcloud.as3api.events.SoundcloudFaultEvent;
+	import com.dasflash.soundcloud.scup.controller.delegate.SetDelegate;
+	import com.dasflash.soundcloud.scup.controller.delegate.TrackDelegate;
+	import com.dasflash.soundcloud.scup.events.AddFilesEvent;
+	import com.dasflash.soundcloud.scup.events.AppEvent;
+	import com.dasflash.soundcloud.scup.events.AuthWindowEvent;
 	import com.dasflash.soundcloud.scup.events.CompleteAuthEvent;
-	import com.dasflash.soundcloud.scup.events.DropWindowEvent;
 	import com.dasflash.soundcloud.scup.events.MainWindowEvent;
-	import com.dasflash.soundcloud.scup.events.ScupEvent;
+	import com.dasflash.soundcloud.scup.events.ThrobberEvent;
 	import com.dasflash.soundcloud.scup.events.TrackListEvent;
 	import com.dasflash.soundcloud.scup.model.ScupConstants;
 	import com.dasflash.soundcloud.scup.model.SetData;
@@ -34,9 +38,15 @@ package com.dasflash.soundcloud.scup.controller
 
 //	import org.swizframework.storage.EncryptedLocalStorageBean;
 	
-	[Event(type="com.dasflash.soundcloud.scup.events.ScupEvent", name="showThrobber")]
-	[Event(type="com.dasflash.soundcloud.scup.events.ScupEvent", name="hideThrobber")]
-	[Event(type="com.dasflash.soundcloud.scup.events.ScupEvent", name="initApp")]
+	[Event(type="com.dasflash.soundcloud.scup.events.MainWindowEvent", name="openMainWindow")]
+	[Event(type="com.dasflash.soundcloud.scup.events.AuthWindowEvent", name="openAuthPage")]
+	[Event(type="com.dasflash.soundcloud.scup.events.AuthWindowEvent", name="openAuthFailPage")]
+	[Event(type="com.dasflash.soundcloud.scup.events.AuthWindowEvent", name="openUserInvalidPage")]
+	[Event(type="com.dasflash.soundcloud.scup.events.AuthWindowEvent", name="openNoConnectionPage")]
+	[Event(type="com.dasflash.soundcloud.scup.events.AuthWindowEvent", name="hideAuthWindow")]
+	[Event(type="com.dasflash.soundcloud.scup.events.ThrobberEvent", name="showThrobber")]
+	[Event(type="com.dasflash.soundcloud.scup.events.ThrobberEvent", name="hideThrobber")]
+	[Event(type="com.dasflash.soundcloud.scup.events.AppEvent", name="initApp")]
 
 	/**
 	 * Controls communication with the SoundCloud API using an instance
@@ -51,7 +61,7 @@ package com.dasflash.soundcloud.scup.controller
 		 
 		/**
 		 * IDispatcherAware implementation. Will be automatically set from Swiz.
-		 * Use this dispatcher instance to dispatch events Swiz should handle
+		 * Use this dispatcher instance to dispatch events Swiz should handle.
 		 *
 		 * @param dispatcher Swiz dispatcher.
 		 *
@@ -71,11 +81,6 @@ package com.dasflash.soundcloud.scup.controller
 		 */
 	 	[Inject]
 		public var setData:SetData;
-		/**
-		 *  Window controller bean
-		 */		
-		[Inject]
-		public var windowController:WindowController;
 		
 		/**
 		 *  EncryptedLocalStorageController bean
@@ -140,11 +145,13 @@ package com.dasflash.soundcloud.scup.controller
 			userData.profileURL = event.data["permalink-url"];
 			
 			// open drop window to start uploading files
-//			windowController.openDropWindow();
+//			windowController.openAuthWindow();
 			
 			setData.resetData();
 			
-			windowController.openMainWindow();
+			_dispatcher.dispatchEvent(new AuthWindowEvent(AuthWindowEvent.HIDE_AUTH_WINDOW));
+			
+			_dispatcher.dispatchEvent(new MainWindowEvent(MainWindowEvent.OPEN_MAIN_WINDOW));
 		}
 		
 		// if me request fails 
@@ -157,14 +164,14 @@ package com.dasflash.soundcloud.scup.controller
 				case 401:
 					
 					// open "invalid user" screen
-					windowController.openDropWindow("userInvalid");
+					_dispatcher.dispatchEvent(new AuthWindowEvent(AuthWindowEvent.OPEN_USER_INVALID_PAGE));
 					break;
 				
 				// else this is most likely a missing internet connection
 				default:
 					
 					// show message "can't access soundcloud"
-					windowController.openDropWindow("noConnection");
+					_dispatcher.dispatchEvent(new AuthWindowEvent(AuthWindowEvent.OPEN_NO_CONNECTION_PAGE));
 			}
 			
 			// remove listener for subsequent fault events this call may cause.
@@ -190,7 +197,7 @@ package com.dasflash.soundcloud.scup.controller
 		protected function requestTokenFaultHandler(event:SoundcloudFaultEvent):void
 		{
 			// re-init app
-			_dispatcher.dispatchEvent(new ScupEvent(ScupEvent.INIT_APP));
+			_dispatcher.dispatchEvent(new AppEvent(AppEvent.INIT_APP));
 		}
 		
 
@@ -199,7 +206,7 @@ package com.dasflash.soundcloud.scup.controller
 		
 		protected function requestTokenSuccessHandler(event:SoundcloudAuthEvent):void
 		{
-			windowController.openAuthenticationWindow();
+			_dispatcher.dispatchEvent(new AuthWindowEvent(AuthWindowEvent.OPEN_AUTH_PAGE));
 		}
 		
 		
@@ -207,7 +214,7 @@ package com.dasflash.soundcloud.scup.controller
 		// navigate to authentication page
 		
 		[Mediate(event="openAuthPage")]
-		public function openAuthPageHandler(event:DropWindowEvent):void
+		public function openAuthPageHandler(event:AuthWindowEvent):void
 		{
 			soundcloudClient.authorizeUser();
 		}
@@ -226,7 +233,7 @@ package com.dasflash.soundcloud.scup.controller
 		
 		protected function accessTokenFaultHandler(event:SoundcloudFaultEvent):void
 		{
-			windowController.openDropWindow("authFailPage");
+			_dispatcher.dispatchEvent(new AuthWindowEvent(AuthWindowEvent.OPEN_AUTH_FAIL_PAGE));
 		}
 		
 		
@@ -237,11 +244,11 @@ package com.dasflash.soundcloud.scup.controller
 		{
 			saveAccessToken(event.token);
 			
-//			windowController.openDropWindow("dropPage");
-			
 			setData.resetData();
 			
-			windowController.openMainWindow();
+			_dispatcher.dispatchEvent(new AuthWindowEvent(AuthWindowEvent.HIDE_AUTH_WINDOW));
+			
+			_dispatcher.dispatchEvent(new MainWindowEvent(MainWindowEvent.OPEN_MAIN_WINDOW));
 		}
 		
 		
@@ -310,11 +317,6 @@ package com.dasflash.soundcloud.scup.controller
 			uploadTracks();
 		}
 		
-		/*protected function trackUploadFaultHandler(event:SoundcloudFaultEvent):void
-		{
-			Alert.show("Upload failed. "+event.message);
-		}*/
-		
 		[Mediate(event="retryTrack")]
 		public function retryTrackHandler(event:TrackListEvent):void
 		{
@@ -332,6 +334,14 @@ package com.dasflash.soundcloud.scup.controller
 			// abort upload
 			if (track.isUploading) {
 				track.asset_data.cancel();
+				
+			// if track is already uploaded
+			} else if (track.id) {
+				
+				// delete track on server
+				var delegate:SoundcloudDelegate = soundcloudClient.sendRequest("tracks/"+track.id, URLRequestMethod.DELETE);
+				delegate.addEventListener(SoundcloudEvent.REQUEST_COMPLETE, onDeleteComplete);
+				delegate.addEventListener(SoundcloudFaultEvent.FAULT, onDeleteFault);
 			}
 			
 			//delete track from set
@@ -342,27 +352,18 @@ package com.dasflash.soundcloud.scup.controller
 			uploadTracks();
 		}
 		
-		// ADD TRACKS
-		[Mediate(event="browseFiles")]
-		public function browseFilesHandler(event:ScupEvent):void
+		private function onDeleteComplete(event:SoundcloudEvent):void
 		{
-			var file:File = new File();
-			
-			file.addEventListener(FileListEvent.SELECT_MULTIPLE, fileSelectHandler);
-			
-			// limit to .ogg, .mp3, .mp4 .flac, .aac, .wav(e) .aif(f) 
-			var soundFilesFilter:FileFilter = new FileFilter("Sound files", "*.ogg;*.mp3;*.mp4;*.flac;*.aac;*.wav;*.wave;*.aif;*.aiff");
-			
-			file.browseForOpenMultiple("Select Tracks", [soundFilesFilter]);
 		}
-			
-		protected function fileSelectHandler(event:FileListEvent):void
+		
+		private function onDeleteFault(event:SoundcloudFaultEvent):void
 		{
-			addTracks(event.files);
+			Alert.show("Sorry, the track couldn't be deleted from the server." +
+				"Please go to your SoundCloud account and try to delete it manually.");
 		}
 		
 		[Mediate(event="addFiles")]
-		public function addFilesHandler(event:MainWindowEvent):void
+		public function addFilesHandler(event:AddFilesEvent):void
 		{
 			if (setData.trackCollection.length == 0) {
 				//setData.resetData();
@@ -398,7 +399,7 @@ package com.dasflash.soundcloud.scup.controller
 		// SAVE SET
 		
 		[Mediate(event="saveSet")]
-		public function saveSetHandler(event:ScupEvent):void
+		public function saveSetHandler(event:AppEvent):void
 		{
 			if (!setData.title) {
 				
@@ -410,7 +411,7 @@ package com.dasflash.soundcloud.scup.controller
 				
 			} else {
 				
-				_dispatcher.dispatchEvent(new ScupEvent(ScupEvent.SHOW_THROBBER));
+				_dispatcher.dispatchEvent(new ThrobberEvent(ThrobberEvent.SHOW_THROBBER));
 				
 				saveSet();
 			}
@@ -443,7 +444,7 @@ package com.dasflash.soundcloud.scup.controller
 		{
 			Alert.show("Sorry, the set couldn't be saved. Please try again.");
 			
-			_dispatcher.dispatchEvent(new ScupEvent(ScupEvent.HIDE_THROBBER));
+			_dispatcher.dispatchEvent(new ThrobberEvent(ThrobberEvent.HIDE_THROBBER));
 		}
 		
 		protected function updateSet():void
@@ -465,7 +466,7 @@ package com.dasflash.soundcloud.scup.controller
 		{
 			Alert.show("Sorry, the set couldn't be saved. Please try again.");
 			
-			_dispatcher.dispatchEvent(new ScupEvent(ScupEvent.HIDE_THROBBER));
+			_dispatcher.dispatchEvent(new ThrobberEvent(ThrobberEvent.HIDE_THROBBER));
 		}
 		
 		protected function updateTracks():void
@@ -538,7 +539,7 @@ package com.dasflash.soundcloud.scup.controller
 			setData.resetData();
 			
 			// hide throbber
-			_dispatcher.dispatchEvent(new ScupEvent(ScupEvent.HIDE_THROBBER));
+			_dispatcher.dispatchEvent(new ThrobberEvent(ThrobberEvent.HIDE_THROBBER));
 		}
 		
 		protected function trackUpdateCompleteHandler(event:SoundcloudEvent):void
@@ -552,12 +553,12 @@ package com.dasflash.soundcloud.scup.controller
 			Alert.show("The set has been saved, but the settings for some tracks couldn't be updated. Please review the tracks online at "+
 			setData.permalink+". Sorry!");
 			
-			_dispatcher.dispatchEvent(new ScupEvent(ScupEvent.HIDE_THROBBER));
+			_dispatcher.dispatchEvent(new ThrobberEvent(ThrobberEvent.HIDE_THROBBER));
 		}
 		
 		// CANCEL SET
 		[Mediate(event="cancelSet")]
-		public function cancelSetHandler(event:ScupEvent):void
+		public function cancelSetHandler(event:AppEvent):void
 		{
 			Alert.show("If you continue, the already uploaded tracks will not be deleted but all the settings you just made will be lost.",
 				"", Alert.CANCEL|Alert.OK, null, cancelAlertCloseHandler);
@@ -590,20 +591,20 @@ package com.dasflash.soundcloud.scup.controller
 		
 		// SAVE SET COMPLETE
 		[Mediate(event="resetApp")]
-		public function resetAppHandler(event:DropWindowEvent):void
+		public function resetAppHandler(event:AuthWindowEvent):void
 		{
 			initAppHandler(event);
 		}
 		
 		// SWITCH USER 
 		[Mediate(event="switchUser")]
-		public function switchUser(event:DropWindowEvent):void
+		public function switchUser(event:AuthWindowEvent):void
 		{
 			// delete old credentials
 			deleteAccessToken();
 			
 			// re-init app
-			_dispatcher.dispatchEvent(new ScupEvent(ScupEvent.INIT_APP));
+			_dispatcher.dispatchEvent(new AppEvent(AppEvent.INIT_APP));
 		}
 		
 		

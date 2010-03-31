@@ -1,94 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:WindowedApplication
-	xmlns:fx="http://ns.adobe.com/mxml/2009"
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009"
 	xmlns:s="library://ns.adobe.com/flex/spark"
 	xmlns:mx="library://ns.adobe.com/flex/mx"
 	xmlns:view="com.dasflash.soundcloud.scup.view.*"
-	xmlns:ctrl="com.dasflash.soundcloud.scup.controller.*"
-	xmlns:model="com.dasflash.soundcloud.scup.model.*"
-	width="667"	height="493"
-	minWidth="667" minHeight="440"
+	xmlns:swiz="http://swiz.swizframework.org"
+	width="667"
+	height="493"
+	minWidth="667"
+	minHeight="440"
 	maxWidth="667"
 	showStatusBar="false"
 	styleName="mainWindow"
 	windowComplete="windowCompleteHandler(event)"
-	visible="false" xmlns:swiz="http://swiz.swizframework.org" 
-	>
-	
+	visible="false">
+
 	<fx:Metadata>
-	
-		[Event(type="com.dasflash.soundcloud.scup.events.ScupEvent", name="initApp")]
-		
+		[Event(type="com.dasflash.soundcloud.scup.events.AppEvent", name="initApp")]
+		[Event(type="com.dasflash.soundcloud.scup.events.AppEvent", name="checkForUpdate")]
 	</fx:Metadata>
-	
-	
+
+	<fx:Style source="Scup.css"/>
+
 	<fx:Script>
 		<![CDATA[
-			import air.update.ApplicationUpdaterUI;
-			
-			import com.dasflash.soundcloud.scup.events.ScupEvent;
-			import com.dasflash.soundcloud.scup.view.skins.DetailsPanelSkin;
-			
-			import flash.events.InvokeEvent;
-			
+			import com.dasflash.soundcloud.scup.events.AppEvent;
+
 			import mx.events.AIREvent;
-			import mx.events.FlexEvent;
 			import mx.logging.LogEventLevel;
-			
-			private var appUpdater:ApplicationUpdaterUI;
-			
+
+
 			/**
-			 * Start application
+			 * Initialize application
 			 */
 			protected function windowCompleteHandler(event:AIREvent):void
 			{
 				// check for update
 				// this event will be handled by UpdaterController
-				dispatchEvent(new ScupEvent(ScupEvent.CHECK_FOR_UPDATE));
-				
+				dispatchEvent(new AppEvent(AppEvent.CHECK_FOR_UPDATE));
+
 				// init app
 				// this event will be handled by SoundcloudAPIController
-				dispatchEvent(new ScupEvent(ScupEvent.INIT_APP));
+				dispatchEvent(new AppEvent(AppEvent.INIT_APP));
 			}
-
 		]]>
 	</fx:Script>
-	
-	<fx:Style source="Scup.css"/>
-	
+
 	<fx:Declarations>
-		
+
 		<!-- Swiz Framework Configuration -->
-		<swiz:Swiz config="{swizConfig}" beanProviders="{[Beans]}">
-			
+		<swiz:Swiz config="{swizConfig}"
+			beanProviders="{[Beans]}">
+
 			<swiz:loggingTargets>
-				<s:TraceTarget fieldSeparator=" | " includeLevel="true" includeCategory="true" level="{ LogEventLevel.WARN }" />
+				<s:TraceTarget fieldSeparator=" | "
+					includeLevel="true"
+					includeCategory="true"
+					level="{ LogEventLevel.WARN }"/>
 			</swiz:loggingTargets>
-			
+
 		</swiz:Swiz>
-		
+
 		<swiz:SwizConfig id="swizConfig"
 			strict="true"
 			eventPackages="com.dasflash.soundcloud.scup.events"
-			viewPackages="com.dasflash.soundcloud.scup.view"
-		/>
-		
-	</fx:Declarations>
-	
-	<s:layout>
-		<s:VerticalLayout gap="0"/>
-	</s:layout>
-	
-	<view:DetailsPanel id="detailsPanel" width="100%" skinClass="com.dasflash.soundcloud.scup.view.skins.DetailsPanelSkin"
-		currentStateChange="if(detailsPanel.currentState=='expanded')sharingPanel.currentState='collapsed'"/>
-	
-	<view:TrackList width="100%" height="100%" />
-		
-	<view:SharingPanel id="sharingPanel" width="100%" skinClass="com.dasflash.soundcloud.scup.view.skins.SharingPanelSkin"
-		currentStateChange="if(sharingPanel.currentState=='expanded')detailsPanel.currentState='collapsed'"/>
-	
-	<view:StatusBar width="100%" skinClass="com.dasflash.soundcloud.scup.view.skins.StatusBarSkin"/>
+			viewPackages="com.dasflash.soundcloud.scup.view"/>
 
+	</fx:Declarations>
+
+	<view:MainView width="100%"
+		height="100%"/>
 
 </s:WindowedApplication>
-
