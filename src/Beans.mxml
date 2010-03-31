@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<swiz:BeanProvider xmlns:swiz="http://swiz.swizframework.org"
+				   xmlns:fx="http://ns.adobe.com/mxml/2009"
+				   xmlns:s="library://ns.adobe.com/flex/spark"
+				   xmlns:mx="library://ns.adobe.com/flex/mx"
+				   xmlns:model="com.dasflash.soundcloud.scup.model.*"
+				   xmlns:ctrl="com.dasflash.soundcloud.scup.controller.*">
+	
+	<model:SetData id="setData" />
+	
+	<model:UserData id="userData"/>
+	
+	<ctrl:SoundcloudAPIController/>
+	
+	<ctrl:MainWindowController/>
+	
+	<ctrl:AuthWindowController/>
+	
+	<ctrl:UpdaterController/>
+	
+	<ctrl:ThrobberController/>
+	
+	<ctrl:EncryptedLocalStorageController/>
+	
+</swiz:BeanProvider>
