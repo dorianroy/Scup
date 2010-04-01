@@ -10,7 +10,7 @@ package com.dasflash.soundcloud.scup.events
 
 		public static const CHECK_FOR_UPDATE:String = "checkForUpdate";
 
-		public static const SWITCH_USER:String = "switchUser";
+		public static const LOGOUT:String = "logout";
 
 
 		public function AppEvent(type:String, bubbles:Boolean=true, cancelable:Boolean=false)

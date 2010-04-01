@@ -8,13 +8,7 @@ package com.dasflash.soundcloud.scup.controller
 	import com.dasflash.soundcloud.as3api.events.SoundcloudFaultEvent;
 	import com.dasflash.soundcloud.scup.controller.delegate.SetDelegate;
 	import com.dasflash.soundcloud.scup.controller.delegate.TrackDelegate;
-	import com.dasflash.soundcloud.scup.events.AddFilesEvent;
-	import com.dasflash.soundcloud.scup.events.AppEvent;
-	import com.dasflash.soundcloud.scup.events.AuthWindowEvent;
-	import com.dasflash.soundcloud.scup.events.CompleteAuthEvent;
-	import com.dasflash.soundcloud.scup.events.MainWindowEvent;
-	import com.dasflash.soundcloud.scup.events.ThrobberEvent;
-	import com.dasflash.soundcloud.scup.events.TrackListEvent;
+	import com.dasflash.soundcloud.scup.events.*;
 	import com.dasflash.soundcloud.scup.model.ScupConstants;
 	import com.dasflash.soundcloud.scup.model.SetData;
 	import com.dasflash.soundcloud.scup.model.TrackData;
@@ -50,7 +44,9 @@ package com.dasflash.soundcloud.scup.controller
 
 	/**
 	 * Controls communication with the SoundCloud API using an instance
-	 * of the SoundcloudClient API wrapper class
+	 * of the SoundcloudClient API wrapper class. This class handles 
+	 * OAuth authentication as well as uploading tracks and artwork 
+	 * and saving meta data.
 	 * 
 	 * @author Dorian Roy
 	 * http://dasflash.com
@@ -144,17 +140,11 @@ package com.dasflash.soundcloud.scup.controller
 			userData.userName = event.data["username"];
 			userData.profileURL = event.data["permalink-url"];
 			
-			// open drop window to start uploading files
-//			windowController.openAuthWindow();
-			
-			setData.resetData();
-			
-			_dispatcher.dispatchEvent(new AuthWindowEvent(AuthWindowEvent.HIDE_AUTH_WINDOW));
-			
-			_dispatcher.dispatchEvent(new MainWindowEvent(MainWindowEvent.OPEN_MAIN_WINDOW));
+			// show to main window
+			showMainView();
 		}
 		
-		// if me request fails 
+		// if me request failed
 		protected function getMeFaultHandler(event:SoundcloudFaultEvent):void
 		{
 			// look at the cause of this fault
@@ -167,7 +157,7 @@ package com.dasflash.soundcloud.scup.controller
 					_dispatcher.dispatchEvent(new AuthWindowEvent(AuthWindowEvent.OPEN_USER_INVALID_PAGE));
 					break;
 				
-				// else this is most likely a missing internet connection
+				// else this is most likely missing internet connection
 				default:
 					
 					// show message "can't access soundcloud"
@@ -180,18 +170,19 @@ package com.dasflash.soundcloud.scup.controller
 			SoundcloudDelegate(event.target).removeEventListener(SoundcloudFaultEvent.FAULT, getMeFaultHandler);
 		}
 		
+		
 		// AUTHENTICATION STEP 2
 		// get request token
 		
 		protected function getRequestToken():void
 		{
-			soundcloudClient.addEventListener(SoundcloudAuthEvent.REQUEST_TOKEN, requestTokenSuccessHandler);
-			soundcloudClient.addEventListener(SoundcloudFaultEvent.REQUEST_TOKEN_FAULT, requestTokenFaultHandler);
+			soundcloudClient.addEventListener(SoundcloudAuthEvent.REQUEST_TOKEN, requestTokenSuccessHandler, false, 0, true);
+			soundcloudClient.addEventListener(SoundcloudFaultEvent.REQUEST_TOKEN_FAULT, requestTokenFaultHandler, false, 0, true);
 			soundcloudClient.getRequestToken();
 		}
 		
 		/**
-		 *  This is bad. Can only reset app in this case.
+		 * Couldn't retrieve a request token. This is bad. App will be resetted.
 		 * @private
 		 */
 		protected function requestTokenFaultHandler(event:SoundcloudFaultEvent):void
@@ -206,6 +197,7 @@ package com.dasflash.soundcloud.scup.controller
 		
 		protected function requestTokenSuccessHandler(event:SoundcloudAuthEvent):void
 		{
+			// open auth window
 			_dispatcher.dispatchEvent(new AuthWindowEvent(AuthWindowEvent.OPEN_AUTH_PAGE));
 		}
 		
@@ -216,6 +208,7 @@ package com.dasflash.soundcloud.scup.controller
 		[Mediate(event="openAuthPage")]
 		public function openAuthPageHandler(event:AuthWindowEvent):void
 		{
+			// open login page in browser
 			soundcloudClient.authorizeUser();
 		}
 		
@@ -226,13 +219,15 @@ package com.dasflash.soundcloud.scup.controller
 		[Mediate(event="completeAuth")]
 		public function completeAuthHandler(event:CompleteAuthEvent):void
 		{
-			soundcloudClient.addEventListener(SoundcloudAuthEvent.ACCESS_TOKEN, accessTokenSuccessHandler);
-			soundcloudClient.addEventListener(SoundcloudFaultEvent.ACCESS_TOKEN_FAULT, accessTokenFaultHandler);
+			// request access token and pass verification code
+			soundcloudClient.addEventListener(SoundcloudAuthEvent.ACCESS_TOKEN, accessTokenSuccessHandler, false, 0, true);
+			soundcloudClient.addEventListener(SoundcloudFaultEvent.ACCESS_TOKEN_FAULT, accessTokenFaultHandler, false, 0, true);
 			soundcloudClient.getAccessToken(event.verificationCode);
 		}
 		
 		protected function accessTokenFaultHandler(event:SoundcloudFaultEvent):void
 		{
+			// show error message
 			_dispatcher.dispatchEvent(new AuthWindowEvent(AuthWindowEvent.OPEN_AUTH_FAIL_PAGE));
 		}
 		
@@ -242,12 +237,24 @@ package com.dasflash.soundcloud.scup.controller
 		
 		protected function accessTokenSuccessHandler(event:SoundcloudAuthEvent):void
 		{
+			// save token locally
 			saveAccessToken(event.token);
 			
+			// proceed to main view
+			showMainView();
+		}
+		
+		
+		// SHOW MAIN VIEW
+		protected function showMainView():void
+		{
+			// set setdata to default values
 			setData.resetData();
 			
+			// hide auth window
 			_dispatcher.dispatchEvent(new AuthWindowEvent(AuthWindowEvent.HIDE_AUTH_WINDOW));
 			
+			// show main window
 			_dispatcher.dispatchEvent(new MainWindowEvent(MainWindowEvent.OPEN_MAIN_WINDOW));
 		}
 		
@@ -255,9 +262,11 @@ package com.dasflash.soundcloud.scup.controller
 		// UPLOAD TRACKS
 		
 		/**
-		 * Cycle through queued tracks and start the next upload(s)
+		 * Cycle through queued tracks and start the next upload(s).
+		 * The queue is capable of uploading multiple tracks simultaneously,
+		 * though the number of concurrent uploads is set to 1 by default.
 		 */
-		public function uploadTracks():void
+		public function processTrackQueue():void
 		{
 			// get list of tracks
 			var tracks:IList = setData.trackCollection;
@@ -314,7 +323,7 @@ package com.dasflash.soundcloud.scup.controller
 		protected function trackUploadCompleteHandler(event:SoundcloudEvent):void
 		{
 			// continue with the next uploads
-			uploadTracks();
+			processTrackQueue();
 		}
 		
 		[Mediate(event="retryTrack")]
@@ -323,42 +332,49 @@ package com.dasflash.soundcloud.scup.controller
 			// restart queue
 			event.trackData.uploadComplete = false;
 			
-			uploadTracks();
+			processTrackQueue();
 		}
 		
 		[Mediate(event="deleteTrack")]
 		public function deleteTrackHandler(event:TrackListEvent):void
 		{
-			var track:TrackData = event.trackData;
+			removeTrackFromList(event.trackData);
+		}
+		
+		protected function removeTrackFromList(track:TrackData):void
+		{
+			// delete track on server
+			deleteTrackOnServer(track);
 			
+			//delete track from setdata
+			var tracks:IList = setData.trackCollection;
+			tracks.removeItemAt(tracks.getItemIndex(track));
+			
+			// continue with the next upload if any is queued
+			processTrackQueue();
+		}
+		
+		protected function deleteTrackOnServer(track:TrackData):void
+		{
 			// abort upload
 			if (track.isUploading) {
 				track.asset_data.cancel();
 				
-			// if track is already uploaded
+				// if track is already uploaded
 			} else if (track.id) {
 				
 				// delete track on server
-				var delegate:SoundcloudDelegate = soundcloudClient.sendRequest("tracks/"+track.id, URLRequestMethod.DELETE);
-				delegate.addEventListener(SoundcloudEvent.REQUEST_COMPLETE, onDeleteComplete);
-				delegate.addEventListener(SoundcloudFaultEvent.FAULT, onDeleteFault);
+				var trackDelegate:TrackDelegate = new TrackDelegate(soundcloudClient, track);
+				trackDelegate.addEventListener(SoundcloudFaultEvent.FAULT, onDeleteFault);
+				trackDelegate.deleteTrack();
 			}
-			
-			//delete track from set
-			var tracks:IList = setData.trackCollection;
-			tracks.removeItemAt(tracks.getItemIndex(event.trackData));
-			
-			// continue with the next uploads
-			uploadTracks();
-		}
-		
-		private function onDeleteComplete(event:SoundcloudEvent):void
-		{
 		}
 		
 		private function onDeleteFault(event:SoundcloudFaultEvent):void
 		{
-			Alert.show("Sorry, the track couldn't be deleted from the server." +
+			var trackTitle:String = TrackDelegate(event.target).trackData.title;
+			
+			Alert.show("Sorry, the track \""+trackTitle+"\" couldn't be deleted from the server." +
 				"Please go to your SoundCloud account and try to delete it manually.");
 		}
 		
@@ -393,13 +409,13 @@ package com.dasflash.soundcloud.scup.controller
 			}
 			
 			// process queue
-			uploadTracks();
+			processTrackQueue();
 		}
 		
 		// SAVE SET
 		
 		[Mediate(event="saveSet")]
-		public function saveSetHandler(event:AppEvent):void
+		public function saveSetHandler(event:SetEvent):void
 		{
 			if (!setData.title) {
 				
@@ -418,14 +434,14 @@ package com.dasflash.soundcloud.scup.controller
 		}
 		
 		/**
-		 * creates or modifies a playlist resource on the server
-		 * (sets are called "playlist" in the SC API spec)
+		 * Creates or modifies a playlist resource on the server
+		 * (sets are called "playlist" in the SC API spec).
 		 */
 		public function saveSet():void
 		{
 			// create a delegate object to handle the upload request
 			// I could have executed the upload without this additional class,
-			// but the delegate can hold state of the upload process and that makes
+			// but the delegate can hold state of the upload process which makes
 			// it easier to save the returned set id in the SetData				
 			var setDelegate:SetDelegate = new SetDelegate(soundcloudClient, setData);
 			setDelegate.addEventListener(SoundcloudEvent.REQUEST_COMPLETE, saveSetCompleteHandler);
@@ -435,8 +451,6 @@ package com.dasflash.soundcloud.scup.controller
 		
 		protected function saveSetCompleteHandler(event:SoundcloudEvent):void
 		{
-			trace("save set complete");
-			
 			updateSet();
 		}
 		
@@ -457,8 +471,6 @@ package com.dasflash.soundcloud.scup.controller
 		
 		protected function updateSetCompleteHandler(event:SoundcloudEvent):void
 		{
-			trace("update set complete");
-			
 			updateTracks();
 		}
 		
@@ -550,17 +562,19 @@ package com.dasflash.soundcloud.scup.controller
 		
 		protected function trackUpdateFaultHandler(event:SoundcloudFaultEvent):void
 		{
-			Alert.show("The set has been saved, but the settings for some tracks couldn't be updated. Please review the tracks online at "+
-			setData.permalink+". Sorry!");
+			Alert.show("The set has been saved, but the settings for some tracks " +
+				"couldn't be updated. Please review the tracks online at "+
+				setData.permalink);
 			
 			_dispatcher.dispatchEvent(new ThrobberEvent(ThrobberEvent.HIDE_THROBBER));
 		}
 		
 		// CANCEL SET
 		[Mediate(event="cancelSet")]
-		public function cancelSetHandler(event:AppEvent):void
+		public function cancelSetHandler(event:SetEvent):void
 		{
-			Alert.show("If you continue, the already uploaded tracks will not be deleted but all the settings you just made will be lost.",
+			Alert.show("If you continue all uploaded tracks will be deleted from " +
+				"the server and all data you've entered will be lost.",
 				"", Alert.CANCEL|Alert.OK, null, cancelAlertCloseHandler);
 		}
 		
@@ -570,21 +584,17 @@ package com.dasflash.soundcloud.scup.controller
 				
 				case Alert.OK:
 					cancelSet();
-					break;
 			}
 		}
 		
 		public function cancelSet():void
 		{
-			// cancel all running uploads
+			// delete all tracks
 			for each (var track:TrackData in setData.trackCollection) {
-				
-				if (track.isUploading) {
-					track.asset_data.cancel();
-				}
+				deleteTrackOnServer(track);
 			}
 			
-			// clear data
+			// clear setdata
 			setData.resetData();
 		}
 		
@@ -597,8 +607,8 @@ package com.dasflash.soundcloud.scup.controller
 		}
 		
 		// SWITCH USER 
-		[Mediate(event="switchUser")]
-		public function switchUser(event:AuthWindowEvent):void
+		[Mediate(event="logout")]
+		public function logout(event:AuthWindowEvent):void
 		{
 			// delete old credentials
 			deleteAccessToken();

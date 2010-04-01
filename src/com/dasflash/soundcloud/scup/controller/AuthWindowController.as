@@ -69,7 +69,7 @@ package com.dasflash.soundcloud.scup.controller
 				redirectEvent(authWindow, MainWindowEvent.OPEN_MAIN_WINDOW);
 				redirectEvent(authWindow, AuthWindowEvent.OPEN_AUTH_PAGE);
 				redirectEvent(authWindow, AppEvent.RESET_APP);
-				redirectEvent(authWindow, AppEvent.SWITCH_USER);
+				redirectEvent(authWindow, AppEvent.LOGOUT);
 				redirectEvent(authWindow, CompleteAuthEvent.COMPLETE_AUTH);
 				
 				// add a listener to exit the app when closing the drop window

@@ -13,7 +13,7 @@
 		[Event(type="com.dasflash.soundcloud.scup.events.AuthWindowEvent", name="openAuthPage")]
 		[Event(type="com.dasflash.soundcloud.scup.events.CompleteAuthEvent", name="completeAuth")]
 		[Event(type="com.dasflash.soundcloud.scup.events.AppEvent", name="resetApp")]
-		[Event(type="com.dasflash.soundcloud.scup.events.AppEvent", name="switchUser")]
+		[Event(type="com.dasflash.soundcloud.scup.events.AppEvent", name="logout")]
 		
 	</fx:Metadata>
 
@@ -94,7 +94,7 @@
 		</s:Button>
 
 		<s:Button includeIn="userInvalid"
-			click="dispatchEvent(new AppEvent(AppEvent.SWITCH_USER))">
+			click="dispatchEvent(new AppEvent(AppEvent.LOGOUT))">
 			<s:label>Authenticate again</s:label>
 		</s:Button>
 
