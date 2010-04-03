@@ -67,7 +67,8 @@ package com.dasflash.soundcloud.scup.controller
 				// redirect events from window to Swiz framework
 				
 				redirectEvent(authWindow, MainWindowEvent.OPEN_MAIN_WINDOW);
-				redirectEvent(authWindow, AuthWindowEvent.OPEN_AUTH_PAGE);
+				redirectEvent(authWindow, AuthWindowEvent.STATE_AUTH);
+				redirectEvent(authWindow, AuthWindowEvent.GOTO_AUTH_PAGE);
 				redirectEvent(authWindow, AppEvent.RESET_APP);
 				redirectEvent(authWindow, AppEvent.LOGOUT);
 				redirectEvent(authWindow, CompleteAuthEvent.COMPLETE_AUTH);
@@ -82,39 +83,16 @@ package com.dasflash.soundcloud.scup.controller
 		}
 		
 		/**
-		 *  Shortcut method for opening the drop window in authentication state
+		 * Shortcut method for opening the drop window in a state
+		 * according to the event type
 		 */
-		[Mediate(event="openAuthPage")]
+		[Mediate(event="stateAuth")]
+		[Mediate(event="stateAuthFail")]
+		[Mediate(event="stateNoConnection")]
+		[Mediate(event="stateUserInvalid")]
 		public function openAuthenticationWindow(event:AuthWindowEvent):void
 		{
-			openAuthWindow("authStartPage");
-		}
-		
-		/**
-		 *  Shortcut method for opening the drop window in authFailPage state
-		 */
-		[Mediate(event="openAuthFailPage")]
-		public function openAuthFailPage(event:AuthWindowEvent):void
-		{
-			openAuthWindow("authFailPage");
-		}
-		
-		/**
-		 *  Shortcut method for opening the drop window in noConnection state
-		 */
-		[Mediate(event="openNoConnectionPage")]
-		public function openNoConnectionPage(event:AuthWindowEvent):void
-		{
-			openAuthWindow("noConnection");
-		}
-		
-		/**
-		 *  Shortcut method for opening the drop window in userInvalid state
-		 */
-		[Mediate(event="openUserInvalidPage")]
-		public function openUserInvalidPage(event:AuthWindowEvent):void
-		{
-			openAuthWindow("userInvalid");
+			openAuthWindow(event.type);
 		}
 		
 		/**

@@ -6,15 +6,17 @@ package com.dasflash.soundcloud.scup.events
 	public class AuthWindowEvent extends Event
 	{
 
-		public static const OPEN_AUTH_PAGE:String = "openAuthPage";
+		public static const STATE_AUTH:String = "stateAuth";
 
-		public static const OPEN_AUTH_FAIL_PAGE:String = "openAuthFailPage";
+		public static const STATE_AUTH_FAIL:String = "stateAuthFail";
 
-		public static const OPEN_USER_INVALID_PAGE:String = "openUserInvalidPage";
+		public static const STATE_USER_INVALID:String = "stateUserInvalid";
 
-		public static const OPEN_NO_CONNECTION_PAGE:String = "openNoConnectionPage";
+		public static const STATE_NO_CONNECTION:String = "stateNoConnection";
 
 		public static const HIDE_AUTH_WINDOW:String = "hideAuthWindow";
+
+		public static const GOTO_AUTH_PAGE:String = "gotoAuthPage";
 
 
 

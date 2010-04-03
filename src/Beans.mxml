@@ -20,6 +20,6 @@
 	
 	<ctrl:ThrobberController/>
 	
-	<ctrl:EncryptedLocalStorageController/>
+	<model:UserSettings/>
 	
 </swiz:BeanProvider>

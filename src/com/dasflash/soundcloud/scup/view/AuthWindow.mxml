@@ -10,7 +10,7 @@
 
 	<fx:Metadata>
 	
-		[Event(type="com.dasflash.soundcloud.scup.events.AuthWindowEvent", name="openAuthPage")]
+		[Event(type="com.dasflash.soundcloud.scup.events.AuthWindowEvent", name="gotoAuthPage")]
 		[Event(type="com.dasflash.soundcloud.scup.events.CompleteAuthEvent", name="completeAuth")]
 		[Event(type="com.dasflash.soundcloud.scup.events.AppEvent", name="resetApp")]
 		[Event(type="com.dasflash.soundcloud.scup.events.AppEvent", name="logout")]
@@ -31,16 +31,22 @@
 
 			[Bindable]
 			public var setURL:String;
+
+			protected function gotoAuthPageClickHandler(event:MouseEvent):void
+			{
+				dispatchEvent(new AuthWindowEvent(AuthWindowEvent.GOTO_AUTH_PAGE));
+				currentState = 'stateAuthComplete';
+			}
 		]]>
 
 	</fx:Script>
 
 	<s:states>
-		<s:State name="authStartPage"/>
-		<s:State name="authCompletePage"/>
-		<s:State name="authFailPage"/>
-		<s:State name="userInvalid"/>
-		<s:State name="noConnection"/>
+		<s:State name="stateAuth"/>
+		<s:State name="stateAuthComplete"/>
+		<s:State name="stateAuthFail"/>
+		<s:State name="stateUserInvalid"/>
+		<s:State name="stateNoConnection"/>
 	</s:states>
 
 	<mx:Image source="@Embed('assets/authwindow_bg.png')"
@@ -53,11 +59,11 @@
 		gap="0">
 
 		<s:RichText styleName="authWindowHead">
-			<s:content.authStartPage>Connect with SoundCloud</s:content.authStartPage>
-			<s:content.authCompletePage>Enter the code</s:content.authCompletePage>
-			<s:content.authFailPage>Wrong code</s:content.authFailPage>
-			<s:content.userInvalid>Couldn't authenticate</s:content.userInvalid>
-			<s:content.noConnection>Couldn't access SoundCloud</s:content.noConnection>
+			<s:content.stateAuth>Connect with SoundCloud</s:content.stateAuth>
+			<s:content.stateAuthComplete>Enter the code</s:content.stateAuthComplete>
+			<s:content.stateAuthFail>Wrong code</s:content.stateAuthFail>
+			<s:content.stateUserInvalid>Couldn't authenticate</s:content.stateUserInvalid>
+			<s:content.stateNoConnection>Couldn't access SoundCloud</s:content.stateNoConnection>
 		</s:RichText>
 
 		<s:RichEditableText id="sublineText"
@@ -66,16 +72,16 @@
 			width="100%"
 			editable="false"
 			selectable="false">
-			<s:content.authStartPage>Click the button below to open the authentication page in your browser</s:content.authStartPage>
-			<s:content.authCompletePage>you see on the authentication page</s:content.authCompletePage>
-			<s:content.authFailPage>please try again</s:content.authFailPage>
-			<s:content.userInvalid>Your user account data seems to be invalid</s:content.userInvalid>
-			<s:content.noConnection>Please check your internet connection</s:content.noConnection>
+			<s:content.stateAuth>Click the button below to open the authentication page in your browser</s:content.stateAuth>
+			<s:content.stateAuthComplete>you see on the authentication page</s:content.stateAuthComplete>
+			<s:content.stateAuthFail>please try again</s:content.stateAuthFail>
+			<s:content.stateUserInvalid>Your user account data seems to be invalid</s:content.stateUserInvalid>
+			<s:content.stateNoConnection>Please check your internet connection</s:content.stateNoConnection>
 		</s:RichEditableText>
 
 		<s:Group>
 			<s:TextInput id="codeTextInput"
-				includeIn="authCompletePage, authFailPage"
+				includeIn="stateAuthComplete, stateAuthFail"
 				styleName="codeTextInput"
 				width="50"
 				height="20"
@@ -83,22 +89,22 @@
 				bottom="4"/>
 		</s:Group>
 
-		<s:Button includeIn="authStartPage"
-			click="dispatchEvent(new AuthWindowEvent(AuthWindowEvent.OPEN_AUTH_PAGE));currentState='authCompletePage'">
+		<s:Button includeIn="stateAuth"
+			click="gotoAuthPageClickHandler(event)">
 			<s:label>Yes please, move ahead</s:label>
 		</s:Button>
 
-		<s:Button includeIn="authCompletePage, authFailPage"
+		<s:Button includeIn="stateAuthComplete, stateAuthFail"
 			click="dispatchEvent(new CompleteAuthEvent(CompleteAuthEvent.COMPLETE_AUTH, codeTextInput.text));">
 			<s:label>Complete Authentication</s:label>
 		</s:Button>
 
-		<s:Button includeIn="userInvalid"
+		<s:Button includeIn="stateUserInvalid"
 			click="dispatchEvent(new AppEvent(AppEvent.LOGOUT))">
 			<s:label>Authenticate again</s:label>
 		</s:Button>
 
-		<s:Button includeIn="noConnection"
+		<s:Button includeIn="stateNoConnection"
 			click="dispatchEvent(new AppEvent(AppEvent.RESET_APP))">
 			<s:label>Try again</s:label>
 		</s:Button>

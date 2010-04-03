@@ -13,6 +13,7 @@ package com.dasflash.soundcloud.scup.controller
 	import com.dasflash.soundcloud.scup.model.SetData;
 	import com.dasflash.soundcloud.scup.model.TrackData;
 	import com.dasflash.soundcloud.scup.model.UserData;
+	import com.dasflash.soundcloud.scup.model.UserSettings;
 	
 	import flash.events.Event;
 	import flash.events.FileListEvent;
@@ -33,11 +34,12 @@ package com.dasflash.soundcloud.scup.controller
 //	import org.swizframework.storage.EncryptedLocalStorageBean;
 	
 	[Event(type="com.dasflash.soundcloud.scup.events.MainWindowEvent", name="openMainWindow")]
-	[Event(type="com.dasflash.soundcloud.scup.events.AuthWindowEvent", name="openAuthPage")]
-	[Event(type="com.dasflash.soundcloud.scup.events.AuthWindowEvent", name="openAuthFailPage")]
-	[Event(type="com.dasflash.soundcloud.scup.events.AuthWindowEvent", name="openUserInvalidPage")]
-	[Event(type="com.dasflash.soundcloud.scup.events.AuthWindowEvent", name="openNoConnectionPage")]
+	[Event(type="com.dasflash.soundcloud.scup.events.AuthWindowEvent", name="stateAuth")]
+	[Event(type="com.dasflash.soundcloud.scup.events.AuthWindowEvent", name="stateAuthFail")]
+	[Event(type="com.dasflash.soundcloud.scup.events.AuthWindowEvent", name="stateUserInvalid")]
+	[Event(type="com.dasflash.soundcloud.scup.events.AuthWindowEvent", name="stateNoConnection")]
 	[Event(type="com.dasflash.soundcloud.scup.events.AuthWindowEvent", name="hideAuthWindow")]
+	[Event(type="com.dasflash.soundcloud.scup.events.AuthWindowEvent", name="gotoAuthPage")]
 	[Event(type="com.dasflash.soundcloud.scup.events.ThrobberEvent", name="showThrobber")]
 	[Event(type="com.dasflash.soundcloud.scup.events.ThrobberEvent", name="hideThrobber")]
 	[Event(type="com.dasflash.soundcloud.scup.events.AppEvent", name="initApp")]
@@ -60,7 +62,6 @@ package com.dasflash.soundcloud.scup.controller
 		 * Use this dispatcher instance to dispatch events Swiz should handle.
 		 *
 		 * @param dispatcher Swiz dispatcher.
-		 *
 		 */
 		public function set dispatcher(dispatcher:IEventDispatcher):void
 		{
@@ -68,21 +69,22 @@ package com.dasflash.soundcloud.scup.controller
 		}
 		
 		/**
-		 * User data bean
+		 * UserSettings Bean
+		 */
+		[Inject]
+		public var userSettings:UserSettings;
+		
+		/**
+		 * UserData bean
 		 */
 	 	[Inject]
 		public var userData:UserData;
+		
 		/**
-		 * Set data bean
+		 * SetData bean
 		 */
 	 	[Inject]
 		public var setData:SetData;
-		
-		/**
-		 *  EncryptedLocalStorageController bean
-		 */		
-		[Inject]
-		public var localStorage:EncryptedLocalStorageController;
 		
 		/**
 		 * Instance of Soundcloud API wrapper
@@ -93,13 +95,14 @@ package com.dasflash.soundcloud.scup.controller
 		// AUTHENTICATION STEP 1
 		// check for a previously saved access token
 		
+		[Mediate(event="resetApp")]
 		[Mediate(event="initApp")]
 		public function initAppHandler(event:Event):void
 		{
-//			deleteAccessToken();// TODO temp
+//			userSettings.accessToken = null;// TODO temp
 
 			// look for saved token
-			var savedToken:OAuthToken = getAccessToken();
+			var savedToken:OAuthToken = userSettings.accessToken;
 			
 			// if soundcloud api consumer doesn't already exist
 			if (!soundcloudClient) {
@@ -154,14 +157,14 @@ package com.dasflash.soundcloud.scup.controller
 				case 401:
 					
 					// open "invalid user" screen
-					_dispatcher.dispatchEvent(new AuthWindowEvent(AuthWindowEvent.OPEN_USER_INVALID_PAGE));
+					_dispatcher.dispatchEvent(new AuthWindowEvent(AuthWindowEvent.STATE_USER_INVALID));
 					break;
 				
 				// else this is most likely missing internet connection
 				default:
 					
 					// show message "can't access soundcloud"
-					_dispatcher.dispatchEvent(new AuthWindowEvent(AuthWindowEvent.OPEN_NO_CONNECTION_PAGE));
+					_dispatcher.dispatchEvent(new AuthWindowEvent(AuthWindowEvent.STATE_NO_CONNECTION));
 			}
 			
 			// remove listener for subsequent fault events this call may cause.
@@ -198,15 +201,15 @@ package com.dasflash.soundcloud.scup.controller
 		protected function requestTokenSuccessHandler(event:SoundcloudAuthEvent):void
 		{
 			// open auth window
-			_dispatcher.dispatchEvent(new AuthWindowEvent(AuthWindowEvent.OPEN_AUTH_PAGE));
+			_dispatcher.dispatchEvent(new AuthWindowEvent(AuthWindowEvent.STATE_AUTH));
 		}
 		
 		
 		// AUTHENTICATION STEP 4
 		// navigate to authentication page
 		
-		[Mediate(event="openAuthPage")]
-		public function openAuthPageHandler(event:AuthWindowEvent):void
+		[Mediate(event="gotoAuthPage")]
+		public function stateAuthHandler(event:AuthWindowEvent):void
 		{
 			// open login page in browser
 			soundcloudClient.authorizeUser();
@@ -228,7 +231,7 @@ package com.dasflash.soundcloud.scup.controller
 		protected function accessTokenFaultHandler(event:SoundcloudFaultEvent):void
 		{
 			// show error message
-			_dispatcher.dispatchEvent(new AuthWindowEvent(AuthWindowEvent.OPEN_AUTH_FAIL_PAGE));
+			_dispatcher.dispatchEvent(new AuthWindowEvent(AuthWindowEvent.STATE_AUTH_FAIL));
 		}
 		
 		
@@ -238,7 +241,7 @@ package com.dasflash.soundcloud.scup.controller
 		protected function accessTokenSuccessHandler(event:SoundcloudAuthEvent):void
 		{
 			// save token locally
-			saveAccessToken(event.token);
+			userSettings.accessToken = event.token;
 			
 			// proceed to main view
 			showMainView();
@@ -335,6 +338,9 @@ package com.dasflash.soundcloud.scup.controller
 			processTrackQueue();
 		}
 		
+		
+		// DELETE TRACKS
+		
 		[Mediate(event="deleteTrack")]
 		public function deleteTrackHandler(event:TrackListEvent):void
 		{
@@ -378,6 +384,9 @@ package com.dasflash.soundcloud.scup.controller
 				"Please go to your SoundCloud account and try to delete it manually.");
 		}
 		
+		
+		// ADD TRACKS
+		
 		[Mediate(event="addFiles")]
 		public function addFilesHandler(event:AddFilesEvent):void
 		{
@@ -411,6 +420,7 @@ package com.dasflash.soundcloud.scup.controller
 			// process queue
 			processTrackQueue();
 		}
+		
 		
 		// SAVE SET
 		
@@ -460,6 +470,9 @@ package com.dasflash.soundcloud.scup.controller
 			
 			_dispatcher.dispatchEvent(new ThrobberEvent(ThrobberEvent.HIDE_THROBBER));
 		}
+		
+		
+		// UPDATE DATA
 		
 		protected function updateSet():void
 		{
@@ -531,7 +544,7 @@ package com.dasflash.soundcloud.scup.controller
 				}
 			}
 			
-			// when the save set sequnce has finished
+			// when the save set sequence has finished
 			if (allUploadsCompleted) {
 				
 				var alertText:String = "Your set has been saved. Do you want to view it in the browser now?";
@@ -569,7 +582,9 @@ package com.dasflash.soundcloud.scup.controller
 			_dispatcher.dispatchEvent(new ThrobberEvent(ThrobberEvent.HIDE_THROBBER));
 		}
 		
+		
 		// CANCEL SET
+		
 		[Mediate(event="cancelSet")]
 		public function cancelSetHandler(event:SetEvent):void
 		{
@@ -598,50 +613,16 @@ package com.dasflash.soundcloud.scup.controller
 			setData.resetData();
 		}
 		
+		// LOGOUT
 		
-		// SAVE SET COMPLETE
-		[Mediate(event="resetApp")]
-		public function resetAppHandler(event:AuthWindowEvent):void
-		{
-			initAppHandler(event);
-		}
-		
-		// SWITCH USER 
 		[Mediate(event="logout")]
-		public function logout(event:AuthWindowEvent):void
+		public function logout(event:AppEvent):void
 		{
 			// delete old credentials
-			deleteAccessToken();
+			userSettings.accessToken = null;
 			
 			// re-init app
 			_dispatcher.dispatchEvent(new AppEvent(AppEvent.INIT_APP));
-		}
-		
-		
-		// TOKEN STORAGE API
-		
-		public function getAccessToken():OAuthToken
-		{
-			var obj:Object = localStorage.getObject("accessToken");
-			var token:OAuthToken = obj && obj.key && obj.secret ? new OAuthToken(obj.key, obj.secret) : null;
-			return token;
-			
-			/*var obj:Object = encryptedLocalStorage.getObject("accessToken");
-			var token:OAuthToken = obj && obj.key && obj.secret ? new OAuthToken(obj.key, obj.secret) : null;
-			return token;*/
-//			return null;
-		}
-		
-		public function saveAccessToken(token:OAuthToken):void
-		{
-			localStorage.setObject("accessToken", token);
-			/*encryptedLocalStorage.setObject("accessToken", token);*/
-		}
-		
-		protected function deleteAccessToken():void
-		{
-			localStorage.removeItem("accessToken");
-			/*encryptedLocalStorage.removeItem("accessToken");*/
 		}
 		
 	}

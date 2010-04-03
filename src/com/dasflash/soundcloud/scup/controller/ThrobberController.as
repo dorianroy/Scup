@@ -1,6 +1,6 @@
 package com.dasflash.soundcloud.scup.controller
 {
-	import com.dasflash.soundcloud.scup.events.AppEvent;
+	import com.dasflash.soundcloud.scup.events.ThrobberEvent;
 	import com.dasflash.soundcloud.scup.view.components.Throbber;
 
 	import flash.events.EventDispatcher;
@@ -8,16 +8,16 @@ package com.dasflash.soundcloud.scup.controller
 	import mx.managers.PopUpManager;
 	import mx.managers.SystemManager;
 
+
 	public class ThrobberController extends EventDispatcher
 	{
 		// THROBBER
 		private var throbber:Throbber;
 
 		[Mediate(event="showThrobber")]
-		public function showThrobberHandler(event:AppEvent):void
+		public function showThrobberHandler(event:ThrobberEvent):void
 		{
-			if (!throbber)
-			{
+			if (!throbber) {
 				throbber = PopUpManager.createPopUp(SystemManager.getSWFRoot(this), Throbber, true) as Throbber;
 				throbber.play();
 				PopUpManager.centerPopUp(throbber);
@@ -25,10 +25,9 @@ package com.dasflash.soundcloud.scup.controller
 		}
 
 		[Mediate(event="hideThrobber")]
-		public function hideThrobberHandler(event:AppEvent):void
+		public function hideThrobberHandler(event:ThrobberEvent):void
 		{
-			if (throbber)
-			{
+			if (throbber) {
 				PopUpManager.removePopUp(throbber);
 				throbber = null;
 			}
