@@ -1,85 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:ItemRenderer
-	xmlns:fx="http://ns.adobe.com/mxml/2009"
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
 	xmlns:s="library://ns.adobe.com/flex/spark"
 	xmlns:mx="library://ns.adobe.com/flex/mx"
 	xmlns:view="com.dasflash.soundcloud.scup.view.*"
 	click="event.stopPropagation()"
-	autoDrawBackground="false" xmlns:components="com.dasflash.soundcloud.scup.view.components.*"
-	>	
-	
+	autoDrawBackground="false"
+	xmlns:components="com.dasflash.soundcloud.scup.view.components.*"
+	clipAndEnableScrolling="true">
+
 	<fx:Metadata>
 		
 		[Event(type="com.dasflash.soundcloud.scup.events.TrackListEvent", name="retryTrack")]
 		[Event(type="com.dasflash.soundcloud.scup.events.TrackListEvent",name="deleteTrack")]
 		
 	</fx:Metadata>
-	
+
 	<fx:Script>
 		<![CDATA[
 			import com.dasflash.soundcloud.scup.events.TrackListEvent;
+			import com.dasflash.soundcloud.scup.model.SetData;
 			import com.dasflash.soundcloud.scup.model.TrackData;
 			import com.dasflash.soundcloud.scup.view.skins.TextInputSkinMultiLine;
-			
+
 			import flash.events.MouseEvent;
 			import flash.net.navigateToURL;
-			
-			
+
+			import mx.events.CalendarLayoutChangeEvent;
+
+
 			override protected function getCurrentRendererState():String
 			{
 				if (dragging)
 					return "dragging";
-				
+
 				if (expanded && hovered)
 					return "expandedAndHovered";
-				
+
 				if (expanded)
 					return "expanded";
-				
+
 				if (hovered)
 					return "hovered";
-				
-				if (hasState("normal"))    
+
+				if (hasState("normal"))
 					return "normal";
-				
+
 				// If none of the above states are defined in the item renderer,
 				// we return the empty string. This means the user-defined renderer
 				// will display but essentially be non-interactive visually. 
 				return null;
 			}
-			
+
 			//----------------------------------
 			//  expanded state
 			//----------------------------------
 			/**
 			 *  @private
-			 *  storage for the selected property 
-			 */    
+			 *  storage for the selected property
+			 */
 			private var _expanded:Boolean = false;
-			
+
 			/**
 			 *  Set to <code>true</code> when the mouse is hovered over the item renderer.
 			 *
 			 *  @default false
-			 */    
+			 */
 			public function get expanded():Boolean
 			{
 				return _expanded;
 			}
-			
+
 			/**
 			 *  @private
-			 */    
+			 */
 			public function set expanded(value:Boolean):void
 			{
-				if (value != _expanded)
-				{
+				if (value != _expanded) {
 					_expanded = value;
-					
+
 					setCurrentState(getCurrentRendererState(), true);
 				}
 			}
-			
+
 			protected function trackCompleteClickHandler(event:MouseEvent):void
 			{
 				navigateToURL(new URLRequest(data.permalink));
@@ -94,112 +96,366 @@
 			{
 				dispatchEvent(new TrackListEvent(TrackListEvent.RETRY_TRACK, TrackData(data)));
 			}
-			
+
+			protected function dateChangeHandler(event:CalendarLayoutChangeEvent):void
+			{
+				data.release_day = dateField.selectedDate.date;
+				data.release_month = dateField.selectedDate.month + 1;
+				data.release_year = dateField.selectedDate.fullYear;
+			}
 		]]>
 	</fx:Script>
-	
+
 	<s:states>
-	    <s:State name="normal" stateGroups="collapsedStates"/>
-	    <s:State name="dragging"/>
-	    <s:State name="hovered" stateGroups="collapsedStates, hoveredStates"/>
-	    <s:State name="expanded" stateGroups="expandedStates"/>
-	    <s:State name="expandedAndHovered" stateGroups="expandedStates, hoveredStates" />
+		<s:State name="normal"
+			stateGroups="collapsedStates"/>
+		<s:State name="dragging"/>
+		<s:State name="hovered"
+			stateGroups="collapsedStates, hoveredStates"/>
+		<s:State name="expanded"
+			stateGroups="expandedStates"/>
+		<s:State name="expandedAndHovered"
+			stateGroups="expandedStates, hoveredStates"/>
 	</s:states>
-	
+
 	<s:transitions>
 		<mx:Transition>
-			<s:Resize target="{this}" duration="200"/>
+			<s:Resize target="{this}"
+				duration="200"/>
 		</mx:Transition>
 	</s:transitions>
-	
+
 	<!--background fill-->
-	<s:Rect left="1" right="1" top="0" bottom="2" radiusX="4" radiusY="4">
+	<s:Rect left="1"
+		right="1"
+		top="0"
+		bottom="2"
+		radiusX="4"
+		radiusY="4">
 		<s:fill>
 			<s:LinearGradient rotation="90">
-				<s:GradientEntry color.hoveredStates="#EDEDED" color="#F3F3F3" ratio="0.9"/>
-				<s:GradientEntry color="#E3E3E4"/>
+				<s:GradientEntry color.hoveredStates="#EDEDED"
+					color="#F3F3F3"
+					ratio="0.95"/>
+				<s:GradientEntry color="#E6E6E6"/>
 			</s:LinearGradient>
 		</s:fill>
 		<s:stroke>
 			<s:SolidColorStroke color="#D0D0D0"/>
 		</s:stroke>
-		
-	 </s:Rect>
-	 
-		 <s:VGroup width="100%" gap="0" paddingBottom="2" excludeFrom="dragging">
-		 
-			 <!-- normal state elements -->
-		 	<s:Group width="100%">
-		 	
-				<!-- track number -->
-				<s:Label text="{data.index + 1}." color="#444444" top="8" left="8"/>
-				
-				<!-- track title -->
-				<s:TextInput id="titleInput" width="305" left="20" top="2" bottom="1"
-					 text="{data.title}" mouseDown="event.stopPropagation()"
-					 change="if(data) data.title = titleInput.text"
-					 alpha="{data.title?1:0.6}"
-					 skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkin"/>
-				
-				<!-- more options button -->
-				<s:ToggleButton id="expandButton" left="342" top="9" height="8" includeIn="hoveredStates, expandedStates"
-					skinClass="com.dasflash.soundcloud.scup.view.skins.ExtraFieldsButtonSkin"
-					change="expanded = expandButton.selected" mouseDown="event.stopPropagation()"
-					selected="{currentState=='expanded' || currentState=='expandedAndHovered'}"/>
-				
-				<!-- delete button -->
-				<mx:Image id="deleteButton" right="155" top="6" source="@Embed('assets/trashcan.png')"
-				  click="deleteButtonClickHandler(event)" includeIn="hoveredStates, expandedStates"
-				  mouseDown="event.stopPropagation()"
-				  toolTip="Remove this track from the list (it will not be removed from your computer)"/>
-				
-				<!-- progress bar -->
-				<components:SimpleProgressBar right="8" top="7" width="140" height="10"
-					source="{data.asset_data}" visible="{data.isUploading}"
-					skinClass="com.dasflash.soundcloud.scup.view.skins.SimpleProgressBarSkin"/>
-				
-				<!-- waiting label -->
-				<s:Label text="Waiting..." top="8" right="28" visible="{!data.uploadComplete &amp;&amp; !data.isUploading}"
-						 styleName="trackListLinkButton"/>
-					
-				<!-- complete sign -->
-				<mx:Image source="@Embed('assets/complete_icon.png')"
-					visible="{data.id}" click="trackCompleteClickHandler(event)" mouseDown="event.stopPropagation()"
-					top="4" right="8" toolTip="This track has been successfully uploaded. Click here to view it in your browser."/>
-				
-				<!-- complete button -->
-				<mx:LinkButton label="Upload complete" skin="com.dasflash.soundcloud.scup.view.skins.LinkButtonSkin"
-					top="2" right="28" visible="{data.id}" click="trackCompleteClickHandler(event)"
-					mouseDown="event.stopPropagation()" styleName="trackListLinkButton"
-					toolTip="This track has been successfully uploaded. Click here to view it in your browser."/>
-					
-				<!-- failed sign -->
-				<mx:Image source="@Embed('assets/failed_icon.png')"
-					top="4" right="8" visible="{data.uploadFailed}"
-					click="retryButtonClickHandler(event)" mouseDown="event.stopPropagation()"
-					toolTip="Uploading this track has failed. Click here to try it again." />
-				
-				<!-- retry button -->
-				<mx:LinkButton label="Retry upload" skin="com.dasflash.soundcloud.scup.view.skins.LinkButtonSkin"
-					top="2" right="28" visible="{data.uploadFailed}" click="retryButtonClickHandler(event)"
-					mouseDown="event.stopPropagation()" styleName="trackListLinkButton"
-					toolTip="Uploading this track has failed. Click here to try it again." />
-					
-		 	</s:Group>
-			 
-			 <!-- expanded state elements -->
-			 <s:Group width="100%" id="expandedElements">
-			 	
-			 	<s:TextArea id="descrInput" width="100%"
-			    	includeIn="expandedStates" mouseDown="event.stopPropagation()"
-			    	text="{data.description || 'Add description'}"
-			    	change="if(data) data.description = descrInput.text"
-			    	alpha="{data.description?1:0.6}" top="0" left="20" right="8" bottom="4" height="40" styleName="trackTextInput"
-			    	skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkinMultiLine"/>
-			    	
-			 </s:Group>
-		
-		 </s:VGroup>
-	 
+
+	</s:Rect>
+
+	<s:VGroup width="100%"
+		gap="0"
+		paddingBottom="2"
+		excludeFrom="dragging">
+
+		<!-- normal state elements -->
+		<s:Group width="100%">
+
+			<!-- track number -->
+			<s:Label text="{data.index + 1}."
+				color="#444444"
+				top="8"
+				left="8"/>
+
+			<!-- track title -->
+			<s:TextInput id="titleInput"
+				width="305"
+				left="20"
+				top="2"
+				bottom="1"
+				text="{data.title}"
+				mouseDown="event.stopPropagation()"
+				change="if(data) data.title = titleInput.text"
+				alpha="{data.title?1:0.6}"
+				skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkin"/>
+
+			<!-- more options button -->
+			<s:ToggleButton id="expandButton"
+				left="342"
+				top="9"
+				height="8"
+				includeIn="hoveredStates, expandedStates"
+				skinClass="com.dasflash.soundcloud.scup.view.skins.ExtraFieldsButtonSkin"
+				change="expanded = expandButton.selected"
+				mouseDown="event.stopPropagation()"
+				selected="{currentState=='expanded' || currentState=='expandedAndHovered'}"/>
+
+			<!-- delete button -->
+			<mx:Image id="deleteButton"
+				right="155"
+				top="6"
+				source="@Embed('assets/trashcan.png')"
+				click="deleteButtonClickHandler(event)"
+				includeIn="hoveredStates, expandedStates"
+				mouseDown="event.stopPropagation()"
+				toolTip="Remove this track from the list (it will not be removed from your computer)"/>
+
+			<!-- progress bar -->
+			<components:SimpleProgressBar right="8"
+				top="7"
+				width="140"
+				height="10"
+				source="{data.asset_data}"
+				visible="{data.isUploading}"
+				skinClass="com.dasflash.soundcloud.scup.view.skins.SimpleProgressBarSkin"/>
+
+			<!-- waiting label -->
+			<s:Label text="Waiting..."
+				top="8"
+				right="28"
+				visible="{!data.uploadComplete &amp;&amp; !data.isUploading}"
+				styleName="trackListLinkButton"/>
+
+			<!-- complete sign -->
+			<mx:Image source="@Embed('assets/complete_icon.png')"
+				visible="{data.id}"
+				click="trackCompleteClickHandler(event)"
+				mouseDown="event.stopPropagation()"
+				top="4"
+				right="8"
+				toolTip="This track has been successfully uploaded. Click here to view it in your browser."/>
+
+			<!-- complete button -->
+			<mx:LinkButton label="Upload complete"
+				skin="com.dasflash.soundcloud.scup.view.skins.LinkButtonSkin"
+				top="2"
+				right="28"
+				visible="{data.id}"
+				click="trackCompleteClickHandler(event)"
+				mouseDown="event.stopPropagation()"
+				styleName="trackListLinkButton"
+				toolTip="This track has been successfully uploaded. Click here to view it in your browser."/>
+
+			<!-- failed sign -->
+			<mx:Image source="@Embed('assets/failed_icon.png')"
+				top="4"
+				right="8"
+				visible="{data.uploadFailed}"
+				click="retryButtonClickHandler(event)"
+				mouseDown="event.stopPropagation()"
+				toolTip="Uploading this track has failed. Click here to try it again."/>
+
+			<!-- retry button -->
+			<mx:LinkButton label="Retry upload"
+				skin="com.dasflash.soundcloud.scup.view.skins.LinkButtonSkin"
+				top="2"
+				right="28"
+				visible="{data.uploadFailed}"
+				click="retryButtonClickHandler(event)"
+				mouseDown="event.stopPropagation()"
+				styleName="trackListLinkButton"
+				toolTip="Uploading this track has failed. Click here to try it again."/>
+
+		</s:Group>
+
+		<!-- expanded state elements -->
+		<s:VGroup width="100%"
+			includeIn="expandedStates"
+			paddingLeft="8"
+			paddingRight="8"
+			paddingBottom="4"
+			id="expandedElements">
+
+			<s:TextArea id="descrInput"
+				width="100%"
+				mouseDown="event.stopPropagation()"
+				text="{data.description || 'Add a description'}"
+				change="if(data) data.description = descrInput.text"
+				alpha="{data.description ? 1 : 0.6}"
+				top="0"
+				left="20"
+				right="8"
+				bottom="4"
+				height="40"
+				styleName="trackTextInput"
+				skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkinMultiLine"/>
+
+			<mx:Grid id="grid"
+				includeIn="expandedStates"
+				width="100%"
+				verticalGap="2">
+
+				<mx:GridRow styleName="gridRow gridRowTrack"
+					width="100%">
+
+					<!--genre-->
+					<mx:GridItem width="100">
+						<s:Group width="100%">
+							<s:Label text="Genre:"
+								styleName="bodySoft right"
+								top="8"
+								width="100%"/>
+						</s:Group>
+					</mx:GridItem>
+					<mx:GridItem width="100%">
+						<s:Group width="100%">
+							<s:TextInput id="genreInput"
+								text="{data.genre}"
+								width="100%"
+								skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkin"
+								change="if(data) data.genre=genreInput.text"
+								top="2"/>
+						</s:Group>
+					</mx:GridItem>
+
+					<!--record label-->
+					<mx:GridItem width="100">
+						<s:Group width="100%">
+							<s:Label text="Record Label:"
+								styleName="bodySoft right"
+								top="8"
+								width="100%"/>
+						</s:Group>
+					</mx:GridItem>
+					<mx:GridItem width="100%">
+						<s:Group width="100%">
+							<s:TextInput id="labelNameInput"
+								text="{data.label_name}"
+								width="100%"
+								skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkin"
+								change="if(data) data.label_name=labelNameInput.text"
+								top="2"/>
+						</s:Group>
+					</mx:GridItem>
+				</mx:GridRow>
+
+				<mx:GridRow styleName="gridRow gridRowTrack"
+					width="100%">
+
+					<!--tags-->
+					<mx:GridItem width="100">
+						<s:Group width="100%">
+							<s:Label text="Keywords:"
+								styleName="bodySoft right"
+								top="8"
+								width="100%"/>
+						</s:Group>
+					</mx:GridItem>
+					<mx:GridItem width="100%">
+						<s:Group width="100%">
+							<s:TextInput id="tagListInput"
+								text="{data.tag_list}"
+								width="100%"
+								skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkin"
+								change="if(data) data.tag_list=tagListInput.text"
+								top="2"
+								toolTip="Separate multiple keywords with spaces"/>
+						</s:Group>
+					</mx:GridItem>
+
+					<!--release date-->
+					<mx:GridItem width="100">
+						<s:Group width="100%">
+							<s:Label text="Release date:"
+								styleName="bodySoft right"
+								top="8"
+								width="100%"/>
+						</s:Group>
+					</mx:GridItem>
+					<mx:GridItem width="100%">
+						<mx:DateField id="dateField"
+							change="dateChangeHandler(event)"
+							selectedDate="{data ? data.releaseDate : null}"
+							textInputStyleName="dateField"
+							focusSkin="com.dasflash.soundcloud.scup.view.skins.FocusSkin"/>
+					</mx:GridItem>
+				</mx:GridRow>
+
+				<mx:GridRow styleName="gridRow gridRowTrack"
+					width="100%">
+
+					<!--license-->
+					<mx:GridItem width="100">
+						<s:Group width="100%">
+							<s:Label text="License:"
+								styleName="bodySoft right"
+								top="8"
+								width="100%"/>
+						</s:Group>
+					</mx:GridItem>
+					<mx:GridItem width="100%">
+						<s:DropDownList id="licenseDropDown"
+							dataProvider="{SetData.LICENSE_TYPES}"
+							selectedIndex="{data.selectedLicenseIndex}"
+							skinClass="com.dasflash.soundcloud.scup.view.skins.DropDownListSkin"
+							change="if(data) data.selectedLicenseIndex=licenseDropDown.selectedIndex"/>
+					</mx:GridItem>
+
+					<!--BPM-->
+					<mx:GridItem width="100">
+						<s:Group width="100%">
+							<s:Label text="BPM:"
+								styleName="bodySoft right"
+								top="8"
+								width="100%"/>
+						</s:Group>
+					</mx:GridItem>
+					<mx:GridItem width="100%">
+						<s:Group width="100%">
+							<s:TextInput id="bpmInput"
+								text="{data.bpm || ''}"
+								width="100%"
+								skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkin"
+								restrict="0-9"
+								maxChars="3"
+								change="data.bpm=Number(bpmInput.text)"
+								top="2"/>
+						</s:Group>
+					</mx:GridItem>
+				</mx:GridRow>
+
+				<mx:GridRow styleName="gridRow gridRowTrack"
+					width="100%">
+
+					<!--buy link-->
+					<mx:GridItem width="100">
+						<s:Group width="100%">
+							<s:Label text="Buy this set link:"
+								styleName="bodySoft right"
+								top="8"
+								width="100%"/>
+						</s:Group>
+					</mx:GridItem>
+					<mx:GridItem width="100%">
+						<s:Group width="100%">
+							<s:TextInput id="purchaseUrlInput"
+								text="{data.purchase_url || 'http://'}"
+								width="100%"
+								skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkin"
+								change="data.purchase_url=purchaseUrlInput.text"
+								top="2"/>
+						</s:Group>
+					</mx:GridItem>
+
+					<!--video link-->
+					<mx:GridItem width="100">
+						<s:Group width="100%">
+							<s:Label text="Video URL:"
+								styleName="bodySoft right"
+								top="8"
+								width="100%"/>
+						</s:Group>
+					</mx:GridItem>
+					<mx:GridItem width="100%">
+						<s:Group width="100%">
+							<s:TextInput id="videoUrlInput"
+								text="{data.purchase_url || 'http://'}"
+								width="100%"
+								skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkin"
+								change="data.video_url=videoUrlInput.text"
+								top="2"/>
+						</s:Group>
+					</mx:GridItem>
+				</mx:GridRow>
+
+			</mx:Grid>
+
+		</s:VGroup>
+
+	</s:VGroup>
+
 </s:ItemRenderer>
 

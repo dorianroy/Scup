@@ -94,8 +94,7 @@ package com.dasflash.soundcloud.scup.controller
 		
 		// AUTHENTICATION STEP 1
 		// check for a previously saved access token
-		
-		[Mediate(event="resetApp")]
+			
 		[Mediate(event="initApp")]
 		public function initAppHandler(event:Event):void
 		{
@@ -576,7 +575,7 @@ package com.dasflash.soundcloud.scup.controller
 		protected function trackUpdateFaultHandler(event:SoundcloudFaultEvent):void
 		{
 			Alert.show("The set has been saved, but the settings for some tracks " +
-				"couldn't be updated. Please review the tracks online at "+
+				"could not be updated. Please review the tracks online at "+
 				setData.permalink);
 			
 			_dispatcher.dispatchEvent(new ThrobberEvent(ThrobberEvent.HIDE_THROBBER));
@@ -613,10 +612,11 @@ package com.dasflash.soundcloud.scup.controller
 			setData.resetData();
 		}
 		
-		// LOGOUT
 		
-		[Mediate(event="logout")]
-		public function logout(event:AppEvent):void
+		// RESET APP
+		
+		[Mediate(event="resetApp")]
+		public function resetApp(event:AppEvent):void
 		{
 			// delete old credentials
 			userSettings.accessToken = null;

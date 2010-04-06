@@ -4,6 +4,7 @@ package com.dasflash.soundcloud.scup.events
 
 	public class MainWindowEvent extends Event
 	{
+
 		public static const OPEN_MAIN_WINDOW:String = "openMainWindow";
 
 

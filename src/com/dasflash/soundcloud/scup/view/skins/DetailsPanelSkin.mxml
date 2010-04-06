@@ -7,19 +7,21 @@
 
 	<fx:Script>
 		<![CDATA[
+			import com.dasflash.soundcloud.scup.model.SetData;
+
 			import mx.events.CalendarLayoutChangeEvent;
 
 
 			protected function expandButtonChangeHandler(event:Event):void
 			{
-				hostComponent.currentState=expandButton.selected ? "expanded" : "collapsed";
+				hostComponent.currentState = expandButton.selected ? "expanded" : "collapsed";
 			}
 
 			protected function dateChangeHandler(event:CalendarLayoutChangeEvent):void
 			{
-				hostComponent.release_day=dateField.selectedDate.date;
-				hostComponent.release_month=dateField.selectedDate.month + 1;
-				hostComponent.release_year=dateField.selectedDate.fullYear;
+				hostComponent.release_day = dateField.selectedDate.date;
+				hostComponent.release_month = dateField.selectedDate.month + 1;
+				hostComponent.release_year = dateField.selectedDate.fullYear;
 			}
 		]]>
 	</fx:Script>
@@ -81,7 +83,7 @@
 					height="50"
 					text="{hostComponent.description || 'Add a description'}"
 					change="hostComponent.description=descriptionInput.text"
-					alpha="{hostComponent.description?1:0.6}"
+					alpha="{hostComponent.description ? 1 : 0.6}"
 					skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkinMultiLine"/>
 
 				<s:ToggleButton id="expandButton"
@@ -98,7 +100,7 @@
 			includeIn="expanded"
 			width="100%"
 			verticalGap="2"
-			itemCreationPolicy="deferred">
+			itemCreationPolicy="immediate">
 
 			<mx:GridRow styleName="gridRow"
 				width="100%">
@@ -228,7 +230,7 @@
 				</mx:GridItem>
 				<mx:GridItem width="100%">
 					<s:DropDownList id="licenseDropDown"
-						dataProvider="{hostComponent.licenseTypes}"
+						dataProvider="{SetData.LICENSE_TYPES}"
 						selectedIndex="{hostComponent.selectedLicenseIndex}"
 						skinClass="com.dasflash.soundcloud.scup.view.skins.DropDownListSkin"
 						change="hostComponent.selectedLicenseIndex=licenseDropDown.selectedIndex"/>

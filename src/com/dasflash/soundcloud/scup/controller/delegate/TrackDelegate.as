@@ -60,14 +60,11 @@ package com.dasflash.soundcloud.scup.controller.delegate
 			trackData.uploadComplete = true;
 
 			// save id assigned by SoundCloud in TrackData
-			if (event.data && event.data.hasOwnProperty("id"))
-			{
+			if (event.data && event.data.hasOwnProperty("id")) {
 				trackData.id = event.data.id;
 				trackData.permalink = event.data["permalink-url"];
 
-			}
-			else
-			{
+			} else {
 				trackData.uploadFailed = true;
 			}
 
@@ -88,40 +85,50 @@ package com.dasflash.soundcloud.scup.controller.delegate
 
 		public function putTrackData(setData:SetData):void
 		{
+			// create XML data
 			var data:XML = <track/>;
+
+			// add id
 			data.id = trackData.id;
 			data.id.@type = "integer";
-			data.title = trackData.title;
+
+			// add user defined fields
+			data.title = data.title;
+			if (trackData.bpm)
+				data.bpm = trackData.bpm;
 			if (trackData.description)
 				data.description = trackData.description;
+			if (trackData.genre)
+				data.genre = trackData.genre;
+			if (trackData.label_name)
+				data.label_name = trackData.label_name;
+			if (trackData.purchase_url)
+				data.purchase_url = trackData.purchase_url;
+			if (trackData.release_day)
+				data.release_day = trackData.release_day;
+			if (trackData.release_month)
+				data.release_month = trackData.release_month;
+			if (trackData.release_year)
+				data.release_year = trackData.release_year;
+			if (trackData.tag_list)
+				data.tag_list = trackData.tag_list;
+			if (trackData.track_type)
+				data.track_type = trackData.track_type;
+			if (trackData.video_url)
+				data.video_url = trackData.video_url;
+			if (trackData.license)
+				data.license = trackData.license;
 
-			// copy settings from set
-			if (setData.tag_list)
-				data.tag_list = setData.tag_list;
-			if (setData.genre)
-				data.genre = setData.genre;
-			if (setData.label_name)
-				data.label_name = setData.label_name;
-			if (setData.purchase_url)
-				data.purchase_url = setData.purchase_url;
-			if (setData.release)
-				data.release = setData.release;
-			if (setData.release_day)
-				data.release_day = setData.release_day;
-			if (setData.release_month)
-				data.release_month = setData.release_month;
-			if (setData.release_year)
-				data.release_year = setData.release_year;
+			// copy some fields from set data
 			data.streamable = setData.streamable;
 			data.sharing = setData.sharing;
 			data.downloadable = setData.downloadable;
-			if (setData.license)
-				data.license = setData.license;
-			
+
 			// update track via PUT
 			var delegate:SoundcloudDelegate;
 			delegate = client.sendRequest("tracks/" + trackData.id, URLRequestMethod.PUT, data);
 
+			// listen to server response
 			delegate.addEventListener(SoundcloudEvent.REQUEST_COMPLETE, putTrackCompleteHandler);
 			delegate.addEventListener(SoundcloudFaultEvent.FAULT, putTrackFaultHandler);
 

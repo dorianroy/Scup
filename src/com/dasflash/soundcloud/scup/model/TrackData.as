@@ -3,66 +3,162 @@ package com.dasflash.soundcloud.scup.model
 	import flash.events.EventDispatcher;
 	import flash.filesystem.File;
 
-	[Bindable] 
+	import mx.collections.ArrayCollection;
+
+	[Bindable]
 	public class TrackData extends EventDispatcher
 	{
+		// playlist_type
+		public const trackTypes:ArrayCollection = new ArrayCollection(
+			[
+			/* cover
+			   demo
+			   djset
+			   in progress
+			   live
+			   loop
+			   mashup
+			   original
+			   part
+			   podcast
+			   reedit
+			   remix
+			   sample
+			 */
+			{label: "None", data: ""},
+			{label: "Loop", data: "loop"},
+			{label: "Part", data: "part"},
+			{label: "Podcast", data: "podcast"},
+			{label: "Demo", data: "demo"},
+			{label: "DJ Set", data: "djset"},
+			{label: "Sample", data: "sample"},
+			{label: "Cover", data: "cover"},
+			{label: "Mashup", data: "mashup"},
+			{label: "Re-edit", data: "reedit"},
+			{label: "Remix", data: "remix"},
+			{label: "Work in progress", data: "in progress"},
+			{label: "Live", data: "live"},
+			{label: "Original", data: "original"}
+			]
+			);
+
+		public var selectedTrackTypeIndex:int;
+
+		public var selectedLicenseIndex:int;
+
+
 		// SC internal id that is assigned after upload
 		public var id:int;
 		public var permalink:String;
-		
+
 		// editable fields
-	 	public var title:String;
-		public var description:String;
+		public var title:String;
 		public var asset_data:File; // the audio file
-/*		public var artwork_data:File;	// the artwork file
+//		public var artwork_data:File; // the artwork file
 		public var bpm:Number;
+		public var description:String;
 		public var downloadable:Boolean;
-		public var genre:String; 			//a comma separated list of genres
-		public var isrc:String;
-		public var key_signature:String; 	// enumeration
-		public var label_id:uint;
+		public var genre:String; //a comma separated list of genres
+//		public var isrc:String;
+//		public var key_signature:String; 	// enumeration
+//		public var label_id:uint;
 		public var label_name:String;
 		public var purchase_url:String;
-		public var release:String;
-		public var release_day:uint;
-		public var release_month:uint;
-		public var release_year:uint;
-		public var sharing:String			= "private"; // "public" or "private"
-		public var streamable:Boolean
-		public var tag_list:String; 		//a space separated list of tags
-		public var track_type:String; 		// "cover”, “demo”, “djset”, “in progress”, “live”, “mashup”, “original”, “part”, “podcast”, “reedit”, “remix” or “sample”
+//		public var release:String;
+		private var _release_day:uint;
+		private var _release_month:uint;
+		private var _release_year:uint;
+//		public var sharing:String			= "private"; // "public" or "private"
+//		public var streamable:Boolean
+		public var tag_list:String; //a space separated list of tags
+		public var track_type:String;
 		public var video_url:String;
-		public var license:String; 			// see SetData
-		public var shared_to:String; 		// array of emails
-*/		
+
+		public function get license():String
+		{
+			return SetData.LICENSE_TYPES.getItemAt(selectedLicenseIndex).data;
+		}
+
+		public function set license(value:String):void
+		{
+			for (var i:int = 0; i < SetData.LICENSE_TYPES.length; i++) {
+				if (SetData.LICENSE_TYPES.getItemAt(i).data == value) {
+					selectedLicenseIndex = i;
+					return;
+				}
+			}
+			throw(new Error("unknown license type selected"));
+		}
+//		public var shared_to:String; 		// array of emails
+
 		// scup internal fields
 		public var index:uint; // index of this item within the tracklist
+		public var releaseDate:Date;
 		public var isUploading:Boolean;
 		public var uploadComplete:Boolean;
 		public var uploadFailed:Boolean;
 		public var isDirty:Boolean = true; // TODO set by details panel
+
+		public function get release_year():uint
+		{
+			return _release_year;
+		}
+
+		public function set release_year(value:uint):void
+		{
+			_release_year = value;
+			calcReleaseDate();
+		}
+
+		public function get release_month():uint
+		{
+			return _release_month;
+		}
+
+		public function set release_month(value:uint):void
+		{
+			_release_month = value;
+			calcReleaseDate();
+		}
+
+		public function get release_day():uint
+		{
+			return _release_day;
+		}
+
+		public function set release_day(value:uint):void
+		{
+			_release_day = value;
+			calcReleaseDate();
+		}
+
+		protected function calcReleaseDate():void
+		{
+			releaseDate = new Date(release_year, release_month, release_day);
+		}
+
 	}
 }
 
 /*
- writable fields for "track":
-	bpm
-	description
-	downloadable
-	genre
-	isrc
-	key_signature
-	label_id
-	label_name
-	purchase_url
-	release
-	release_day
-	release_month
-	release_year
-	sharing
-	streamable
-	tag_list
-	title
-	track_type
-	video_url
+   writable fields for "track":
+   bpm
+   description
+   downloadable
+   genre
+   isrc
+   key_signature
+   label_id
+   label_name
+   purchase_url
+   release
+   release_day
+   release_month
+   release_year
+   sharing
+   streamable
+   tag_list
+   title
+   track_type
+   video_url
  */

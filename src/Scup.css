@@ -118,6 +118,10 @@ s|SkinnableComponent
 	borderStyle: solid;
 	borderThickness: 1;
 }
+.gridRowTrack
+{
+	borderColor: #e2e4e7;
+}
 .right
 {
 	textAlign: right; 
