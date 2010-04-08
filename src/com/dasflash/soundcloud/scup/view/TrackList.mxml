@@ -9,19 +9,19 @@
 
 	<fx:Metadata>
 		
-		[Event(type="com.dasflash.soundcloud.scup.events.AddFilesEvent", name="addFiles")]
+		[Event(type="com.dasflash.soundcloud.scup.events.SetDataEvent", name="addFiles")]
 		
 	</fx:Metadata>
 
 	<fx:Script>
 		<![CDATA[
-			import com.dasflash.soundcloud.scup.events.AddFilesEvent;
-			
+			import com.dasflash.soundcloud.scup.events.SetDataEvent;
+
 			import flash.events.NativeDragEvent;
-			
+
 			import mx.collections.ICollectionView;
 			import mx.events.DragEvent;
-			
+
 			import spark.components.supportClasses.ItemRenderer;
 
 			[Bindable]
@@ -35,19 +35,16 @@
 
 			protected function nativeDragEnterHandler(event:NativeDragEvent):void
 			{
-				if (event.clipboard.hasFormat(ClipboardFormats.FILE_LIST_FORMAT))
-				{
+				if (event.clipboard.hasFormat(ClipboardFormats.FILE_LIST_FORMAT)) {
 
-					list.dropEnabled=false;
+					list.dropEnabled = false;
 
-					var files:Array=event.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT) as Array;
+					var files:Array = event.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT) as Array;
 
-					for each (var file:File in files)
-					{
+					for each (var file:File in files) {
 
 						// limit to .ogg, .mp3, .mp4 .flac, .aac, .wav(e) .aif(f) 
-						switch (file.extension.toLowerCase())
-						{
+						switch (file.extension.toLowerCase()) {
 							case "ogg":
 								break;
 							case "mp3":
@@ -73,24 +70,25 @@
 						}
 					}
 
-					var iobject:*=flash.display.InteractiveObject(this);
+					var iobject:* = flash.display.InteractiveObject(this);
 					NativeDragManager.acceptDragDrop(iobject);
 				}
 			}
 
 			protected function nativeDragDropHandler(event:NativeDragEvent):void
 			{
-				var files:Array=event.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT) as Array;
+				var files:Array = event.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT) as Array;
 
-				if (files)
-				{
-					dispatchEvent(new AddFilesEvent(AddFilesEvent.ADD_FILES, files, true));
+				if (files) {
+					var setDataEvent:SetDataEvent = new SetDataEvent(SetDataEvent.ADD_FILES);
+					setDataEvent.files = files;
+					dispatchEvent(setDataEvent);
 				}
 			}
 
 			protected function dragStartHandler(event:DragEvent):void
 			{
-				list.dropEnabled=true;
+				list.dropEnabled = true;
 
 				// TODO close open tracklist item
 			}
@@ -153,10 +151,11 @@
 			dataProvider="{tracks}"
 			width="100%"
 			height="100%"
-			dragStart="dragStartHandler(event)"
 			top="0"
+			dragStart="dragStartHandler(event)"
 			dragEnabled="true"
 			dragMoveEnabled="true"
+			hasFocusableChildren="true"
 			itemRenderer="com.dasflash.soundcloud.scup.view.components.TrackListItemRenderer"
 			skinClass="com.dasflash.soundcloud.scup.view.skins.ListSkin"/>
 

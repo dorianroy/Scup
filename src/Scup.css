@@ -1,7 +1,6 @@
 /* CSS file */
 @namespace s "library://ns.adobe.com/flex/spark";
-@namespace mx "library://ns.adobe.com/flex/halo";
-@namespace view "com.dasflash.soundcloud.scup.view.*";
+@namespace mx "library://ns.adobe.com/flex/mx";
 
 /*@font-face
 {
@@ -41,6 +40,17 @@ global
 s|SkinnableComponent
 {
 	focusSkin: ClassReference('com.dasflash.soundcloud.scup.view.skins.FocusSkin');
+}
+mx|ToolTip {
+	backgroundAlpha: 1.0;
+	backgroundColor: #FFFFCA;
+	color: #000000;
+	cornerRadius: 0;
+	fontSize: 11;
+	padding-bottom: 0;
+	padding-top: 0;
+	padding-left: 0;
+	padding-right: 0;
 }
 .authWindowHead
 {
@@ -168,5 +178,3 @@ s|SkinnableComponent
 {
 	font-size: 11px;
 }
-
-

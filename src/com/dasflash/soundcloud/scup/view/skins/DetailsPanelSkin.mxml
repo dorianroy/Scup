@@ -104,6 +104,8 @@
 
 			<mx:GridRow styleName="gridRow"
 				width="100%">
+
+				<!--genre-->
 				<mx:GridItem width="100">
 					<s:Group width="100%">
 						<s:Label text="Genre:"
@@ -117,11 +119,14 @@
 						<s:TextInput id="genreInput"
 							text="{hostComponent.genre}"
 							width="100%"
+							maxChars="40"
 							skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkin"
 							change="hostComponent.genre=genreInput.text"
 							top="2"/>
 					</s:Group>
 				</mx:GridItem>
+
+				<!--record label-->
 				<mx:GridItem width="100">
 					<s:Group width="100%">
 						<s:Label text="Record Label:"
@@ -144,6 +149,8 @@
 
 			<mx:GridRow styleName="gridRow"
 				width="100%">
+
+				<!--type-->
 				<mx:GridItem width="100">
 					<s:Group width="100%">
 						<s:Label text="Set type:"
@@ -154,12 +161,15 @@
 				</mx:GridItem>
 				<mx:GridItem width="100%">
 					<s:DropDownList id="typeDropDown"
+						width="200"
 						dataProvider="{hostComponent.playlistTypes}"
 						prompt="Pick a type"
 						selectedIndex="{hostComponent.selectedPlaylistTypeIndex}"
 						skinClass="com.dasflash.soundcloud.scup.view.skins.DropDownListSkin"
 						change="hostComponent.selectedPlaylistTypeIndex=typeDropDown.selectedIndex"/>
 				</mx:GridItem>
+
+				<!--release no.-->
 				<mx:GridItem width="100">
 					<s:Group width="100%">
 						<s:Label text="Release number:"
@@ -182,6 +192,8 @@
 
 			<mx:GridRow styleName="gridRow"
 				width="100%">
+
+				<!--keywords-->
 				<mx:GridItem width="100">
 					<s:Group width="100%">
 						<s:Label text="Keywords:"
@@ -201,6 +213,8 @@
 							toolTip="Separate multiple keywords with spaces"/>
 					</s:Group>
 				</mx:GridItem>
+
+				<!--release date-->
 				<mx:GridItem width="100">
 					<s:Group width="100%">
 						<s:Label text="Release date:"
@@ -220,6 +234,8 @@
 
 			<mx:GridRow styleName="gridRow"
 				width="100%">
+
+				<!--license-->
 				<mx:GridItem width="100">
 					<s:Group width="100%">
 						<s:Label text="License:"
@@ -230,11 +246,14 @@
 				</mx:GridItem>
 				<mx:GridItem width="100%">
 					<s:DropDownList id="licenseDropDown"
+						width="200"
 						dataProvider="{SetData.LICENSE_TYPES}"
 						selectedIndex="{hostComponent.selectedLicenseIndex}"
 						skinClass="com.dasflash.soundcloud.scup.view.skins.DropDownListSkin"
 						change="hostComponent.selectedLicenseIndex=licenseDropDown.selectedIndex"/>
 				</mx:GridItem>
+
+				<!--ean-->
 				<mx:GridItem width="100">
 					<s:Group width="100%">
 						<s:Label text="EAN/UPC:"
@@ -259,9 +278,11 @@
 
 			<mx:GridRow styleName="gridRow"
 				width="100%">
+
+				<!--buy link-->
 				<mx:GridItem width="100">
 					<s:Group width="100%">
-						<s:Label text="Buy this set link:"
+						<s:Label text="Buy set link:"
 							styleName="bodySoft right"
 							top="8"
 							width="100%"/>
@@ -276,6 +297,19 @@
 							change="hostComponent.purchase_url=purchaseUrlInput.text"
 							top="2"/>
 					</s:Group>
+				</mx:GridItem>
+
+				<!--copy to tracks button-->
+				<mx:GridItem width="100"/>
+				<mx:GridItem width="100%">
+					<s:HGroup width="100%"
+						horizontalAlign="right"
+						paddingTop="3">
+						<s:Button skinClass="com.dasflash.soundcloud.scup.view.skins.CopyToTracksButtonSkin"
+							enabled="{hostComponent.setData.trackCollection.length != 0}"
+							click="hostComponent.copyToTracks()"
+							toolTip="Copy fields to all tracks"/>
+					</s:HGroup>
 				</mx:GridItem>
 			</mx:GridRow>
 

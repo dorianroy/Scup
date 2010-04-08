@@ -93,7 +93,7 @@ package com.dasflash.soundcloud.scup.controller.delegate
 			data.id.@type = "integer";
 
 			// add user defined fields
-			data.title = data.title;
+			data.title = trackData.title;
 			if (trackData.bpm)
 				data.bpm = trackData.bpm;
 			if (trackData.description)
@@ -104,6 +104,8 @@ package com.dasflash.soundcloud.scup.controller.delegate
 				data.label_name = trackData.label_name;
 			if (trackData.purchase_url)
 				data.purchase_url = trackData.purchase_url;
+			if (trackData.release)
+				data.release = trackData.release;
 			if (trackData.release_day)
 				data.release_day = trackData.release_day;
 			if (trackData.release_month)

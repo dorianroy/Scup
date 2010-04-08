@@ -1,12 +1,18 @@
 package com.dasflash.soundcloud.scup.view
 {
+	import com.dasflash.soundcloud.scup.events.SetDataEvent;
+	import com.dasflash.soundcloud.scup.model.SetData;
+	
 	import flash.filesystem.File;
-
+	
 	import mx.collections.ArrayCollection;
 	import mx.events.StateChangeEvent;
 	import mx.states.State;
-
+	
 	import spark.components.supportClasses.SkinnableComponent;
+
+
+	[Event(name="copyToTracks", type="com.dasflash.soundcloud.scup.events.SetDataEvent")]
 
 
 	[SkinState("collapsed")]
@@ -17,6 +23,9 @@ package com.dasflash.soundcloud.scup.view
 	[Bindable]
 	public class DetailsPanel extends SkinnableComponent
 	{
+		[Inject]
+		public var setData:SetData;
+		
 		[Inject(source="setData.title", twoWay="true")]
 		public var title:String;
 
@@ -56,7 +65,7 @@ package com.dasflash.soundcloud.scup.view
 		[Inject(source="setData.selectedPlaylistTypeIndex", twoWay="true")]
 		public var selectedPlaylistTypeIndex:int;
 
-		[Inject(source="setData.playlistTypes", twoWay="true")]
+		[Inject(source="setData.playlistTypes")]
 		public var playlistTypes:ArrayCollection;
 
 		[Inject(source="setData.selectedLicenseIndex", twoWay="true")]
@@ -70,6 +79,10 @@ package com.dasflash.soundcloud.scup.view
 			states = [new State({name: "collapsed"}), new State({name: "expanded"})];
 		}
 
+		public function copyToTracks():void
+		{
+			dispatchEvent(new SetDataEvent(SetDataEvent.COPY_TO_TRACKS))
+		}
 
 		/**
 		 * Overridden to sync skin state to component state

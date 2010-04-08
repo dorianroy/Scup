@@ -1,53 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
-	  minWidth="112" minHeight="40"
-	  alpha.disabled="0.5"> 
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	minWidth="112"
+	minHeight="40"
+	alpha.disabled="0.5">
 
-    <fx:Metadata>
+	<fx:Metadata>
     	[HostComponent("spark.components.List")]
-    </fx:Metadata> 
-    
-    <fx:Script>
+    </fx:Metadata>
+
+	<fx:Script>
 		<![CDATA[
 			import com.dasflash.soundcloud.scup.view.components.TrackListItemRenderer;
-			
+
 			import mx.collections.ArrayCollection;
 			import mx.events.StateChangeEvent;
-			
+
 			import spark.components.supportClasses.ItemRenderer;
 			import spark.events.RendererExistenceEvent;
-			
+
 			protected var renderers:ArrayCollection = new ArrayCollection();
-			
+
 
 			protected function rendererAddHandler(event:RendererExistenceEvent):void
 			{
 				event.renderer.addEventListener(StateChangeEvent.CURRENT_STATE_CHANGE, rendererStateChangeHandler);
-				
+
 				renderers.addItem(event.renderer);
 			}
-			
+
 			protected function rendererRemoveHandler(event:RendererExistenceEvent):void
 			{
 				event.renderer.removeEventListener(StateChangeEvent.CURRENT_STATE_CHANGE, rendererStateChangeHandler);
-				
+
 				renderers.removeItemAt(renderers.getItemIndex(event.renderer));
 			}
-			
+
 			protected function rendererStateChangeHandler(event:StateChangeEvent):void
 			{
-				if ( event.newState == "expanded" || event.newState == "expandedAndHovered") {
+				if (event.newState == "expanded") {
 					collapseAllItems(event.target as ItemRenderer);
 				}
 			}
-			
+
 			protected function collapseAllItems(exception:ItemRenderer=null):void
 			{
 				var l:uint = renderers.length;
-				for (var i:uint = 0; i<l; ++i) {
-					
+				for (var i:uint = 0; i < l; ++i) {
+
 					var renderer:TrackListItemRenderer = renderers.getItemAt(i) as TrackListItemRenderer;
-					
+
 					if (exception && renderer == exception) {
 						continue;
 					}
@@ -55,45 +57,60 @@
 				}
 			}
 
-			/* Define the skin elements that should not be colorized. 
-	           For list, the skin itself is colorized but the individual parts are not. */
-	        static private const exclusions:Array = ["scroller"];
-		
-			/** 
-			 * @copy spark.skins.SparkSkin#colorizeExclusions
-			 */		
-	        override public function get colorizeExclusions():Array {return exclusions;}
-	        
-	        /* Define the content fill items that should be colored by the "contentBackgroundColor" style. */
-	        static private const contentFill:Array = ["bgFill"];
-			
-	        override public function get contentItems():Array {return contentFill};
-					
+			/* Define the skin elements that should not be colorized.
+			 For list, the skin itself is colorized but the individual parts are not. */
+			static private const exclusions:Array = ["scroller"];
 
+			/**
+			 * @copy spark.skins.SparkSkin#colorizeExclusions
+			 */
+			override public function get colorizeExclusions():Array
+			{
+				return exclusions;
+			}
+
+			/* Define the content fill items that should be colored by the "contentBackgroundColor" style. */
+			static private const contentFill:Array = ["bgFill"];
+
+			override public function get contentItems():Array
+			{
+				return contentFill
+			}
+			;
 		]]>
-    </fx:Script>
-    
-    <s:states>
-    	<s:State name="normal" />
-    	<s:State name="disabled" />
-    </s:states>
-    
-    <!-- fill -->
-    <!--- Defines the background appearance of the list-based component. -->
-    <s:Rect id="background" visible="false">
-    	<s:fill>
-    		<s:SolidColor id="bgFill" color="0xFFFFFF" alpha="0"/>
-    	</s:fill>
-    </s:Rect>
-    
-    <!--- Defines the appearance of the list items, including their layout direction -->
-    <s:Scroller left="0" top="0" right="0" bottom="0" id="scroller" focusEnabled="false" minViewportInset="20"
-    	horizontalScrollPolicy="off" >
-	    <s:DataGroup id="dataGroup" rendererAdd="rendererAddHandler(event)"
+	</fx:Script>
+
+	<s:states>
+		<s:State name="normal"/>
+		<s:State name="disabled"/>
+	</s:states>
+
+	<!-- fill -->
+	<!--- Defines the background appearance of the list-based component. -->
+	<s:Rect id="background"
+		visible="false">
+		<s:fill>
+			<s:SolidColor id="bgFill"
+				color="0"/>
+		</s:fill>
+	</s:Rect>
+
+	<!--- Defines the appearance of the list items, including their layout direction -->
+	<s:Scroller left="0"
+		top="0"
+		right="0"
+		bottom="0"
+		id="scroller"
+		focusEnabled="false"
+		minViewportInset="20"
+		horizontalScrollPolicy="off">
+		<s:DataGroup id="dataGroup"
+			rendererAdd="rendererAddHandler(event)"
 			rendererRemove="rendererRemoveHandler(event)">
-	    	<s:layout>
-	    	    <s:VerticalLayout gap="0" horizontalAlign="contentJustify" />
-	    	</s:layout>
-	    </s:DataGroup>
-    </s:Scroller>
+			<s:layout>
+				<s:VerticalLayout gap="0"
+					horizontalAlign="contentJustify"/>
+			</s:layout>
+		</s:DataGroup>
+	</s:Scroller>
 </s:SparkSkin>

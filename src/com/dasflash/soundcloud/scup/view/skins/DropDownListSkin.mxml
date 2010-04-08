@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009"
 	xmlns:s="library://ns.adobe.com/flex/spark"
-	alpha.disabled=".5">
+	alpha.disabled=".5"
+	clipAndEnableScrolling="true">
 
-	
+
 	<fx:Metadata>
         [HostComponent("spark.components.DropDownList")]
     </fx:Metadata>
 
-	
+
 	<s:states>
 		<s:State name="normal"/>
 		<s:State name="open"/>
 		<s:State name="disabled"/>
 	</s:states>
 
-	
+
 	<s:PopUpAnchor id="popUp"
 		displayPopUp.normal="false"
 		displayPopUp.open="true"
@@ -75,7 +76,8 @@
 		</s:Group>
 	</s:PopUpAnchor>
 
-	<s:HGroup gap="0"
+	<s:HGroup width="100%"
+		gap="0"
 		verticalAlign="bottom">
 
 		<!--- The button used by the DropDownList. The default skin is DropDownListButtonSkin. -->
@@ -84,6 +86,7 @@
 			skinClass="com.dasflash.soundcloud.scup.view.skins.DropDownListButtonSkin"/>
 
 		<s:Label id="labelDisplay"
+			width="100%"
 			verticalAlign="middle"
 			maxDisplayedLines="1"
 			click="hostComponent.openDropDown()"/>

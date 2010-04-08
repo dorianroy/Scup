@@ -8,23 +8,9 @@ package com.dasflash.soundcloud.scup.model
 	[Bindable]
 	public class TrackData extends EventDispatcher
 	{
-		// playlist_type
-		public const trackTypes:ArrayCollection = new ArrayCollection(
+		// track types
+		public var trackTypes:ArrayCollection = new ArrayCollection(
 			[
-			/* cover
-			   demo
-			   djset
-			   in progress
-			   live
-			   loop
-			   mashup
-			   original
-			   part
-			   podcast
-			   reedit
-			   remix
-			   sample
-			 */
 			{label: "None", data: ""},
 			{label: "Loop", data: "loop"},
 			{label: "Part", data: "part"},
@@ -42,7 +28,28 @@ package com.dasflash.soundcloud.scup.model
 			]
 			);
 
-		public var selectedTrackTypeIndex:int;
+		public var selectedTrackTypeIndex:int = -1;
+
+		public function get track_type():String
+		{
+			try {
+				return trackTypes.getItemAt(selectedTrackTypeIndex).data;
+			} catch (error:Error) {
+			}
+
+			return null;
+		}
+
+		public function set track_type(value:String):void
+		{
+			for (var i:int = 0; i < trackTypes.length; i++) {
+				if (trackTypes.getItemAt(i).data == value) {
+					selectedTrackTypeIndex = i;
+					return;
+				}
+			}
+			throw(new Error("unknown track type selected"));
+		}
 
 		public var selectedLicenseIndex:int;
 
@@ -64,14 +71,13 @@ package com.dasflash.soundcloud.scup.model
 //		public var label_id:uint;
 		public var label_name:String;
 		public var purchase_url:String;
-//		public var release:String;
+		public var release:String;
 		private var _release_day:uint;
 		private var _release_month:uint;
 		private var _release_year:uint;
 //		public var sharing:String			= "private"; // "public" or "private"
 //		public var streamable:Boolean
 		public var tag_list:String; //a space separated list of tags
-		public var track_type:String;
 		public var video_url:String;
 
 		public function get license():String
@@ -98,6 +104,7 @@ package com.dasflash.soundcloud.scup.model
 		public var uploadComplete:Boolean;
 		public var uploadFailed:Boolean;
 		public var isDirty:Boolean = true; // TODO set by details panel
+
 
 		public function get release_year():uint
 		{
@@ -134,31 +141,9 @@ package com.dasflash.soundcloud.scup.model
 
 		protected function calcReleaseDate():void
 		{
-			releaseDate = new Date(release_year, release_month, release_day);
+			releaseDate = new Date(release_year, release_month - 1, release_day);
 		}
 
 	}
 }
 
-/*
-   writable fields for "track":
-   bpm
-   description
-   downloadable
-   genre
-   isrc
-   key_signature
-   label_id
-   label_name
-   purchase_url
-   release
-   release_day
-   release_month
-   release_year
-   sharing
-   streamable
-   tag_list
-   title
-   track_type
-   video_url
- */

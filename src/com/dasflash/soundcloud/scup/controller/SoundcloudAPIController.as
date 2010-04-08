@@ -263,6 +263,12 @@ package com.dasflash.soundcloud.scup.controller
 		
 		// UPLOAD TRACKS
 		
+		[Mediate(event="tracklistChanged")]
+		public function tracklistChangedHandler(event:SetDataEvent):void
+		{
+			processTrackQueue();
+		}
+		
 		/**
 		 * Cycle through queued tracks and start the next upload(s).
 		 * The queue is capable of uploading multiple tracks simultaneously,
@@ -306,8 +312,7 @@ package com.dasflash.soundcloud.scup.controller
 						// it easier to save the returned track id in the corresponding TrackData					
 						var trackDelegate:TrackDelegate = new TrackDelegate(soundcloudClient, track);
 						trackDelegate.addEventListener(SoundcloudEvent.REQUEST_COMPLETE, trackUploadCompleteHandler);
-//						trackDelegate.addEventListener(SoundcloudFaultEvent.FAULT, trackUploadFaultHandler);
-						trackDelegate.startUpload();
+//						trackDelegate.startUpload();
 						
 						// count this upload
 						uploadCount++;
@@ -343,20 +348,7 @@ package com.dasflash.soundcloud.scup.controller
 		[Mediate(event="deleteTrack")]
 		public function deleteTrackHandler(event:TrackListEvent):void
 		{
-			removeTrackFromList(event.trackData);
-		}
-		
-		protected function removeTrackFromList(track:TrackData):void
-		{
-			// delete track on server
-			deleteTrackOnServer(track);
-			
-			//delete track from setdata
-			var tracks:IList = setData.trackCollection;
-			tracks.removeItemAt(tracks.getItemIndex(track));
-			
-			// continue with the next upload if any is queued
-			processTrackQueue();
+			deleteTrackOnServer(event.trackData);
 		}
 		
 		protected function deleteTrackOnServer(track:TrackData):void
@@ -384,47 +376,10 @@ package com.dasflash.soundcloud.scup.controller
 		}
 		
 		
-		// ADD TRACKS
-		
-		[Mediate(event="addFiles")]
-		public function addFilesHandler(event:AddFilesEvent):void
-		{
-			if (setData.trackCollection.length == 0) {
-				//setData.resetData();
-			}
-			
-			addTracks(event.files);
-		}
-		
-		protected function addTracks(files:Array):void
-		{
-			// collect selected file(s) in a collection
-			// var tracks:ArrayCollection = new ArrayCollection();
-			
-			// cycle through array of selected files
-			for (var i:int=0; i<files.length; ++i) {
-				
-				// get file reference
-				var file:File = files[i] as File;
-				
-				// create new track data
-				var track:TrackData = new TrackData();
-				track.asset_data = file;
-				track.title = file.name;
-				
-				// add track to collection
-				setData.trackCollection.addItem(track);
-			}
-			
-			// process queue
-			processTrackQueue();
-		}
-		
-		
 		// SAVE SET
 		
 		[Mediate(event="saveSet")]
-		public function saveSetHandler(event:SetEvent):void
+		public function saveSetHandler(event:SetDataEvent):void
 		{
 			if (!setData.title) {
 				
@@ -585,7 +540,7 @@ package com.dasflash.soundcloud.scup.controller
 		// CANCEL SET
 		
 		[Mediate(event="cancelSet")]
-		public function cancelSetHandler(event:SetEvent):void
+		public function cancelSetHandler(event:SetDataEvent):void
 		{
 			Alert.show("If you continue all uploaded tracks will be deleted from " +
 				"the server and all data you've entered will be lost.",

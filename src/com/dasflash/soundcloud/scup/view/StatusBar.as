@@ -1,19 +1,18 @@
 package com.dasflash.soundcloud.scup.view
 {
-	import com.dasflash.soundcloud.scup.events.AddFilesEvent;
-	import com.dasflash.soundcloud.scup.events.SetEvent;
-	
+	import com.dasflash.soundcloud.scup.events.SetDataEvent;
+
 	import flash.events.FileListEvent;
 	import flash.filesystem.File;
 	import flash.net.FileFilter;
-	
+
 	import spark.components.supportClasses.SkinnableComponent;
 
-	
-	[Event(type="com.dasflash.soundcloud.scup.events.AddFilesEvent",name="addFiles")]
-	[Event(type="com.dasflash.soundcloud.scup.events.SetEvent",name="saveSet")]
-	[Event(type="com.dasflash.soundcloud.scup.events.SetEvent",name="cancelSet")]
-	
+
+	[Event(type="com.dasflash.soundcloud.scup.events.SetDataEvent", name="addFiles")]
+	[Event(type="com.dasflash.soundcloud.scup.events.SetDataEvent", name="saveSet")]
+	[Event(type="com.dasflash.soundcloud.scup.events.SetDataEvent", name="cancelSet")]
+
 
 	[Bindable]
 	public class StatusBar extends SkinnableComponent
@@ -36,17 +35,19 @@ package com.dasflash.soundcloud.scup.view
 
 		protected function fileSelectHandler(event:FileListEvent):void
 		{
-			dispatchEvent(new AddFilesEvent(AddFilesEvent.ADD_FILES, event.files));
+			var setDataEvent:SetDataEvent = new SetDataEvent(SetDataEvent.ADD_FILES);
+			setDataEvent.files = event.files;
+			dispatchEvent(setDataEvent);
 		}
 
 		public function saveSet():void
 		{
-			dispatchEvent(new SetEvent(SetEvent.SAVE_SET));
+			dispatchEvent(new SetDataEvent(SetDataEvent.SAVE_SET));
 		}
 
 		public function cancelSet():void
 		{
-			dispatchEvent(new SetEvent(SetEvent.CANCEL_SET));
+			dispatchEvent(new SetDataEvent(SetDataEvent.CANCEL_SET));
 		}
 
 	}

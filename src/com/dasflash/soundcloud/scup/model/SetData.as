@@ -19,7 +19,7 @@ package com.dasflash.soundcloud.scup.model
 		public var ean:String;
 
 		// playlist_type
-		public const playlistTypes:ArrayCollection = new ArrayCollection(
+		public var playlistTypes:ArrayCollection = new ArrayCollection(
 			[
 			{label: "None", data: ""},
 			{label: "Album", data: "album"},
@@ -41,7 +41,7 @@ package com.dasflash.soundcloud.scup.model
 				return playlistTypes.getItemAt(selectedPlaylistTypeIndex).data;
 			} catch (error:Error) {
 			}
-			;
+
 			return null;
 		}
 
@@ -75,9 +75,9 @@ package com.dasflash.soundcloud.scup.model
 		public var label_name:String;
 		public var purchase_url:String;
 		public var release:String
-		public var release_day:int; // TODO: use getter/setter
-		public var release_month:int; // TODO: use getter/setter
-		public var release_year:int; // TODO: use getter/setter
+		public var release_day:int;
+		public var release_month:int;
+		public var release_year:int;
 		public var streamable:Boolean;
 		public var tag_list:String; //a space separated list of tags
 		public var shared_to:String;
@@ -192,32 +192,3 @@ package com.dasflash.soundcloud.scup.model
 
 	}
 }
-
-/*
-   currently implemented writable fields for playlist:
-
-   description
-   ean
-   genre
-   label_id
-   label_name
-   playlist_type
-   purchase_url
-   release
-   release_day
-   release_month
-   release_year
-   streamable
-   tag_list
-   title
-
- */
-/*	no-rights-reserved	 The work is the public domain
-   all-rights-reserved	 All rights are reserved
-   cc-by	 Creative Commons Attribution
-   cc-by-nc	 Creative Commons Attribution Noncommercial
-   cc-by-nd	 Creative Commons Attribution No Derivative Works
-   cc-by-sa	 Creative Commons Attribution Share Alike
-   cc-by-nc-nd	 Creative Commons Attribution Noncommercial Non Derivate Works
-   cc-by-nc-sa	 Creative Commons Attribution Noncommercial Share Alike
- */

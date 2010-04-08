@@ -3,9 +3,8 @@
 	xmlns:s="library://ns.adobe.com/flex/spark"
 	xmlns:mx="library://ns.adobe.com/flex/mx"
 	xmlns:view="com.dasflash.soundcloud.scup.view.*"
-	click="event.stopPropagation()"
-	autoDrawBackground="false"
 	xmlns:components="com.dasflash.soundcloud.scup.view.components.*"
+	autoDrawBackground="false"
 	clipAndEnableScrolling="true">
 
 	<fx:Metadata>
@@ -26,15 +25,13 @@
 			import flash.net.navigateToURL;
 
 			import mx.events.CalendarLayoutChangeEvent;
+			import mx.managers.PopUpManager;
 
 
 			override protected function getCurrentRendererState():String
 			{
 				if (dragging)
 					return "dragging";
-
-				if (expanded && hovered)
-					return "expandedAndHovered";
 
 				if (expanded)
 					return "expanded";
@@ -50,6 +47,7 @@
 				// will display but essentially be non-interactive visually. 
 				return null;
 			}
+
 
 			//----------------------------------
 			//  expanded state
@@ -114,8 +112,7 @@
 			stateGroups="collapsedStates, hoveredStates"/>
 		<s:State name="expanded"
 			stateGroups="expandedStates"/>
-		<s:State name="expandedAndHovered"
-			stateGroups="expandedStates, hoveredStates"/>
+
 	</s:states>
 
 	<s:transitions>
@@ -134,8 +131,8 @@
 		radiusY="4">
 		<s:fill>
 			<s:LinearGradient rotation="90">
-				<s:GradientEntry color.hoveredStates="#EDEDED"
-					color="#F3F3F3"
+				<s:GradientEntry color.hovered="#F2F2F2"
+					color="#EEEEEE"
 					ratio="0.95"/>
 				<s:GradientEntry color="#E6E6E6"/>
 			</s:LinearGradient>
@@ -181,7 +178,7 @@
 				skinClass="com.dasflash.soundcloud.scup.view.skins.ExtraFieldsButtonSkin"
 				change="expanded = expandButton.selected"
 				mouseDown="event.stopPropagation()"
-				selected="{currentState=='expanded' || currentState=='expandedAndHovered'}"/>
+				selected="{currentState=='expanded'}"/>
 
 			<!-- delete button -->
 			<mx:Image id="deleteButton"
@@ -260,29 +257,26 @@
 			id="expandedElements">
 
 			<s:TextArea id="descrInput"
+				paddingRight="8"
 				width="100%"
 				mouseDown="event.stopPropagation()"
 				text="{data.description || 'Add a description'}"
 				change="if(data) data.description = descrInput.text"
 				alpha="{data.description ? 1 : 0.6}"
-				top="0"
-				left="20"
-				right="8"
-				bottom="4"
-				height="40"
+				height="37"
 				styleName="trackTextInput"
 				skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkinMultiLine"/>
 
 			<mx:Grid id="grid"
-				includeIn="expandedStates"
 				width="100%"
+				includeIn="expandedStates"
 				verticalGap="2">
 
 				<mx:GridRow styleName="gridRow gridRowTrack"
 					width="100%">
 
 					<!--genre-->
-					<mx:GridItem width="100">
+					<mx:GridItem width="92">
 						<s:Group width="100%">
 							<s:Label text="Genre:"
 								styleName="bodySoft right"
@@ -290,11 +284,12 @@
 								width="100%"/>
 						</s:Group>
 					</mx:GridItem>
-					<mx:GridItem width="100%">
+					<mx:GridItem width="201">
 						<s:Group width="100%">
 							<s:TextInput id="genreInput"
 								text="{data.genre}"
 								width="100%"
+								maxChars="40"
 								skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkin"
 								change="if(data) data.genre=genreInput.text"
 								top="2"/>
@@ -311,10 +306,10 @@
 						</s:Group>
 					</mx:GridItem>
 					<mx:GridItem width="100%">
-						<s:Group width="100%">
+						<s:Group>
 							<s:TextInput id="labelNameInput"
 								text="{data.label_name}"
-								width="100%"
+								width="196"
 								skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkin"
 								change="if(data) data.label_name=labelNameInput.text"
 								top="2"/>
@@ -325,8 +320,51 @@
 				<mx:GridRow styleName="gridRow gridRowTrack"
 					width="100%">
 
-					<!--tags-->
+					<!--type-->
+					<mx:GridItem width="92">
+						<s:Group width="100%">
+							<s:Label text="Track type:"
+								styleName="bodySoft right"
+								top="8"
+								width="100%"/>
+						</s:Group>
+					</mx:GridItem>
+					<mx:GridItem width="100%">
+						<s:DropDownList id="typeDropDown"
+							width="190"
+							dataProvider="{data.trackTypes}"
+							prompt="Pick a type"
+							selectedIndex="{data.selectedTrackTypeIndex}"
+							skinClass="com.dasflash.soundcloud.scup.view.skins.DropDownListSkin"
+							change="data.selectedTrackTypeIndex=typeDropDown.selectedIndex;typeDropDown.invalidateSize()"/>
+					</mx:GridItem>
+
+					<!--release no.-->
 					<mx:GridItem width="100">
+						<s:Group width="100%">
+							<s:Label text="Release number:"
+								styleName="bodySoft right"
+								top="8"
+								width="100%"/>
+						</s:Group>
+					</mx:GridItem>
+					<mx:GridItem width="100%">
+						<s:Group>
+							<s:TextInput id="releaseInput"
+								text="{data.release}"
+								width="196"
+								skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkin"
+								change="data.release=releaseInput.text"
+								top="2"/>
+						</s:Group>
+					</mx:GridItem>
+				</mx:GridRow>
+
+				<mx:GridRow styleName="gridRow gridRowTrack"
+					width="100%">
+
+					<!--tags-->
+					<mx:GridItem width="92">
 						<s:Group width="100%">
 							<s:Label text="Keywords:"
 								styleName="bodySoft right"
@@ -334,7 +372,7 @@
 								width="100%"/>
 						</s:Group>
 					</mx:GridItem>
-					<mx:GridItem width="100%">
+					<mx:GridItem width="201">
 						<s:Group width="100%">
 							<s:TextInput id="tagListInput"
 								text="{data.tag_list}"
@@ -368,7 +406,7 @@
 					width="100%">
 
 					<!--license-->
-					<mx:GridItem width="100">
+					<mx:GridItem width="92">
 						<s:Group width="100%">
 							<s:Label text="License:"
 								styleName="bodySoft right"
@@ -376,12 +414,13 @@
 								width="100%"/>
 						</s:Group>
 					</mx:GridItem>
-					<mx:GridItem width="100%">
+					<mx:GridItem width="201">
 						<s:DropDownList id="licenseDropDown"
+							width="190"
 							dataProvider="{SetData.LICENSE_TYPES}"
 							selectedIndex="{data.selectedLicenseIndex}"
 							skinClass="com.dasflash.soundcloud.scup.view.skins.DropDownListSkin"
-							change="if(data) data.selectedLicenseIndex=licenseDropDown.selectedIndex"/>
+							change="if(data) data.selectedLicenseIndex=licenseDropDown.selectedIndex;licenseDropDown.invalidateSize()"/>
 					</mx:GridItem>
 
 					<!--BPM-->
@@ -394,13 +433,13 @@
 						</s:Group>
 					</mx:GridItem>
 					<mx:GridItem width="100%">
-						<s:Group width="100%">
+						<s:Group>
 							<s:TextInput id="bpmInput"
 								text="{data.bpm || ''}"
-								width="100%"
+								width="80"
 								skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkin"
-								restrict="0-9"
-								maxChars="3"
+								restrict="0-9."
+								maxChars="10"
 								change="data.bpm=Number(bpmInput.text)"
 								top="2"/>
 						</s:Group>
@@ -411,15 +450,15 @@
 					width="100%">
 
 					<!--buy link-->
-					<mx:GridItem width="100">
+					<mx:GridItem width="92">
 						<s:Group width="100%">
-							<s:Label text="Buy this set link:"
+							<s:Label text="Buy track link:"
 								styleName="bodySoft right"
 								top="8"
 								width="100%"/>
 						</s:Group>
 					</mx:GridItem>
-					<mx:GridItem width="100%">
+					<mx:GridItem width="201">
 						<s:Group width="100%">
 							<s:TextInput id="purchaseUrlInput"
 								text="{data.purchase_url || 'http://'}"
@@ -440,10 +479,10 @@
 						</s:Group>
 					</mx:GridItem>
 					<mx:GridItem width="100%">
-						<s:Group width="100%">
+						<s:Group>
 							<s:TextInput id="videoUrlInput"
-								text="{data.purchase_url || 'http://'}"
-								width="100%"
+								text="{data.video_url || 'http://'}"
+								width="196"
 								skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkin"
 								change="data.video_url=videoUrlInput.text"
 								top="2"/>
