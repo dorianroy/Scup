@@ -206,8 +206,8 @@
 				toolTip="This track has been successfully uploaded. Click here to view it in your browser."/>
 
 			<!-- complete button -->
-			<mx:LinkButton label="Upload complete"
-				skin="com.dasflash.soundcloud.scup.view.skins.LinkButtonSkin"
+			<s:Button label="Upload complete"
+				skinClass="com.dasflash.soundcloud.scup.view.skins.LinkButtonSkin"
 				top="2"
 				right="28"
 				visible="{data.id}"
@@ -226,8 +226,8 @@
 				toolTip="Uploading this track has failed. Click here to try it again."/>
 
 			<!-- retry button -->
-			<mx:LinkButton label="Retry upload"
-				skin="com.dasflash.soundcloud.scup.view.skins.LinkButtonSkin"
+			<s:Button label="Retry upload"
+				skinClass="com.dasflash.soundcloud.scup.view.skins.LinkButtonSkin"
 				top="2"
 				right="28"
 				visible="{data.uploadFailed}"
@@ -334,13 +334,16 @@
 						</s:Group>
 					</mx:GridItem>
 					<mx:GridItem width="100%">
-						<s:DropDownList id="typeDropDown"
-							width="190"
-							dataProvider="{data.trackTypes}"
-							prompt="Pick a type"
-							selectedIndex="{data.selectedTrackTypeIndex}"
-							skinClass="com.dasflash.soundcloud.scup.view.skins.DropDownListSkin"
-							change="data.selectedTrackTypeIndex=typeDropDown.selectedIndex;typeDropDown.invalidateSize()"/>
+						<s:Group>
+							<s:DropDownList id="typeDropDown"
+								top="6"
+								width="190"
+								dataProvider="{data.trackTypes}"
+								prompt="Pick a type"
+								selectedIndex="{data.selectedTrackTypeIndex}"
+								skinClass="com.dasflash.soundcloud.scup.view.skins.DropDownListSkin"
+								change="data.selectedTrackTypeIndex=typeDropDown.selectedIndex;typeDropDown.invalidateSize()"/>
+						</s:Group>
 					</mx:GridItem>
 
 					<!--release no.-->
@@ -419,12 +422,15 @@
 						</s:Group>
 					</mx:GridItem>
 					<mx:GridItem width="201">
-						<s:DropDownList id="licenseDropDown"
-							width="190"
-							dataProvider="{SetData.LICENSE_TYPES}"
-							selectedIndex="{data.selectedLicenseIndex}"
-							skinClass="com.dasflash.soundcloud.scup.view.skins.DropDownListSkin"
-							change="if(data) data.selectedLicenseIndex=licenseDropDown.selectedIndex;licenseDropDown.invalidateSize()"/>
+						<s:Group>
+							<s:DropDownList id="licenseDropDown"
+								top="6"
+								width="190"
+								dataProvider="{SetData.LICENSE_TYPES}"
+								selectedIndex="{data.selectedLicenseIndex}"
+								skinClass="com.dasflash.soundcloud.scup.view.skins.DropDownListSkin"
+								change="if(data) data.selectedLicenseIndex=licenseDropDown.selectedIndex;licenseDropDown.invalidateSize()"/>
+						</s:Group>
 					</mx:GridItem>
 
 					<!--BPM-->

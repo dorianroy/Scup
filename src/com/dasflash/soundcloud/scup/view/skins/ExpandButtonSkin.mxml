@@ -55,9 +55,9 @@
 			<s:Path data="M 1 0
 				L 6 4
 				L 1 8"
-				data.selectedStates="M 0 1
-					   L 8 1
-						L 4 6">
+				data.selectedStates="M 0 2
+					   L 8 2
+						L 4 7">
 				<s:fill>
 					<s:SolidColor color="{getStyle('color')}"/>
 				</s:fill>

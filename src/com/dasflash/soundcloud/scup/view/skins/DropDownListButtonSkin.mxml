@@ -51,8 +51,7 @@
 	</s:Rect>
 
 	<!-- arrows -->
-	<s:VGroup top="8"
-		right="6"
+	<s:VGroup right="6"
 		gap="2"
 		alpha.up=".6">
 		<s:Path verticalCenter="0"

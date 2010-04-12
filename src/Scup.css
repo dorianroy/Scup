@@ -2,38 +2,55 @@
 @namespace s "library://ns.adobe.com/flex/spark";
 @namespace mx "library://ns.adobe.com/flex/mx";
 
-/*@font-face
+@font-face
 {
 	fontFamily: Interstate-Regular;
 	fontWeight: normal;
 	fontStyle: normal;
-	src: local("Interstate-Regular");
+	src: url("assets/Interstate-Regular.ttf");
 }
 @font-face
 {
 	fontFamily: Interstate-Light;
 	fontWeight: normal;	
 	fontStyle: normal;
-	src: local("Interstate-Light");
-}*/
+	src: url("assets/Interstate-Light.ttf");
+}
+
 @font-face
 {
-	fontFamily: Lucida Sans;
+	fontFamily: LucidaGrande;
 	fontWeight: normal;
 	fontStyle: normal;
-	src: url("assets/lsans.ttf");
+	src: url("assets/LucidaGrande.ttf");
 }
 @font-face
 {
-	fontFamily: Lucida Sans;
+	fontFamily: LucidaGrande;
 	fontWeight: bold;
 	fontStyle: normal;
-	src: url("assets/lsansd.ttf");
+	src: url("assets/LucidaGrandeBold.ttf");
+}
+@font-face
+{
+	fontFamily: LucidaGrandeMX;
+	fontWeight: normal;
+	fontStyle: normal;
+	src: url("assets/LucidaGrande.ttf");
+	embedAsCFF: false;
+}
+@font-face
+{
+	fontFamily: LucidaGrandeMX;
+	fontWeight: bold;
+	fontStyle: normal;
+	src: url("assets/LucidaGrandeBold.ttf");
+	embedAsCFF: false;
 }
 
 global
 {
-	fontFamily: Lucida Grande, Lucida Sans, Lucida-Sans, LucidaSans, Lucida Sans Unicode, Arial;
+	fontFamily: LucidaGrande;
 	fontSize: 12;
 	color: #333333;
 }
@@ -41,7 +58,12 @@ s|SkinnableComponent
 {
 	focusSkin: ClassReference('com.dasflash.soundcloud.scup.view.skins.FocusSkin');
 }
+mx|Button, mx|TextInput, mx|DateField
+{
+	fontFamily: LucidaGrandeMX;
+}
 mx|ToolTip {
+	fontFamily: LucidaGrandeMX;
 	backgroundAlpha: 1.0;
 	backgroundColor: #FFFFCA;
 	color: #000000;
@@ -54,7 +76,7 @@ mx|ToolTip {
 }
 .authWindowHead
 {
-	fontFamily: Interstate-Regular, Helvetica, Arial, sans-serif;
+	fontFamily: Interstate-Regular;
 	fontSize: 21;
 	textAlign: center;
 	paddingLeft: 40;
@@ -62,17 +84,13 @@ mx|ToolTip {
 }
 .authWindowBody
 {
-	fontFamily: Interstate-Light, Helvetica, Arial, sans-serif;
+	fontFamily: Interstate-Light;
 	fontSize: 14;
 	color: #999999;
 	textAlign: center;
 	paddingLeft: 40;
 	paddingRight: 40;
 	paddingBottom: 10;
-}
-.codeTextInput
-{
-	
 }
 .mainWindow
 {
@@ -95,14 +113,14 @@ mx|ToolTip {
 }
 .dropHereLabelHead
 {
-	fontFamily: Interstate-Light, Helvetica, Arial, sans-serif;
+	fontFamily: Interstate-Light;
 	fontSize: 22;
 	color: #999999;
 	textAlign: center;
 }
 .dropHereLabelSub
 {
-	fontFamily: Interstate-Light, Helvetica, Arial, sans-serif;
+	fontFamily: Interstate-Light;
 	fontSize: 16;
 	color: #999999;
 	textAlign: center;
@@ -133,9 +151,9 @@ mx|ToolTip {
 .dateField
 {
 	borderSkin: ClassReference(null);
-	paddingTop: 4;
+	paddingTop: 3;
 	paddingBottom: 0;
-	fontFamily: Lucida Grande, Lucida Sans, Lucida-Sans, LucidaSans, Lucida Sans Unicode, Arial;
+	paddingLeft: 0;
 }
 .sharingPanelTitle
 {
@@ -155,12 +173,6 @@ mx|ToolTip {
 .standardButton
 {
 	corner-radius: 4;
-}
-.linkButton
-{
-	color: #FFFFFF;
-	font-weight: bold;
-	font-size: 11px;
 }
 .trackTextInput
 {

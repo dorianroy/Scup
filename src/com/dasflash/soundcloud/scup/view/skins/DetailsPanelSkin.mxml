@@ -45,10 +45,10 @@
 	<!--background-->
 	<!-- bottom=-1 is a workaround to avoid flickering during the transition-->
 	<s:Rect id="background"
-			left="0"
-			top="0"
-			right="0"
-			bottom="-1">
+		left="0"
+		top="0"
+		right="0"
+		bottom="-1">
 		<s:fill>
 			<s:SolidColor color="#EBF1F9"/>
 		</s:fill>
@@ -166,13 +166,16 @@
 					</s:Group>
 				</mx:GridItem>
 				<mx:GridItem width="100%">
-					<s:DropDownList id="typeDropDown"
-						width="200"
-						dataProvider="{hostComponent.playlistTypes}"
-						prompt="Pick a type"
-						selectedIndex="{hostComponent.selectedPlaylistTypeIndex}"
-						skinClass="com.dasflash.soundcloud.scup.view.skins.DropDownListSkin"
-						change="hostComponent.selectedPlaylistTypeIndex=typeDropDown.selectedIndex"/>
+					<s:Group>
+						<s:DropDownList id="typeDropDown"
+							top="6"
+							width="200"
+							dataProvider="{hostComponent.playlistTypes}"
+							prompt="Pick a type"
+							selectedIndex="{hostComponent.selectedPlaylistTypeIndex}"
+							skinClass="com.dasflash.soundcloud.scup.view.skins.DropDownListSkin"
+							change="hostComponent.selectedPlaylistTypeIndex=typeDropDown.selectedIndex"/>
+					</s:Group>
 				</mx:GridItem>
 
 				<!--release no.-->
@@ -251,12 +254,15 @@
 					</s:Group>
 				</mx:GridItem>
 				<mx:GridItem width="100%">
-					<s:DropDownList id="licenseDropDown"
-						width="200"
-						dataProvider="{SetData.LICENSE_TYPES}"
-						selectedIndex="{hostComponent.selectedLicenseIndex}"
-						skinClass="com.dasflash.soundcloud.scup.view.skins.DropDownListSkin"
-						change="hostComponent.selectedLicenseIndex=licenseDropDown.selectedIndex"/>
+					<s:Group>
+						<s:DropDownList id="licenseDropDown"
+							top="6"
+							width="200"
+							dataProvider="{SetData.LICENSE_TYPES}"
+							selectedIndex="{hostComponent.selectedLicenseIndex}"
+							skinClass="com.dasflash.soundcloud.scup.view.skins.DropDownListSkin"
+							change="hostComponent.selectedLicenseIndex=licenseDropDown.selectedIndex"/>
+					</s:Group>
 				</mx:GridItem>
 
 				<!--ean-->
