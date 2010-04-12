@@ -10,13 +10,8 @@
 	</fx:Metadata>
 
 	<fx:Script>
-		/* Define the skin elements that should not be colorized.
-		 For toggle button, the graphics are colorized but the label is not. */
 		static private const exclusions:Array = ["labelDisplay"];
 
-		/**
-		 * @copy spark.skins.SparkSkin#colorizeExclusions
-		 */
 		override public function get colorizeExclusions():Array
 		{
 			return exclusions;
@@ -42,22 +37,36 @@
 			stateGroups="selectedUpStates, disabledStates, selectedStates"/>
 	</s:states>
 
-	<s:layout>
-		<s:HorizontalLayout gap="2"/>
-	</s:layout>
+	<s:Group>
 
-	<mx:Image source.selectedStates="@Embed('assets/arrow_mini_down.png')"
-		source="@Embed('assets/arrow_mini_right.png')"/>
+		<!-- invisible rect to make background clickable -->
+		<s:Graphic>
+			<s:Rect width="10"
+				height="10"
+				alpha="0">
+				<s:fill>
+					<s:SolidColor/>
+				</s:fill>
+			</s:Rect>
+		</s:Graphic>
 
-	<!-- layer 8: text -->
+		<!-- arrow grapic -->
+		<s:Graphic>
+			<s:Path data="M 1 0
+				L 6 4
+				L 1 8"
+				data.selectedStates="M 0 1
+					   L 8 1
+						L 4 6">
+				<s:fill>
+					<s:SolidColor color="{getStyle('color')}"/>
+				</s:fill>
+			</s:Path>
+		</s:Graphic>
+	</s:Group>
+
 	<s:Label id="labelDisplay"
-		text="More options"
-		text.selectedStates="Hide more options"
 		verticalAlign="middle"
-		verticalCenter="1"
-		left="6"
-		top="2"
-		bottom="2"
-		styleName="textButton"/>
+		left="10"/>
 
 </s:SparkSkin>

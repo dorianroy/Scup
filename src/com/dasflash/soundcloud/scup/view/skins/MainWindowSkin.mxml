@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:fb="http://ns.adobe.com/flashbuilder/2009"
+	alpha.disabledGroup="0.5">
+	<fx:Metadata>[HostComponent("spark.components.Window")]</fx:Metadata>
+
+	<s:states>
+		<s:State name="normal"/>
+		<s:State name="disabled"
+			stateGroups="disabledGroup"/>
+		<s:State name="normalAndInactive"
+			stateGroups="inactiveGroup"/>
+		<s:State name="disabledAndInactive"
+			stateGroups="disabledGroup, inactiveGroup"/>
+	</s:states>
+
+	<!-- layer 1: background fill -->
+	<!--- Defines the background color of the skin. -->
+	<s:Rect id="backgroundRect"
+		left="0"
+		right="0"
+		top="0"
+		bottom="0">
+		<s:fill>
+			<!--- @private -->
+			<s:SolidColor id="backgroundFill"/>
+		</s:fill>
+	</s:Rect>
+
+	<!-- layer 2: content + status bar -->
+	<s:Group left="0"
+		right="0"
+		top="0"
+		bottom="0"
+		minHeight="24"
+		minWidth="0">
+		<s:layout>
+			<s:VerticalLayout gap="0"/>
+		</s:layout>
+
+		<!-- content -->
+		<!--- @copy spark.components.SkinnableContainer#contentGroup -->
+		<s:Group id="contentGroup"
+			width="100%"
+			height="100%"
+			minHeight="0"
+			minWidth="0"/>
+
+		<!-- status bar -->
+		<!--- @copy spark.components.WindowedApplication#statusBar -->
+		<s:Group id="statusBar"
+			width="100%"
+			minHeight="16">
+
+			<!-- status bar fill -->
+			<s:Rect left="0"
+				right="0"
+				top="0"
+				bottom="0">
+				<s:fill>
+					<s:LinearGradient rotation="90">
+						<s:GradientEntry color="#b0b0b0"
+							color.inactiveGroup="#dddddd"/>
+						<s:GradientEntry color="#a7a7a7"
+							color.inactiveGroup="#d8d8d8"/>
+					</s:LinearGradient>
+				</s:fill>
+			</s:Rect>
+
+			<!-- status bar dark separator line -->
+			<s:Line left="0"
+				right="0">
+				<s:stroke>
+					<s:SolidColorStroke color="#515151"
+						color.inactiveGroup="#777777"/>
+				</s:stroke>
+			</s:Line>
+
+			<!-- status bar bright separator line -->
+			<s:Line left="0"
+				right="0"
+				top="1">
+				<s:stroke>
+					<s:SolidColorStroke color="#d0d0d0"
+						color.inactiveGroup="#ebebeb"/>
+				</s:stroke>
+			</s:Line>
+
+			<!-- status text -->
+			<!--- @copy spark.components.WindowedApplication#statusText -->
+			<s:Label id="statusText"
+				top="2"
+				bottom="2"
+				left="10"
+				right="10"
+				verticalAlign="middle"
+				fontSize="10"
+				color="0x585858"
+				width="100%"
+				maxDisplayedLines="1"/>
+
+		</s:Group>
+	</s:Group>
+
+</s:SparkSkin>

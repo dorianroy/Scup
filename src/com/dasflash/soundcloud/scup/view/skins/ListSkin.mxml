@@ -96,13 +96,11 @@
 	</s:Rect>
 
 	<!--- Defines the appearance of the list items, including their layout direction -->
-	<s:Scroller left="0"
-		top="0"
-		right="0"
-		bottom="0"
+	<s:Scroller width="100%"
+		height="100%"
 		id="scroller"
 		focusEnabled="false"
-		minViewportInset="20"
+		measuredSizeIncludesScrollBars="false"
 		horizontalScrollPolicy="off">
 		<s:DataGroup id="dataGroup"
 			rendererAdd="rendererAddHandler(event)"

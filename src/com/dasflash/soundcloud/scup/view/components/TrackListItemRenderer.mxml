@@ -19,6 +19,7 @@
 			import com.dasflash.soundcloud.scup.events.TrackListEvent;
 			import com.dasflash.soundcloud.scup.model.SetData;
 			import com.dasflash.soundcloud.scup.model.TrackData;
+			import com.dasflash.soundcloud.scup.view.skins.DeleteButtonSkin;
 			import com.dasflash.soundcloud.scup.view.skins.TextInputSkinMultiLine;
 
 			import flash.events.MouseEvent;
@@ -94,13 +95,6 @@
 			{
 				dispatchEvent(new TrackListEvent(TrackListEvent.RETRY_TRACK, TrackData(data)));
 			}
-
-			protected function dateChangeHandler(event:CalendarLayoutChangeEvent):void
-			{
-				data.release_day = dateField.selectedDate.date;
-				data.release_month = dateField.selectedDate.month + 1;
-				data.release_year = dateField.selectedDate.fullYear;
-			}
 		]]>
 	</fx:Script>
 
@@ -123,16 +117,15 @@
 	</s:transitions>
 
 	<!--background fill-->
-	<s:Rect left="1"
-		right="1"
+	<s:Rect left="21"
+		right="21"
 		top="0"
 		bottom="2"
 		radiusX="4"
 		radiusY="4">
 		<s:fill>
 			<s:LinearGradient rotation="90">
-				<s:GradientEntry color.hovered="#F2F2F2"
-					color="#EEEEEE"
+				<s:GradientEntry color="#EEEEEE"
 					ratio="0.95"/>
 				<s:GradientEntry color="#E6E6E6"/>
 			</s:LinearGradient>
@@ -144,6 +137,8 @@
 	</s:Rect>
 
 	<s:VGroup width="100%"
+		left="20"
+		right="20"
 		gap="0"
 		paddingBottom="2"
 		excludeFrom="dragging">
@@ -151,16 +146,32 @@
 		<!-- normal state elements -->
 		<s:Group width="100%">
 
+			<s:BitmapImage left="4"
+				top="5"
+				source="@Embed('assets/grip.png')"/>
+
+			<!-- more options button -->
+			<s:ToggleButton id="expandButton"
+				left="21"
+				top="9"
+				skinClass="com.dasflash.soundcloud.scup.view.skins.ExpandButtonSkin"
+				styleName="expandButton"
+				change="expanded = expandButton.selected"
+				mouseDown="event.stopPropagation()"
+				selected="{currentState=='expanded'}"/>
+
 			<!-- track number -->
 			<s:Label text="{data.index + 1}."
+				width="17"
+				textAlign="right"
 				color="#444444"
 				top="8"
-				left="8"/>
+				left="34"/>
 
 			<!-- track title -->
 			<s:TextInput id="titleInput"
-				width="305"
-				left="20"
+				width="420"
+				left="50"
 				top="2"
 				bottom="1"
 				text="{data.title}"
@@ -168,27 +179,6 @@
 				change="if(data) data.title = titleInput.text"
 				alpha="{data.title?1:0.6}"
 				skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkin"/>
-
-			<!-- more options button -->
-			<s:ToggleButton id="expandButton"
-				left="342"
-				top="9"
-				height="8"
-				includeIn="hoveredStates, expandedStates"
-				skinClass="com.dasflash.soundcloud.scup.view.skins.ExtraFieldsButtonSkin"
-				change="expanded = expandButton.selected"
-				mouseDown="event.stopPropagation()"
-				selected="{currentState=='expanded'}"/>
-
-			<!-- delete button -->
-			<mx:Image id="deleteButton"
-				right="155"
-				top="6"
-				source="@Embed('assets/trashcan.png')"
-				click="deleteButtonClickHandler(event)"
-				includeIn="hoveredStates, expandedStates"
-				mouseDown="event.stopPropagation()"
-				toolTip="Remove this track from the list (it will not be removed from your computer)"/>
 
 			<!-- progress bar -->
 			<components:SimpleProgressBar right="8"
@@ -256,16 +246,30 @@
 			paddingBottom="4"
 			id="expandedElements">
 
-			<s:TextArea id="descrInput"
-				paddingRight="8"
-				width="100%"
-				mouseDown="event.stopPropagation()"
-				text="{data.description || 'Add a description'}"
-				change="if(data) data.description = descrInput.text"
-				alpha="{data.description ? 1 : 0.6}"
-				height="37"
-				styleName="trackTextInput"
-				skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkinMultiLine"/>
+			<s:Group width="100%">
+
+				<!-- delete button -->
+				<s:Button id="deleteButton"
+					left="3"
+					top="5"
+					click="deleteButtonClickHandler(event)"
+					mouseDown="event.stopPropagation()"
+					skinClass="com.dasflash.soundcloud.scup.view.skins.DeleteButtonSkin"
+					toolTip="Remove this track from the list and delete it on the server"/>
+
+				<!-- description -->
+				<s:TextArea id="descrInput"
+					left="26"
+					width="584"
+					height="37"
+					mouseDown="event.stopPropagation()"
+					text="{data.description || 'Add a description'}"
+					change="if(data) data.description = descrInput.text"
+					alpha="{data.description ? 1 : 0.6}"
+					styleName="trackTextInput"
+					skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkinMultiLine"/>
+
+			</s:Group>
 
 			<mx:Grid id="grid"
 				width="100%"
@@ -395,7 +399,7 @@
 					</mx:GridItem>
 					<mx:GridItem width="100%">
 						<mx:DateField id="dateField"
-							change="dateChangeHandler(event)"
+							change="data.releaseDate=dateField.selectedDate"
 							selectedDate="{data ? data.releaseDate : null}"
 							textInputStyleName="dateField"
 							focusSkin="com.dasflash.soundcloud.scup.view.skins.FocusSkin"/>

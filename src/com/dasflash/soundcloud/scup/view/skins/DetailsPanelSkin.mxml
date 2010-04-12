@@ -43,9 +43,12 @@
 	</s:transitions>
 
 	<!--background-->
+	<!-- bottom=-1 is a workaround to avoid flickering during the transition-->
 	<s:Rect id="background"
-		width="100%"
-		height="100%">
+			left="0"
+			top="0"
+			right="0"
+			bottom="-1">
 		<s:fill>
 			<s:SolidColor color="#EBF1F9"/>
 		</s:fill>
@@ -87,7 +90,10 @@
 					skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkinMultiLine"/>
 
 				<s:ToggleButton id="expandButton"
-					skinClass="com.dasflash.soundcloud.scup.view.skins.ExtraFieldsButtonSkin"
+					skinClass="com.dasflash.soundcloud.scup.view.skins.ExpandButtonSkin"
+					label="More Options"
+					label.expanded="Hide Options"
+					styleName="expandButton"
 					change="expandButtonChangeHandler(event)"
 					selected="{currentState=='expanded'}"/>
 

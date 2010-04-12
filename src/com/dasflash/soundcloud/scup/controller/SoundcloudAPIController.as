@@ -312,7 +312,7 @@ package com.dasflash.soundcloud.scup.controller
 						// it easier to save the returned track id in the corresponding TrackData					
 						var trackDelegate:TrackDelegate = new TrackDelegate(soundcloudClient, track);
 						trackDelegate.addEventListener(SoundcloudEvent.REQUEST_COMPLETE, trackUploadCompleteHandler);
-//						trackDelegate.startUpload();
+						trackDelegate.startUpload();
 						
 						// count this upload
 						uploadCount++;
@@ -539,13 +539,13 @@ package com.dasflash.soundcloud.scup.controller
 		
 		// CANCEL SET
 		
-		[Mediate(event="cancelSet")]
+		/*[Mediate(event="cancelSet")]
 		public function cancelSetHandler(event:SetDataEvent):void
 		{
 			Alert.show("If you continue all uploaded tracks will be deleted from " +
 				"the server and all data you've entered will be lost.",
 				"", Alert.CANCEL|Alert.OK, null, cancelAlertCloseHandler);
-		}
+		}*/
 		
 		protected function cancelAlertCloseHandler(event:CloseEvent):void
 		{

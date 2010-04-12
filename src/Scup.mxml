@@ -5,12 +5,12 @@
 	xmlns:view="com.dasflash.soundcloud.scup.view.*"
 	xmlns:swiz="http://swiz.swizframework.org"
 	width="667"
-	height="493"
+	height="540"
 	minWidth="667"
 	minHeight="440"
 	maxWidth="667"
-	showStatusBar="false"
 	styleName="mainWindow"
+	skinClass="com.dasflash.soundcloud.scup.view.skins.MainWindowSkin"
 	windowComplete="windowCompleteHandler(event)"
 	visible="false">
 
@@ -24,7 +24,6 @@
 	<fx:Script>
 		<![CDATA[
 			import com.dasflash.soundcloud.scup.events.AppEvent;
-
 			import mx.events.AIREvent;
 			import mx.logging.LogEventLevel;
 

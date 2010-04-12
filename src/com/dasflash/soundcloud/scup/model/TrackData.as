@@ -2,7 +2,7 @@ package com.dasflash.soundcloud.scup.model
 {
 	import flash.events.EventDispatcher;
 	import flash.filesystem.File;
-
+	
 	import mx.collections.ArrayCollection;
 
 	[Bindable]
@@ -72,9 +72,9 @@ package com.dasflash.soundcloud.scup.model
 		public var label_name:String;
 		public var purchase_url:String;
 		public var release:String;
-		private var _release_day:uint;
-		private var _release_month:uint;
-		private var _release_year:uint;
+		private var _release_day:uint = new Date().date;
+		private var _release_month:uint = new Date().month+1;
+		private var _release_year:uint = new Date().fullYear;
 //		public var sharing:String			= "private"; // "public" or "private"
 //		public var streamable:Boolean
 		public var tag_list:String; //a space separated list of tags
@@ -99,49 +99,42 @@ package com.dasflash.soundcloud.scup.model
 
 		// scup internal fields
 		public var index:uint; // index of this item within the tracklist
-		public var releaseDate:Date;
 		public var isUploading:Boolean;
 		public var uploadComplete:Boolean;
 		public var uploadFailed:Boolean;
 		public var isDirty:Boolean = true; // TODO set by details panel
 
+		// release date fields
+		public var releaseDate:Date = new Date();
 
 		public function get release_year():uint
 		{
-			return _release_year;
+			return releaseDate.fullYear;
 		}
 
 		public function set release_year(value:uint):void
 		{
-			_release_year = value;
-			calcReleaseDate();
+			releaseDate.fullYear = value;
 		}
 
 		public function get release_month():uint
 		{
-			return _release_month;
+			return releaseDate.month;
 		}
 
 		public function set release_month(value:uint):void
 		{
-			_release_month = value;
-			calcReleaseDate();
+			releaseDate.month = value - 1;
 		}
 
 		public function get release_day():uint
 		{
-			return _release_day;
+			return releaseDate.date;
 		}
 
 		public function set release_day(value:uint):void
 		{
-			_release_day = value;
-			calcReleaseDate();
-		}
-
-		protected function calcReleaseDate():void
-		{
-			releaseDate = new Date(release_year, release_month - 1, release_day);
+			releaseDate.date = value;
 		}
 
 	}

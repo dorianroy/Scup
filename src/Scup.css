@@ -113,12 +113,6 @@ mx|ToolTip {
 	font-weight: bold;
 	color: #FFFFFF;
 }
-.textButton
-{
-	font-size: 11px;
-	font-weight: bold;
-	color: #000000;
-}
 .gridRow 
 {
 	borderSkin: ClassReference('mx.skins.halo.HaloBorder');
@@ -141,12 +135,16 @@ mx|ToolTip {
 	borderSkin: ClassReference(null);
 	paddingTop: 4;
 	paddingBottom: 0;
+	fontFamily: Lucida Grande, Lucida Sans, Lucida-Sans, LucidaSans, Lucida Sans Unicode, Arial;
 }
-.sharingPanelCB
+.sharingPanelTitle
 {
 	color: #FFFFFF;
 	fontWeight: bold;
 	fontSize: 11px;
+}
+.sharingPanelCB
+{
 	corner-radius: 4;
 }
 .sharingPanelHelp
@@ -168,13 +166,16 @@ mx|ToolTip {
 {
 	contentBackgroundColor: #FFFFFF;
 }
-.deleteArtworkButton
-{
-	up-skin: Embed('assets/delete_button.png');
-	down-skin: Embed('assets/delete_button_over.png');
-	over-skin: Embed('assets/delete_button_over.png');
-}
 .trackListLinkButton
 {
 	font-size: 11px;
+}
+.expandButton
+{
+	font-size: 11px;
+	font-weight: bold;
+}
+.expandButtonLight
+{
+	color: #FFFFFF;
 }

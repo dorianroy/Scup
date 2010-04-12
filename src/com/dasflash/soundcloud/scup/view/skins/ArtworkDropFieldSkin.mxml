@@ -25,18 +25,18 @@
 
 	<!-- loader -->
 	<mx:Image id="loader"
-		source="{hostComponent.artworkFileURL}"
-		horizontalAlign="center"
-		verticalAlign="middle"
-		smoothBitmapContent="true"
 		top="0"
 		right="0"
 		bottom="0"
 		left="0"
+		source="{hostComponent.artworkFileURL}"
+		horizontalAlign="center"
+		verticalAlign="middle"
+		smoothBitmapContent="true"
 		maintainAspectRatio="true"/>
 
 	<!-- frame -->
-	<mx:Image source="@Embed('assets/artwork_frame.png')"/>
+	<s:BitmapImage source="@Embed('assets/artwork_frame.png')"/>
 
 	<s:VGroup horizontalAlign="center"
 		width="100%"
@@ -47,13 +47,13 @@
 			visible="{!Boolean(hostComponent.artworkFileURL)}"/>
 	</s:VGroup>
 
-	<mx:Button id="deleteButton"
-		right="6"
+	<s:Button id="deleteButton"
+		right="5"
 		top="6"
-		toolTip="Remove artwork"
 		alpha="0"
-		styleName="deleteArtworkButton"
+		toolTip="Remove artwork"
 		visible="{Boolean(hostComponent.artworkFileURL)}"
-		click="hostComponent.removeFile()"/>
+		click="hostComponent.removeFile()"
+		skinClass="com.dasflash.soundcloud.scup.view.skins.DeleteButtonSkin"/>
 
 </s:Skin>

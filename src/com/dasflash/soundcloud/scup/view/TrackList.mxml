@@ -16,6 +16,7 @@
 	<fx:Script>
 		<![CDATA[
 			import com.dasflash.soundcloud.scup.events.SetDataEvent;
+			import com.dasflash.soundcloud.scup.view.skins.AddButtonSkin;
 
 			import flash.events.NativeDragEvent;
 
@@ -92,6 +93,27 @@
 
 				// TODO close open tracklist item
 			}
+
+			public function browseFiles():void
+			{
+				var file:File = new File();
+
+				file.addEventListener(FileListEvent.SELECT_MULTIPLE, fileSelectHandler);
+
+				// limit to .ogg, .mp3, .mp4 .flac, .aac, .wav(e) .aif(f) 
+				var soundFilesFilter:FileFilter = new FileFilter("Sound files", "*.ogg;*.mp3;*.mp4;*.flac;*.aac;*.wav;*.wave;*.aif;*.aiff");
+
+				file.browseForOpenMultiple("Select Tracks", [soundFilesFilter]);
+			}
+
+			protected function fileSelectHandler(event:FileListEvent):void
+			{
+				var setDataEvent:SetDataEvent = new SetDataEvent(SetDataEvent.ADD_FILES);
+
+				setDataEvent.files = event.files;
+
+				dispatchEvent(setDataEvent);
+			}
 		]]>
 	</fx:Script>
 
@@ -131,6 +153,12 @@
 		top="0"
 		bottom="0">
 
+		<s:Button top="6"
+			right="20"
+			click="browseFiles()"
+			toolTip="Add tracks"
+			skinClass="com.dasflash.soundcloud.scup.view.skins.AddButtonSkin"/>
+
 		<s:Label text="Drag files here to upload"
 			visible="{tracks.length==0}"
 			styleName="dropHereLabelHead"
@@ -151,7 +179,7 @@
 			dataProvider="{tracks}"
 			width="100%"
 			height="100%"
-			top="0"
+			top="35"
 			dragStart="dragStartHandler(event)"
 			dragEnabled="true"
 			dragMoveEnabled="true"

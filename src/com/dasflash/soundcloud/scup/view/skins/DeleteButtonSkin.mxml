@@ -2,15 +2,15 @@
 <s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009"
 	xmlns:s="library://ns.adobe.com/flex/spark"
 	xmlns:fb="http://ns.adobe.com/flashbuilder/2009"
-	minWidth="23"
-	minHeight="23"
+	minWidth="18"
+	minHeight="18"
 	alpha.disabled="0.5">
 
 	<!-- host component -->
 	<fx:Metadata>
 		<![CDATA[ 
-        [HostComponent("spark.components.Button")]
-        ]]>
+		[HostComponent("spark.components.Button")]
+		]]>
 	</fx:Metadata>
 
 	<!-- states -->
@@ -21,8 +21,8 @@
 		<s:State name="disabled"/>
 	</s:states>
 
-	<s:BitmapImage source="@Embed('assets/copy-to-tracks_up.png')"
-		source.over="@Embed('assets/copy-to-tracks_over.png')"
-		source.down="@Embed('assets/copy-to-tracks_down.png')"/>
+	<s:BitmapImage source="@Embed('assets/delete-button_up.png')"
+		source.over="@Embed('assets/delete-button_up.png')"
+		source.down="@Embed('assets/delete-button_down.png')"/>
 
 </s:SparkSkin>

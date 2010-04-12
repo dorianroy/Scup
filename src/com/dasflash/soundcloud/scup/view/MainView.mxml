@@ -1,24 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009"
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
 	xmlns:s="library://ns.adobe.com/flex/spark"
 	xmlns:mx="library://ns.adobe.com/flex/mx"
 	xmlns:view="com.dasflash.soundcloud.scup.view.*"
-	gap="0">
+	xmlns:metadata="org.swizframework.metadata.*">
 
-	<view:DetailsPanel id="detailsPanel"
+	<fx:Metadata>
+		[Event(name="saveSet",type="com.dasflash.soundcloud.scup.events.SetDataEvent")]
+	</fx:Metadata>
+
+	<fx:Script>
+		<![CDATA[
+			import com.dasflash.soundcloud.scup.events.SetDataEvent;
+		]]>
+	</fx:Script>
+
+	<s:VGroup gap="0"
 		width="100%"
-		skinClass="com.dasflash.soundcloud.scup.view.skins.DetailsPanelSkin"
-		currentStateChange="if(detailsPanel.currentState=='expanded')sharingPanel.currentState='collapsed'"/>
+		height="100%">
 
-	<view:TrackList width="100%"
-		height="100%"/>
+		<view:DetailsPanel id="detailsPanel"
+			width="100%"
+			skinClass="com.dasflash.soundcloud.scup.view.skins.DetailsPanelSkin"
+			currentStateChange="if(detailsPanel.currentState=='expanded')sharingPanel.currentState='collapsed'"/>
 
-	<view:SharingPanel id="sharingPanel"
-		width="100%"
-		skinClass="com.dasflash.soundcloud.scup.view.skins.SharingPanelSkin"
-		currentStateChange="if(sharingPanel.currentState=='expanded')detailsPanel.currentState='collapsed'"/>
+		<view:TrackList width="100%"
+			height="100%"/>
 
-	<view:StatusBar width="100%"
-		skinClass="com.dasflash.soundcloud.scup.view.skins.StatusBarSkin"/>
+		<view:SharingPanel id="sharingPanel"
+			width="100%"
+			skinClass="com.dasflash.soundcloud.scup.view.skins.SharingPanelSkin"
+			currentStateChange="if(sharingPanel.currentState=='expanded')detailsPanel.currentState='collapsed'"/>
 
-</s:VGroup>
+	</s:VGroup>
+
+	<!--
+		 This button is placed here as a workaround for a Flex bug
+		 where fixed elements flicker when the background of their
+		 container is animated
+	-->
+	<s:Button id="SendSetButton"
+		bottom="5"
+		right="21"
+		label="Send Set"
+		styleName="standardButton"
+		click="dispatchEvent(new SetDataEvent(SetDataEvent.SAVE_SET))"/>
+
+</s:Group>

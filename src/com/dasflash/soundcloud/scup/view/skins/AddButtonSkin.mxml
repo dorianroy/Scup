@@ -9,8 +9,8 @@
 	<!-- host component -->
 	<fx:Metadata>
 		<![CDATA[ 
-        [HostComponent("spark.components.Button")]
-        ]]>
+		[HostComponent("spark.components.Button")]
+		]]>
 	</fx:Metadata>
 
 	<!-- states -->
@@ -21,8 +21,8 @@
 		<s:State name="disabled"/>
 	</s:states>
 
-	<s:BitmapImage source="@Embed('assets/copy-to-tracks_up.png')"
-		source.over="@Embed('assets/copy-to-tracks_over.png')"
-		source.down="@Embed('assets/copy-to-tracks_down.png')"/>
+	<s:BitmapImage source="@Embed('assets/add-button_up.png')"
+		source.over="@Embed('assets/add-button_up.png')"
+		source.down="@Embed('assets/add-button_down.png')"/>
 
 </s:SparkSkin>
