@@ -20,7 +20,7 @@
 			import com.dasflash.soundcloud.scup.model.SetData;
 			import com.dasflash.soundcloud.scup.model.TrackData;
 			import com.dasflash.soundcloud.scup.view.skins.DeleteButtonSkin;
-			import com.dasflash.soundcloud.scup.view.skins.TextInputSkinMultiLine;
+			import com.dasflash.soundcloud.scup.view.skins.TextAreaSkin;
 
 			import flash.events.MouseEvent;
 			import flash.net.navigateToURL;
@@ -146,6 +146,7 @@
 		<!-- normal state elements -->
 		<s:Group width="100%">
 
+			<!-- drag handle -->
 			<s:BitmapImage left="4"
 				top="5"
 				source="@Embed('assets/grip.png')"/>
@@ -169,12 +170,13 @@
 				left="34"/>
 
 			<!-- track title -->
-			<s:TextInput id="titleInput"
+			<components:PlaceholderTextInput id="titleInput"
 				width="420"
 				left="50"
 				top="2"
 				bottom="1"
 				text="{data.title}"
+				placeholder="Enter a title"
 				mouseDown="event.stopPropagation()"
 				change="if(data) data.title = titleInput.text"
 				alpha="{data.title?1:0.6}"
@@ -208,7 +210,7 @@
 			<!-- complete button -->
 			<s:Button label="Upload complete"
 				skinClass="com.dasflash.soundcloud.scup.view.skins.LinkButtonSkin"
-				top="2"
+				top="8"
 				right="28"
 				visible="{data.id}"
 				click="trackCompleteClickHandler(event)"
@@ -228,7 +230,7 @@
 			<!-- retry button -->
 			<s:Button label="Retry upload"
 				skinClass="com.dasflash.soundcloud.scup.view.skins.LinkButtonSkin"
-				top="2"
+				top="8"
 				right="28"
 				visible="{data.uploadFailed}"
 				click="retryButtonClickHandler(event)"
@@ -239,35 +241,38 @@
 		</s:Group>
 
 		<!-- expanded state elements -->
-		<s:VGroup width="100%"
+		<s:VGroup right="0"
+			left="0"
 			includeIn="expandedStates"
 			paddingLeft="8"
-			paddingRight="8"
+			paddingRight="6"
 			paddingBottom="4"
 			id="expandedElements">
 
 			<s:Group width="100%">
 
+				<!-- description -->
+				<components:PlaceholderTextArea id="descrInput"
+					left="0"
+					width="580"
+					height="37"
+					text="{data.description}"
+					placeholder="Add a description"
+					change="if(data) data.description = descrInput.text"
+					mouseDown="event.stopPropagation()"
+					alpha="{data.description ? 1 : 0.6}"
+					styleName="trackTextInput"
+					skinClass="com.dasflash.soundcloud.scup.view.skins.TextAreaSkin"/>
+
 				<!-- delete button -->
 				<s:Button id="deleteButton"
-					left="3"
+					right="2" 
 					top="5"
+					focusEnabled="false"
 					click="deleteButtonClickHandler(event)"
 					mouseDown="event.stopPropagation()"
 					skinClass="com.dasflash.soundcloud.scup.view.skins.DeleteButtonSkin"
-					toolTip="Remove this track from the list and delete it on the server"/>
-
-				<!-- description -->
-				<s:TextArea id="descrInput"
-					left="26"
-					width="584"
-					height="37"
-					mouseDown="event.stopPropagation()"
-					text="{data.description || 'Add a description'}"
-					change="if(data) data.description = descrInput.text"
-					alpha="{data.description ? 1 : 0.6}"
-					styleName="trackTextInput"
-					skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkinMultiLine"/>
+					toolTip="Remove this track from the list{ data.id ? ' and delete it on the server' : ''}"/>
 
 			</s:Group>
 
@@ -296,6 +301,7 @@
 								maxChars="40"
 								skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkin"
 								change="if(data) data.genre=genreInput.text"
+								mouseDown="event.stopPropagation()"
 								top="2"/>
 						</s:Group>
 					</mx:GridItem>
@@ -316,6 +322,7 @@
 								width="196"
 								skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkin"
 								change="if(data) data.label_name=labelNameInput.text"
+								mouseDown="event.stopPropagation()"
 								top="2"/>
 						</s:Group>
 					</mx:GridItem>
@@ -362,6 +369,7 @@
 								width="196"
 								skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkin"
 								change="data.release=releaseInput.text"
+								mouseDown="event.stopPropagation()"
 								top="2"/>
 						</s:Group>
 					</mx:GridItem>
@@ -386,6 +394,7 @@
 								width="100%"
 								skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkin"
 								change="if(data) data.tag_list=tagListInput.text"
+								mouseDown="event.stopPropagation()"
 								top="2"
 								toolTip="Separate multiple keywords with spaces"/>
 						</s:Group>
@@ -451,6 +460,7 @@
 								restrict="0-9."
 								maxChars="10"
 								change="data.bpm=Number(bpmInput.text)"
+								mouseDown="event.stopPropagation()"
 								top="2"/>
 						</s:Group>
 					</mx:GridItem>
@@ -475,6 +485,7 @@
 								width="100%"
 								skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkin"
 								change="data.purchase_url=purchaseUrlInput.text"
+								mouseDown="event.stopPropagation()"
 								top="2"/>
 						</s:Group>
 					</mx:GridItem>
@@ -495,6 +506,7 @@
 								width="196"
 								skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkin"
 								change="data.video_url=videoUrlInput.text"
+								mouseDown="event.stopPropagation()"
 								top="2"/>
 						</s:Group>
 					</mx:GridItem>

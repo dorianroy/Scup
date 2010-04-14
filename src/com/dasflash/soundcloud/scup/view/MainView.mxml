@@ -35,12 +35,12 @@
 	</s:VGroup>
 
 	<!--
-		 This button is placed here as a workaround for a Flex bug
-		 where fixed elements flicker when the background of their
-		 container is animated
+		 This button is placed here instead of inside the SharingPanel
+		 as a workaround for a Flex bug where fixed elements flicker
+		 when the background of their container is animated
 	-->
 	<s:Button id="SendSetButton"
-		bottom="5"
+		bottom="9"
 		right="21"
 		label="Send Set"
 		styleName="standardButton"

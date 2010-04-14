@@ -4,7 +4,7 @@
 	alpha.disabled="0.5">
 
 	<fx:Metadata>
-    	[HostComponent("spark.components.TextInput")]
+    	[HostComponent("com.dasflash.soundcloud.scup.view.components.PlaceholderTextInput")]
     </fx:Metadata>
 
 	<fx:Script>
@@ -13,7 +13,7 @@
 			public var hasFocus:Boolean;
 
 			/* Define the skin elements that should not be colorized. */
-			static private const exclusions:Array=["background", "textView"];
+			static private const exclusions:Array = ["background", "textDisplay", "placeholderDisplay"];
 
 			/**
 			 * @copy spark.skins.SparkSkin#colorizeExclusions
@@ -24,26 +24,24 @@
 			}
 
 			/* Define the content fill items that should be colored by the "contentBackgroundColor" style. */
-			static private const contentFill:Array=["bgFill"];
+			static private const contentFill:Array = ["bgFill"];
 
 			/**
 			 * @inheritDoc
 			 */
 			override public function get contentItems():Array
 			{
-				return contentFill
+				return contentFill;
 			}
-			;
 
 			protected function textView_focusInHandler(event:FocusEvent):void
 			{
-				hasFocus=true;
-				textDisplay.selectAll();
+				hasFocus = true;
 			}
 
 			protected function textView_focusOutHandler(event:FocusEvent):void
 			{
-				hasFocus=false;
+				hasFocus = false;
 			}
 		]]>
 
@@ -54,7 +52,7 @@
 		<s:State name="disabled"/>
 	</s:states>
 
-	<!--- Defines the appearance of the TextInput component's background. -->
+	<!-- background -->
 	<s:Rect id="background"
 		left="1"
 		right="1"
@@ -71,7 +69,19 @@
 	<s:RichEditableText id="textDisplay"
 		focusIn="textView_focusInHandler(event)"
 		focusOut="textView_focusOutHandler(event)"
-		lineBreak="explicit"
+		left="1"
+		right="1"
+		top="1"
+		bottom="1"
+		paddingLeft="3"
+		paddingTop="5"
+		paddingRight="3"
+		paddingBottom="3"/>
+
+	<!-- placeholder text -->
+	<s:Label id="placeholderDisplay"
+		text="{hostComponent.placeholder}"
+		mouseEnabled="false"
 		left="1"
 		right="1"
 		top="1"

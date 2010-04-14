@@ -73,21 +73,23 @@
 			<s:VGroup width="100%"
 				paddingBottom="10">
 
-				<s:TextInput id="titleInput"
+				<components:PlaceholderTextInput id="titleInput"
 					width="100%"
-					text="{hostComponent.title || 'New Set'}"
+					text="{hostComponent.title}"
+					placeholder="New Set"
 					change="hostComponent.title=titleInput.text"
 					alpha="{hostComponent.title?1:0.6}"
 					styleName="setDetailsHead"
 					skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkin"/>
 
-				<s:TextArea id="descriptionInput"
+				<components:PlaceholderTextArea id="descriptionInput"
 					width="100%"
 					height="50"
-					text="{hostComponent.description || 'Add a description'}"
+					text="{hostComponent.description}"
+					placeholder="Add a description"
 					change="hostComponent.description=descriptionInput.text"
 					alpha="{hostComponent.description ? 1 : 0.6}"
-					skinClass="com.dasflash.soundcloud.scup.view.skins.TextInputSkinMultiLine"/>
+					skinClass="com.dasflash.soundcloud.scup.view.skins.TextAreaSkin"/>
 
 				<s:ToggleButton id="expandButton"
 					skinClass="com.dasflash.soundcloud.scup.view.skins.ExpandButtonSkin"

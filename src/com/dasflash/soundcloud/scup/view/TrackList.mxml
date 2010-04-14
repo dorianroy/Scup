@@ -153,7 +153,8 @@
 		top="0"
 		bottom="0">
 
-		<s:Button top="6"
+		<!-- add button -->
+		<s:Button top="8"
 			right="20"
 			click="browseFiles()"
 			toolTip="Add tracks"
@@ -167,7 +168,7 @@
 			width="100%"
 			top="60"/>
 
-		<s:Label text="We support AIFF, WAV, FLAC, OGG, MP3, AAC"
+		<s:Label text="Supported file types: AIFF, WAV, FLAC, OGG, MP3, AAC"
 			visible="{tracks.length==0}"
 			styleName="dropHereLabelSub"
 			includeInLayout="{tracks.length==0}"
