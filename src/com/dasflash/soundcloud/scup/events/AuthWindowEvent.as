@@ -14,6 +14,8 @@ package com.dasflash.soundcloud.scup.events
 
 		public static const STATE_NO_CONNECTION:String = "stateNoConnection";
 
+		public static const STATE_BUSY:String = "stateBusy";
+
 		public static const HIDE_AUTH_WINDOW:String = "hideAuthWindow";
 
 		public static const GOTO_AUTH_PAGE:String = "gotoAuthPage";

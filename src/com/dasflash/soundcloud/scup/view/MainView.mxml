@@ -7,13 +7,21 @@
 
 	<fx:Metadata>
 		[Event(name="saveSet",type="com.dasflash.soundcloud.scup.events.SetDataEvent")]
+		[Event(name="resetApp",type="com.dasflash.soundcloud.scup.events.AppEvent")]
 	</fx:Metadata>
 
 	<fx:Script>
 		<![CDATA[
+			import com.dasflash.soundcloud.scup.events.AppEvent;
 			import com.dasflash.soundcloud.scup.events.SetDataEvent;
+			import com.dasflash.soundcloud.scup.view.skins.LinkButtonSkin;
+
+			[Bindable]
+			[Inject(source="userData.userName")]
+			public var userName:String;
 		]]>
 	</fx:Script>
+
 
 	<s:VGroup gap="0"
 		width="100%"
@@ -33,6 +41,17 @@
 			currentStateChange="if(sharingPanel.currentState=='expanded')detailsPanel.currentState='collapsed'"/>
 
 	</s:VGroup>
+
+	<s:HGroup top="6"
+		right="20">
+		<!-- user name display-->
+		<s:Label text="Hej, {userName} |"/>
+
+		<!-- sign out button -->
+		<s:Button label="Sign out"
+			skinClass="com.dasflash.soundcloud.scup.view.skins.LinkButtonSkin"
+			click="dispatchEvent(new AppEvent(AppEvent.RESET_APP))"/>
+	</s:HGroup>
 
 	<!--
 		 This button is placed here instead of inside the SharingPanel

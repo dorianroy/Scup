@@ -6,12 +6,15 @@
 	width="390"
 	height="288"
 	resizable="false"
-	showStatusBar="false">
+	showStatusBar="false"
+	xmlns:components="com.dasflash.soundcloud.scup.view.components.*">
 
 	<fx:Metadata>
 	
 		[Event(type="com.dasflash.soundcloud.scup.events.AuthWindowEvent", name="gotoAuthPage")]
 		[Event(type="com.dasflash.soundcloud.scup.events.CompleteAuthEvent", name="completeAuth")]
+		[Event(type="com.dasflash.soundcloud.scup.events.ThrobberEvent", name="showThrobber")]
+		[Event(type="com.dasflash.soundcloud.scup.events.ThrobberEvent", name="hideThrobber")]
 		[Event(type="com.dasflash.soundcloud.scup.events.AppEvent", name="initApp")]
 		[Event(type="com.dasflash.soundcloud.scup.events.AppEvent", name="resetApp")]
 		
@@ -23,6 +26,7 @@
 			import com.dasflash.soundcloud.scup.events.AppEvent;
 			import com.dasflash.soundcloud.scup.events.AuthWindowEvent;
 			import com.dasflash.soundcloud.scup.events.CompleteAuthEvent;
+			import com.dasflash.soundcloud.scup.events.ThrobberEvent;
 
 			import flash.display.InteractiveObject;
 
@@ -47,6 +51,7 @@
 		<s:State name="stateAuthFail"/>
 		<s:State name="stateUserInvalid"/>
 		<s:State name="stateNoConnection"/>
+		<s:State name="stateBusy"/>
 	</s:states>
 
 	<mx:Image source="@Embed('assets/authwindow_bg.png')"
@@ -66,24 +71,25 @@
 			<s:content.stateNoConnection>Couldn't access SoundCloud</s:content.stateNoConnection>
 		</s:RichText>
 
-		<s:RichEditableText id="sublineText"
+		<components:Throbber includeIn="stateBusy"
+			horizontalCenter="-26"/>
+
+		<s:RichText id="sublineText"
 			styleName="authWindowBody"
 			lineBreak="toFit"
-			width="100%"
-			editable="false"
-			selectable="false">
+			width="100%">
 			<s:content.stateAuth>Click the button below to open the authentication page in your browser</s:content.stateAuth>
 			<s:content.stateAuthComplete>you see on the authentication page</s:content.stateAuthComplete>
 			<s:content.stateAuthFail>please try again</s:content.stateAuthFail>
 			<s:content.stateUserInvalid>Your user account data seems to be invalid</s:content.stateUserInvalid>
 			<s:content.stateNoConnection>Please check your internet connection</s:content.stateNoConnection>
-		</s:RichEditableText>
+		</s:RichText>
 
 		<s:Group>
 			<s:TextInput id="codeTextInput"
 				includeIn="stateAuthComplete, stateAuthFail"
 				styleName="codeTextInput"
-				width="50"
+				width="56"
 				height="20"
 				top="0"
 				bottom="4"/>

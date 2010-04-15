@@ -41,7 +41,7 @@
 			stateGroups="selectedUpStates, disabledStates, selectedStates"/>
 	</s:states>
 
-	<!-- layer 8: text -->
+	<!-- text -->
 	<s:Label id="labelDisplay"
 		alpha=".8"
 		alpha.overStates="1"/>

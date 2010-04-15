@@ -68,6 +68,7 @@ package com.dasflash.soundcloud.scup.controller
 				
 				redirectEvent(authWindow, MainWindowEvent.OPEN_MAIN_WINDOW);
 				redirectEvent(authWindow, AuthWindowEvent.STATE_AUTH);
+				redirectEvent(authWindow, AuthWindowEvent.STATE_NO_CONNECTION);
 				redirectEvent(authWindow, AuthWindowEvent.GOTO_AUTH_PAGE);
 				redirectEvent(authWindow, AppEvent.INIT_APP);
 				redirectEvent(authWindow, AppEvent.RESET_APP);
@@ -90,6 +91,7 @@ package com.dasflash.soundcloud.scup.controller
 		[Mediate(event="stateAuthFail")]
 		[Mediate(event="stateNoConnection")]
 		[Mediate(event="stateUserInvalid")]
+		[Mediate(event="stateBusy")]
 		public function openAuthenticationWindow(event:AuthWindowEvent):void
 		{
 			openAuthWindow(event.type);

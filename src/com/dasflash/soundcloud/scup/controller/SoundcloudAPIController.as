@@ -38,10 +38,9 @@ package com.dasflash.soundcloud.scup.controller
 	[Event(type="com.dasflash.soundcloud.scup.events.AuthWindowEvent", name="stateAuthFail")]
 	[Event(type="com.dasflash.soundcloud.scup.events.AuthWindowEvent", name="stateUserInvalid")]
 	[Event(type="com.dasflash.soundcloud.scup.events.AuthWindowEvent", name="stateNoConnection")]
+	[Event(type="com.dasflash.soundcloud.scup.events.AuthWindowEvent", name="stateBusy")]
 	[Event(type="com.dasflash.soundcloud.scup.events.AuthWindowEvent", name="hideAuthWindow")]
 	[Event(type="com.dasflash.soundcloud.scup.events.AuthWindowEvent", name="gotoAuthPage")]
-	[Event(type="com.dasflash.soundcloud.scup.events.ThrobberEvent", name="showThrobber")]
-	[Event(type="com.dasflash.soundcloud.scup.events.ThrobberEvent", name="hideThrobber")]
 	[Event(type="com.dasflash.soundcloud.scup.events.AppEvent", name="initApp")]
 
 	/**
@@ -178,19 +177,22 @@ package com.dasflash.soundcloud.scup.controller
 		
 		protected function getRequestToken():void
 		{
+			_dispatcher.dispatchEvent(new AuthWindowEvent(AuthWindowEvent.STATE_BUSY));
+			
 			soundcloudClient.addEventListener(SoundcloudAuthEvent.REQUEST_TOKEN, requestTokenSuccessHandler, false, 0, true);
 			soundcloudClient.addEventListener(SoundcloudFaultEvent.REQUEST_TOKEN_FAULT, requestTokenFaultHandler, false, 0, true);
 			soundcloudClient.getRequestToken();
 		}
 		
 		/**
-		 * Couldn't retrieve a request token. This is bad. App will be resetted.
+		 * Couldn't retrieve a request token. This is bad. Either SoundCloud
+		 * is down or there's no internet connection.
 		 * @private
 		 */
 		protected function requestTokenFaultHandler(event:SoundcloudFaultEvent):void
 		{
-			// re-init app
-			_dispatcher.dispatchEvent(new AppEvent(AppEvent.INIT_APP));
+			// show message "can't access soundcloud"
+			_dispatcher.dispatchEvent(new AuthWindowEvent(AuthWindowEvent.STATE_NO_CONNECTION));
 		}
 		
 
@@ -221,6 +223,8 @@ package com.dasflash.soundcloud.scup.controller
 		[Mediate(event="completeAuth")]
 		public function completeAuthHandler(event:CompleteAuthEvent):void
 		{
+			_dispatcher.dispatchEvent(new AuthWindowEvent(AuthWindowEvent.STATE_BUSY));
+			
 			// request access token and pass verification code
 			soundcloudClient.addEventListener(SoundcloudAuthEvent.ACCESS_TOKEN, accessTokenSuccessHandler, false, 0, true);
 			soundcloudClient.addEventListener(SoundcloudFaultEvent.ACCESS_TOKEN_FAULT, accessTokenFaultHandler, false, 0, true);
@@ -242,8 +246,8 @@ package com.dasflash.soundcloud.scup.controller
 			// save token locally
 			userSettings.accessToken = event.token;
 			
-			// proceed to main view
-			showMainView();
+			// get user data
+			getMe();
 		}
 		
 		

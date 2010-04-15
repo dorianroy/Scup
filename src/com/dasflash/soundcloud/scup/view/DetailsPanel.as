@@ -2,13 +2,13 @@ package com.dasflash.soundcloud.scup.view
 {
 	import com.dasflash.soundcloud.scup.events.SetDataEvent;
 	import com.dasflash.soundcloud.scup.model.SetData;
-	
+
 	import flash.filesystem.File;
-	
+
 	import mx.collections.ArrayCollection;
 	import mx.events.StateChangeEvent;
 	import mx.states.State;
-	
+
 	import spark.components.supportClasses.SkinnableComponent;
 
 
@@ -23,9 +23,10 @@ package com.dasflash.soundcloud.scup.view
 	[Bindable]
 	public class DetailsPanel extends SkinnableComponent
 	{
+
 		[Inject]
 		public var setData:SetData;
-		
+
 		[Inject(source="setData.title", twoWay="true")]
 		public var title:String;
 
