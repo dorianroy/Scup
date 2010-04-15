@@ -42,6 +42,7 @@
 		width="100%"
 		top="34">
 		<s:RichText width="60%"
+			alpha="0.6"
 			text="Drop artwork here"
 			textAlign="center"
 			visible="{!Boolean(hostComponent.artworkFileURL)}"/>

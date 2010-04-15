@@ -20,7 +20,7 @@
 
 	<ctrl:UpdaterController/>
 
-	<ctrl:ThrobberController/>
+	<ctrl:SpinnerController/>
 
 	<model:UserSettings/>
 

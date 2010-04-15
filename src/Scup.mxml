@@ -24,6 +24,8 @@
 	<fx:Script>
 		<![CDATA[
 			import com.dasflash.soundcloud.scup.events.AppEvent;
+			import com.dasflash.soundcloud.scup.events.SpinnerEvent;
+
 			import mx.events.AIREvent;
 			import mx.logging.LogEventLevel;
 

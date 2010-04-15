@@ -13,8 +13,8 @@
 	
 		[Event(type="com.dasflash.soundcloud.scup.events.AuthWindowEvent", name="gotoAuthPage")]
 		[Event(type="com.dasflash.soundcloud.scup.events.CompleteAuthEvent", name="completeAuth")]
-		[Event(type="com.dasflash.soundcloud.scup.events.ThrobberEvent", name="showThrobber")]
-		[Event(type="com.dasflash.soundcloud.scup.events.ThrobberEvent", name="hideThrobber")]
+		[Event(type="com.dasflash.soundcloud.scup.events.SpinnerEvent", name="showSpinner")]
+		[Event(type="com.dasflash.soundcloud.scup.events.SpinnerEvent", name="hideSpinner")]
 		[Event(type="com.dasflash.soundcloud.scup.events.AppEvent", name="initApp")]
 		[Event(type="com.dasflash.soundcloud.scup.events.AppEvent", name="resetApp")]
 		
@@ -26,7 +26,7 @@
 			import com.dasflash.soundcloud.scup.events.AppEvent;
 			import com.dasflash.soundcloud.scup.events.AuthWindowEvent;
 			import com.dasflash.soundcloud.scup.events.CompleteAuthEvent;
-			import com.dasflash.soundcloud.scup.events.ThrobberEvent;
+			import com.dasflash.soundcloud.scup.events.SpinnerEvent;
 
 			import flash.display.InteractiveObject;
 
@@ -40,6 +40,17 @@
 			{
 				dispatchEvent(new AuthWindowEvent(AuthWindowEvent.GOTO_AUTH_PAGE));
 				currentState = 'stateAuthComplete';
+			}
+
+			override protected function stateChanged(oldState:String, newState:String, recursive:Boolean):void
+			{
+				switch (newState) {
+
+					case "stateAuthComplete":
+						// clear input text
+						codeTextInput.text = "";
+
+				}
 			}
 		]]>
 
@@ -71,8 +82,10 @@
 			<s:content.stateNoConnection>Couldn't access SoundCloud</s:content.stateNoConnection>
 		</s:RichText>
 
-		<components:Throbber includeIn="stateBusy"
-			horizontalCenter="-26"/>
+		<!-- spinner -->
+		<components:Spinner id="spinner"
+			alpha="0.5"
+			includeIn="stateBusy"/>
 
 		<s:RichText id="sublineText"
 			styleName="authWindowBody"
@@ -101,6 +114,7 @@
 		</s:Button>
 
 		<s:Button includeIn="stateAuthComplete, stateAuthFail"
+			enabled="{Boolean(codeTextInput.text)}"
 			click="dispatchEvent(new CompleteAuthEvent(CompleteAuthEvent.COMPLETE_AUTH, codeTextInput.text));">
 			<s:label>Complete Authentication</s:label>
 		</s:Button>

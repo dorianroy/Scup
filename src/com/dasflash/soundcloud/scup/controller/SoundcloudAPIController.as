@@ -223,6 +223,13 @@ package com.dasflash.soundcloud.scup.controller
 		[Mediate(event="completeAuth")]
 		public function completeAuthHandler(event:CompleteAuthEvent):void
 		{
+			if (!event.verificationCode) {
+				
+				_dispatcher.dispatchEvent(new AuthWindowEvent(AuthWindowEvent.STATE_AUTH_FAIL));
+				
+				return;
+			}
+			
 			_dispatcher.dispatchEvent(new AuthWindowEvent(AuthWindowEvent.STATE_BUSY));
 			
 			// request access token and pass verification code
@@ -395,7 +402,7 @@ package com.dasflash.soundcloud.scup.controller
 				
 			} else {
 				
-				_dispatcher.dispatchEvent(new ThrobberEvent(ThrobberEvent.SHOW_THROBBER));
+				_dispatcher.dispatchEvent(new SpinnerEvent(SpinnerEvent.SHOW_SPINNER));
 				
 				saveSet();
 			}
@@ -426,7 +433,7 @@ package com.dasflash.soundcloud.scup.controller
 		{
 			Alert.show("Sorry, the set couldn't be saved. Please try again.");
 			
-			_dispatcher.dispatchEvent(new ThrobberEvent(ThrobberEvent.HIDE_THROBBER));
+			_dispatcher.dispatchEvent(new SpinnerEvent(SpinnerEvent.HIDE_SPINNER));
 		}
 		
 		
@@ -449,7 +456,7 @@ package com.dasflash.soundcloud.scup.controller
 		{
 			Alert.show("Sorry, the set couldn't be saved. Please try again.");
 			
-			_dispatcher.dispatchEvent(new ThrobberEvent(ThrobberEvent.HIDE_THROBBER));
+			_dispatcher.dispatchEvent(new SpinnerEvent(SpinnerEvent.HIDE_SPINNER));
 		}
 		
 		protected function updateTracks():void
@@ -521,8 +528,8 @@ package com.dasflash.soundcloud.scup.controller
 			// clear set data
 			setData.resetData();
 			
-			// hide throbber
-			_dispatcher.dispatchEvent(new ThrobberEvent(ThrobberEvent.HIDE_THROBBER));
+			// hide spinner
+			_dispatcher.dispatchEvent(new SpinnerEvent(SpinnerEvent.HIDE_SPINNER));
 		}
 		
 		protected function trackUpdateCompleteHandler(event:SoundcloudEvent):void
@@ -537,7 +544,7 @@ package com.dasflash.soundcloud.scup.controller
 				"could not be updated. Please review the tracks online at "+
 				setData.permalink);
 			
-			_dispatcher.dispatchEvent(new ThrobberEvent(ThrobberEvent.HIDE_THROBBER));
+			_dispatcher.dispatchEvent(new SpinnerEvent(SpinnerEvent.HIDE_SPINNER));
 		}
 		
 		
