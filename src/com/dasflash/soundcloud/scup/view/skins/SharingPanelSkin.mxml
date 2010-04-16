@@ -142,7 +142,7 @@
 			<s:Group width="100%">
 				<s:CheckBox id="downloadableCheckBox"
 					selected="{hostComponent.downloadable}"
-					label="Make original downloadable"
+					label="Make original(s) downloadable"
 					styleName="sharingPanelCB sharingPanelTitle"
 					top="5"
 					bottom="6"

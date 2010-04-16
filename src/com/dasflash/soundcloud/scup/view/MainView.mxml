@@ -16,9 +16,15 @@
 			import com.dasflash.soundcloud.scup.events.SetDataEvent;
 			import com.dasflash.soundcloud.scup.view.skins.LinkButtonSkin;
 
+			import flash.net.navigateToURL;
+
 			[Bindable]
 			[Inject(source="userData.userName")]
 			public var userName:String;
+
+			[Bindable]
+			[Inject(source="userData.profileURL")]
+			public var profileURL:String;
 		]]>
 	</fx:Script>
 
@@ -43,14 +49,24 @@
 	</s:VGroup>
 
 	<s:HGroup top="6"
-		right="20">
+		right="20"
+		gap="2">
+
 		<!-- user name display-->
-		<s:Label text="Hej, {userName} |"/>
+		<s:Label text="Hej, "/>
+
+		<!-- sign out button -->
+		<s:Button label="{userName}"
+			skinClass="com.dasflash.soundcloud.scup.view.skins.LinkButtonSkin"
+			click="navigateToURL(new URLRequest(profileURL))"/>
+
+		<s:Label text=" | "/>
 
 		<!-- sign out button -->
 		<s:Button label="Sign out"
 			skinClass="com.dasflash.soundcloud.scup.view.skins.LinkButtonSkin"
 			click="dispatchEvent(new AppEvent(AppEvent.RESET_APP))"/>
+
 	</s:HGroup>
 
 	<!--
