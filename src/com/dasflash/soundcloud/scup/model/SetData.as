@@ -27,6 +27,7 @@ package com.dasflash.soundcloud.scup.model
 			{label: "Demo", data: "demo"},
 			{label: "EP", data: "ep"},
 			{label: "Playlist", data: "playlist"},
+			{label: "Sample Collection", data: "sample collection"},
 			{label: "Showcase", data: "showcase"},
 			{label: "Single", data: "single"}
 			]
