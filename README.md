@@ -1,4 +1,3 @@
-
 *** SCUP SOUNDCLOUD UPLOADER ***
 
 [![Flattr this](http://api.flattr.com/button/button-compact-static-100x17.png)](http://flattr.com/thing/2620/Scup-The-SoundCloud-Uploader)
@@ -53,7 +52,12 @@ In order to compile and run it, you'll need:
   file in the project root that points to your update URL. See Adobe's
   docs for details.
   
-  
+- I couldn't include the fonts of the release version for obvious
+  reasons. If you don't have Interstate-Regular and Lucida-Grande
+  installed on your system, you'll have to replace them in the Scup.css
+  file with a font of your choice. 
+
+
 *** Feedback ***
 
 Please use github's issues management if you encounter any bugs in
