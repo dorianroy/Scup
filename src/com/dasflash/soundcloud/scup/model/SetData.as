@@ -1,3 +1,24 @@
+/*
+
+   Copyright 2010 (c) Dorian Roy - dorianroy.com
+
+   This file is part of Scup.
+
+   Scup is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   Scup is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with Scup. If not, see <http://www.gnu.org/licenses/>.
+
+ */
+
 package com.dasflash.soundcloud.scup.model
 {
 	import flash.events.EventDispatcher;
@@ -35,7 +56,6 @@ package com.dasflash.soundcloud.scup.model
 
 		public var selectedPlaylistTypeIndex:int;
 
-
 		public function get playlist_type():String
 		{
 			try {
@@ -57,6 +77,28 @@ package com.dasflash.soundcloud.scup.model
 			throw(new Error("unknown set type selected"));
 		}
 
+		public var selectedTrackTypeIndex:int = -1;
+
+		public function get track_type():String
+		{
+			try {
+				return TrackData.TRACK_TYPES.getItemAt(selectedTrackTypeIndex).data;
+			} catch (error:Error) {
+			}
+
+			return null;
+		}
+
+		public function set track_type(value:String):void
+		{
+			for (var i:int = 0; i < TrackData.TRACK_TYPES.length; i++) {
+				if (TrackData.TRACK_TYPES.getItemAt(i).data == value) {
+					selectedTrackTypeIndex = i;
+					return;
+				}
+			}
+			throw(new Error("unknown track type selected"));
+		}
 
 		// get ordered list of track ids
 		public function get tracks():Array
@@ -87,13 +129,13 @@ package com.dasflash.soundcloud.scup.model
 		public static const LICENSE_TYPES:ArrayCollection = new ArrayCollection(
 			[
 			{label: "All rights reserved", data: "all-rights-reserved"},
-			{label: "No rights reserved", data: "no-rights-reserved"},
-			{label: "CC", data: "cc-by"},
-			{label: "CC Noncommercial", data: "cc-by-nc"},
-			{label: "CC No Derivative Works", data: "cc-by-nd"},
-			{label: "CC Share Alike", data: "cc-by-sa"},
-			{label: "CC Noncommercial Non Derivate Works", data: "cc-by-nc-nd"},
-			{label: "CC Noncommercial Share Alike", data: "cc-by-nc-sa"}
+			{label: "The work is in the public domain", data: "no-rights-reserved"},
+			{label: "CC Attribution", data: "cc-by"},
+			{label: "CC Attribution Noncommercial", data: "cc-by-nc"},
+			{label: "CC Attribution No Derivative Works", data: "cc-by-nd"},
+			{label: "CC Attribution Share Alike", data: "cc-by-sa"},
+			{label: "CC Attribution Noncommercial Non Derivate Works", data: "cc-by-nc-nd"},
+			{label: "CC Attribution Noncommercial Share Alike", data: "cc-by-nc-sa"}
 			]
 			);
 		public var selectedLicenseIndex:int;
@@ -173,6 +215,7 @@ package com.dasflash.soundcloud.scup.model
 			selectedSharingIndex = 0;
 			selectedLicenseIndex = 0;
 			selectedPlaylistTypeIndex = -1;
+			selectedTrackTypeIndex = -1;
 			tag_list = "";
 			streamable = true;
 			shared_to = "";

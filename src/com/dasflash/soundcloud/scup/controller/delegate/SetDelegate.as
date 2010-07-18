@@ -1,3 +1,24 @@
+/*
+
+   Copyright 2010 (c) Dorian Roy - dorianroy.com
+
+   This file is part of Scup.
+
+   Scup is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   Scup is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with Scup. If not, see <http://www.gnu.org/licenses/>.
+
+ */
+
 package com.dasflash.soundcloud.scup.controller.delegate
 {
 	import com.dasflash.soundcloud.as3api.SoundcloudClient;
@@ -29,34 +50,34 @@ package com.dasflash.soundcloud.scup.controller.delegate
 		 */
 		public function SetDelegate(client:SoundcloudClient, setData:SetData)
 		{
-			this.client=client;
-			this.setData=setData;
+			this.client = client;
+			this.setData = setData;
 		}
 
 		public function postSet():void
 		{
 			// create track parameters object
-			var params:Object={};
-			params["playlist[title]"]=setData.title;
+			var params:Object = {};
+			params["playlist[title]"] = setData.title;
 			if (setData.artwork_data)
-				params["playlist[artwork_data]"]=setData.artwork_data;
+				params["playlist[artwork_data]"] = setData.artwork_data;
 
 			// create playlist via POST
 			var delegate:SoundcloudDelegate;
-			delegate=client.sendRequest("playlists", URLRequestMethod.POST, params);
+			delegate = client.sendRequest("playlists", URLRequestMethod.POST, params);
 			delegate.addEventListener(SoundcloudEvent.REQUEST_COMPLETE, postSetCompleteHandler);
 			delegate.addEventListener(SoundcloudFaultEvent.FAULT, postSetFaultHandler);
 
-			setData.isUploading=true;
+			setData.isUploading = true;
 		}
 
 		protected function postSetCompleteHandler(event:SoundcloudEvent):void
 		{
-			setData.isUploading=false;
+			setData.isUploading = false;
 
 			// save id assigned by SoundCloud in TrackData
-			setData.setId=event.data.id;
-			setData.permalink=event.data["permalink-url"];
+			setData.setId = event.data.id;
+			setData.permalink = event.data["permalink-url"];
 
 			// redispatch this event 
 			dispatchEvent(event);
@@ -64,7 +85,7 @@ package com.dasflash.soundcloud.scup.controller.delegate
 
 		protected function postSetFaultHandler(event:SoundcloudFaultEvent):void
 		{
-			setData.isUploading=false;
+			setData.isUploading = false;
 
 			// redispatch this event
 			dispatchEvent(event);
@@ -77,48 +98,46 @@ package com.dasflash.soundcloud.scup.controller.delegate
 			 * the same parameter name for each track which isn't supported by URLVariables
 			 */
 
-			var data:XML=<playlist/>;
-			data.title=setData.title;
+			var data:XML = <playlist/>;
+			data.title = setData.title;
 			if (setData.description)
-				data.description=setData.description;
+				data.description = setData.description;
 			if (setData.tag_list)
-				data.tag_list=setData.tag_list;
+				data.tag_list = setData.tag_list;
 			if (setData.ean)
-				data.ean=setData.ean;
+				data.ean = setData.ean;
 			if (setData.genre)
-				data.genre=setData.genre;
+				data.genre = setData.genre;
 			if (setData.label_name)
-				data.label_name=setData.label_name;
+				data.label_name = setData.label_name;
 			if (setData.playlist_type)
-				data.playlist_type=setData.playlist_type;
+				data.playlist_type = setData.playlist_type;
 			if (setData.purchase_url)
-				data.purchase_url=setData.purchase_url;
+				data.purchase_url = setData.purchase_url;
 			if (setData.release)
-				data.release=setData.release;
+				data.release = setData.release;
 			if (setData.release_day)
-				data.release_day=setData.release_day;
+				data.release_day = setData.release_day;
 			if (setData.release_month)
-				data.release_month=setData.release_month;
+				data.release_month = setData.release_month;
 			if (setData.release_year)
-				data.release_year=setData.release_year;
-			data.streamable=setData.streamable;
-			data.sharing=setData.sharing;
-			data.downloadable=setData.downloadable;
+				data.release_year = setData.release_year;
+			data.streamable = setData.streamable;
+			data.sharing = setData.sharing;
+			data.downloadable = setData.downloadable;
 			if (setData.license)
-				data.license=setData.license;
+				data.license = setData.license;
 
 			// add array of email addresses
-			if (setData.shared_to)
-			{
+			if (setData.shared_to) {
 
-				var emailsXML:XML=<shared-to><emails type="array"/></shared-to>;
+				var emailsXML:XML = <shared-to><emails type="array"/></shared-to>;
 
-				var addresses:Array=setData.shared_to.split(",");
+				var addresses:Array = setData.shared_to.split(",");
 
-				for each (var address:String in addresses)
-				{
+				for each (var address:String in addresses) {
 
-					var addressXML:XML=new XML("<email><address>" + address + "</address></email>");
+					var addressXML:XML = new XML("<email><address>" + address + "</address></email>");
 					// remove whitespace
 					emailsXML.emails.appendChild(addressXML);
 				}
@@ -127,33 +146,29 @@ package com.dasflash.soundcloud.scup.controller.delegate
 			}
 
 			// add list of tracks
-			if (setData.trackCollection.length > 0)
-			{
+			if (setData.trackCollection.length > 0) {
 
 				// add all tracks
 				// TOOD make sure the order is correct
-				for each (var track:TrackData in setData.trackCollection)
-				{
+				for each (var track:TrackData in setData.trackCollection) {
 
 					// if track has been uploaded and assigned a soundcloud id
-					if (track.id)
-					{
+					if (track.id) {
 
 						// create XML list
-						if (!data.hasOwnProperty("tracks"))
-						{
+						if (!data.hasOwnProperty("tracks")) {
 							data.appendChild(<tracks type="array"/>);
 						}
 
 						// add track
-						var trackXML:XML=new XML("<track><id>" + track.id + "</id></track>");
+						var trackXML:XML = new XML("<track><id>" + track.id + "</id></track>");
 						data.tracks.appendChild(trackXML);
 					}
 				}
 			}
 
 			var delegate:SoundcloudDelegate;
-			delegate=client.sendRequest("playlists/" + setData.setId, URLRequestMethod.PUT, data);
+			delegate = client.sendRequest("playlists/" + setData.setId, URLRequestMethod.PUT, data);
 			delegate.addEventListener(SoundcloudEvent.REQUEST_COMPLETE, updateSetCompleteHandler);
 			delegate.addEventListener(SoundcloudFaultEvent.FAULT, updateSetFaultHandler);
 		}

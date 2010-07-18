@@ -1,15 +1,36 @@
+/*
+
+   Copyright 2010 (c) Dorian Roy - dorianroy.com
+
+   This file is part of Scup.
+
+   Scup is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   Scup is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with Scup. If not, see <http://www.gnu.org/licenses/>.
+
+ */
+
 package com.dasflash.soundcloud.scup.model
 {
 	import flash.events.EventDispatcher;
 	import flash.filesystem.File;
-	
+
 	import mx.collections.ArrayCollection;
 
 	[Bindable]
 	public class TrackData extends EventDispatcher
 	{
 		// track types
-		public var trackTypes:ArrayCollection = new ArrayCollection(
+		public static const TRACK_TYPES:ArrayCollection = new ArrayCollection(
 			[
 			{label: "None", data: ""},
 			{label: "Loop", data: "loop"},
@@ -33,7 +54,7 @@ package com.dasflash.soundcloud.scup.model
 		public function get track_type():String
 		{
 			try {
-				return trackTypes.getItemAt(selectedTrackTypeIndex).data;
+				return TRACK_TYPES.getItemAt(selectedTrackTypeIndex).data;
 			} catch (error:Error) {
 			}
 
@@ -42,8 +63,8 @@ package com.dasflash.soundcloud.scup.model
 
 		public function set track_type(value:String):void
 		{
-			for (var i:int = 0; i < trackTypes.length; i++) {
-				if (trackTypes.getItemAt(i).data == value) {
+			for (var i:int = 0; i < TRACK_TYPES.length; i++) {
+				if (TRACK_TYPES.getItemAt(i).data == value) {
 					selectedTrackTypeIndex = i;
 					return;
 				}
@@ -73,7 +94,7 @@ package com.dasflash.soundcloud.scup.model
 		public var purchase_url:String;
 		public var release:String;
 		private var _release_day:uint = new Date().date;
-		private var _release_month:uint = new Date().month+1;
+		private var _release_month:uint = new Date().month + 1;
 		private var _release_year:uint = new Date().fullYear;
 //		public var sharing:String			= "private"; // "public" or "private"
 //		public var streamable:Boolean

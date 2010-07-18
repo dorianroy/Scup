@@ -1,4 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+
+	 Copyright 2010 (c) Dorian Roy - dorianroy.com
+
+	 This file is part of Scup.
+
+	 Scup is free software: you can redistribute it and/or modify
+	 it under the terms of the GNU General Public License as published by
+	 the Free Software Foundation, either version 3 of the License, or
+	 (at your option) any later version.
+
+	 Scup is distributed in the hope that it will be useful,
+	 but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	 GNU General Public License for more details.
+
+	 You should have received a copy of the GNU General Public License
+	 along with Scup. If not, see <http://www.gnu.org/licenses/>.
+
+-->
+
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
 	xmlns:s="library://ns.adobe.com/flex/spark"
 	xmlns:mx="library://ns.adobe.com/flex/mx"
@@ -44,7 +66,7 @@
 
 					for each (var file:File in files) {
 
-						// limit to .ogg, .mp3, .mp4 .flac, .aac, .wav(e) .aif(f) 
+						// limit to .ogg, .mp3, .mp4 .flac, .aac, .wav(e) .aif(f) .m4a
 						switch (file.extension.toLowerCase()) {
 							case "ogg":
 								break;
@@ -63,6 +85,8 @@
 							case "aif":
 								break;
 							case "aiff":
+								break;
+							case "m4a":
 								break;
 
 							// if none of the file extensions is met, return
@@ -100,8 +124,8 @@
 
 				file.addEventListener(FileListEvent.SELECT_MULTIPLE, fileSelectHandler);
 
-				// limit to .ogg, .mp3, .mp4 .flac, .aac, .wav(e) .aif(f) 
-				var soundFilesFilter:FileFilter = new FileFilter("Sound files", "*.ogg;*.mp3;*.mp4;*.flac;*.aac;*.wav;*.wave;*.aif;*.aiff");
+				// limit to .ogg, .mp3, .mp4 .flac, .aac, .wav(e) .aif(f) .m4a
+				var soundFilesFilter:FileFilter = new FileFilter("Sound files", "*.ogg;*.mp3;*.mp4;*.flac;*.aac;*.wav;*.wave;*.aif;*.aiff;*.m4a");
 
 				file.browseForOpenMultiple("Select Tracks", [soundFilesFilter]);
 			}
@@ -168,7 +192,7 @@
 			width="100%"
 			top="60"/>
 
-		<s:Label text="Supported file types: AIFF, WAV, FLAC, OGG, MP3, AAC"
+		<s:Label text="Supported file types: AIFF, WAV, FLAC, OGG, MP3, AAC, MP4, M4A"
 			visible="{tracks.length==0}"
 			styleName="dropHereLabelSub"
 			includeInLayout="{tracks.length==0}"

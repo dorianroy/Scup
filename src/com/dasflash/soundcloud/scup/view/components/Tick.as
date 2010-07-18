@@ -1,3 +1,8 @@
+/*
+   Spinner component by Jake Hawkes
+   http://grakl.com/wordpress/?p=5
+ */
+
 package com.dasflash.soundcloud.scup.view.components
 {
 	import flash.display.Sprite;

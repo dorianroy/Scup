@@ -1,4 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+
+	 Copyright 2010 (c) Dorian Roy - dorianroy.com
+
+	 This file is part of Scup.
+
+	 Scup is free software: you can redistribute it and/or modify
+	 it under the terms of the GNU General Public License as published by
+	 the Free Software Foundation, either version 3 of the License, or
+	 (at your option) any later version.
+
+	 Scup is distributed in the hope that it will be useful,
+	 but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	 GNU General Public License for more details.
+
+	 You should have received a copy of the GNU General Public License
+	 along with Scup. If not, see <http://www.gnu.org/licenses/>.
+
+-->
+
 <s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009"
 	xmlns:s="library://ns.adobe.com/flex/spark"
 	alpha.disabled="0.5">
@@ -66,18 +88,23 @@
 	</s:Rect>
 
 	<!-- text -->
-	<s:RichEditableText id="textDisplay"
-		focusIn="textView_focusInHandler(event)"
-		focusOut="textView_focusOutHandler(event)"
-		lineBreak="toFit"
-		left="1"
+	<s:Scroller left="1"
 		right="1"
 		top="1"
-		bottom="1"
-		paddingLeft="3"
-		paddingTop="5"
-		paddingRight="3"
-		paddingBottom="3"/>
+		bottom="1">
+		<s:RichEditableText id="textDisplay"
+			focusIn="textView_focusInHandler(event)"
+			focusOut="textView_focusOutHandler(event)"
+			lineBreak="toFit"
+			left="0"
+			right="0"
+			top="0"
+			bottom="0"
+			paddingLeft="3"
+			paddingTop="5"
+			paddingRight="3"
+			paddingBottom="3"/>
+	</s:Scroller>
 
 	<!-- placeholder text -->
 	<s:Label id="placeholderDisplay"
