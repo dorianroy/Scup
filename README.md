@@ -5,7 +5,7 @@
 
 Scup is a little AIR program that allows you to upload tracks to
 SoundCloud from your desktop. You can get the current release 
-version at http://scup.dasflash.com
+version at <http://scup.dasflash.com>.
 
 I created Scup to demo the SoundCloud-AS3-API and play around with 
 Flex 4 Spark components and the Swiz Framework. Feel free to do the same
@@ -39,12 +39,12 @@ In order to compile and run it, you'll need:
 - Flash Builder 4 or another IDE that supports AIR and Flex 4 SDK
 
 - The Soundcloud-AS3-API library
-  http://github.com/dasflash/Soundcloud-AS3-API
+  <http://github.com/dasflash/Soundcloud-AS3-API>
   
 - The Swiz Framework library
-  http://github.com/swiz/swiz-framework
+  <http://github.com/swiz/swiz-framework>
   
-- Register your app at http://soundcloud.com/you/apps/new
+- Register your app at <http://soundcloud.com/you/apps/new>
   to get a API key which you need to enter in
   com.dasflash.soundcloud.scup.model.ScupConstants.as
    
@@ -58,12 +58,14 @@ In order to compile and run it, you'll need:
 
 Please use github's issues management if you encounter any bugs in
 the code. For user feedback and feature requests, please use the
-feedback forum at http://getsatisfaction.com/scup/
+feedback forum at <http://getsatisfaction.com/scup/>
 
 For everything else, feel free to contact me at dori[at]nroy[dot]de
-or via twitter.com/dorianroy
+or via <http://twitter.com/dorianroy>
 
 Read more about Scup and the Soundcloud-AS3-API here:
-* dasflash.com
-* twitter.com/dasflash
+
+- <http://dasflash.com>
+
+- <http://twitter.com/dasflash>
 
